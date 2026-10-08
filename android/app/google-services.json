@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "828316887169",
+    "project_id": "sudoku-sagax-games",
+    "storage_bucket": "sudoku-sagax-games.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828316887169:android:26df21e102871dfbd54580",
+        "android_client_info": {
+          "package_name": "com.tekinsight.sudokusagax"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG0Jj4VM_zq-aeHfSD1AMT2MvlyEQ37nw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

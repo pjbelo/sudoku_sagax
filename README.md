@@ -342,6 +342,20 @@ open build/ios/ipa/                          # Sudoku Sagax.ipa
 
 Audio license: Creative Commons CC0 1.0.
 
+**Fonts** — *Exo 2* and *Inter*, bundled in `google_fonts/` — SIL Open Font
+License 1.1 (shown in the app's licenses page).
+
+**Images** — the app icon, Google Play feature graphics and in-app logo were
+generated in code with Claude Code (Anthropic). They contain no third-party or
+AI-image-model artwork:
+
+| Image | Source |
+|---|---|
+| App icon (`assets/icons/`, iOS/Android launcher icons, `docs/google-play/icon-512.png`) | [tool/store/app_icon_test.dart](tool/store/app_icon_test.dart) |
+| Feature graphics (`docs/google-play/feature-graphic-<lang>.png`) | [tool/store/feature_graphic_test.dart](tool/store/feature_graphic_test.dart) |
+| Home-screen logo | [lib/widgets/sudoku_logo.dart](lib/widgets/sudoku_logo.dart) |
+| Sagax Games logo (`assets/images/sagax-games-logo.png`) | Sagax Games brand asset, shared with Memorex and Slidox |
+
 ## Original design brief (prompt)
 
 Create a sudoku game named "Sudoku Sagax". Analyse memorex and slidox games and use similar architecture, UI and design. Investigate what are the main scientific papers that aply to benefits of sudoku type games. The game should have 9 dificulty levels, should have a timer, should have "notes" option (when notting the user can write small numbers in a cell, representing the possible numbers). As options screen with: sound ON/off; timer ON/off; show error (true/FALSE) if a wrong number is inserted; hint button (ON/off) a button to insert a correct number; defaults in CAPS. The game should have a scoreboard.
