@@ -16,6 +16,8 @@ flutter test             # unit + widget tests (generator, game model, services,
 flutter gen-l10n         # regenerate localizations after editing .arb
 ```
 
+Release signing (Android) reads the gitignored `android/key.properties` + upload keystore; without them release builds fall back to the debug key (fine for `flutter run --release`, rejected by Play). Device testing and store publishing steps are in README.md (`## Testing`, `## Publishing`).
+
 ## Architecture
 
 - **`lib/game/`** is pure Dart, with no Flutter imports, and fully unit-tested.

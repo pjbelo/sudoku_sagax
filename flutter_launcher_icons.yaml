@@ -1,0 +1,23 @@
+# Launcher icons for iOS and Android. The source PNGs in assets/icons/ are
+# rendered by tool/store/app_icon_test.dart; regenerate everything with
+#   tool/store/app_icon.sh
+flutter_launcher_icons:
+  image_path: "assets/icons/icon.png"
+
+  android: true # overwrite the default ic_launcher
+  min_sdk_android: 21
+  adaptive_icon_background: "assets/icons/adaptive_background.png"
+  adaptive_icon_foreground: "assets/icons/adaptive_foreground.png"
+  adaptive_icon_monochrome: "assets/icons/adaptive_monochrome.png"
+  # The foreground is already drawn inside the safe zone; no extra inset.
+  adaptive_icon_foreground_inset: 0
+
+  ios: true
+  remove_alpha_ios: true # App Store rejects icons with an alpha channel
+
+  web:
+    generate: false
+  windows:
+    generate: false
+  macos:
+    generate: false
