@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,6 +20,11 @@ final ThemeData sagaxTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: AppColors.electricCyan,
   scaffoldBackgroundColor: AppColors.midnightNavy,
+  // Cupertino widgets (e.g. the Info screen's nav bar on iOS) would otherwise
+  // pick up Material's default purple.
+  cupertinoOverrideTheme: const CupertinoThemeData(
+    primaryColor: AppColors.electricCyan,
+  ),
   appBarTheme: AppBarTheme(
     backgroundColor: AppColors.midnightNavy,
     elevation: 0,

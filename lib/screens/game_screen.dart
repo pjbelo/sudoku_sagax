@@ -390,7 +390,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                     constraints.maxWidth > constraints.maxHeight * 1.1;
                 return landscape
                     ? _buildLandscape(l10n, constraints)
-                    : _buildPortrait(l10n);
+                    : _buildPortrait(l10n, constraints);
               },
             ),
           ),
@@ -399,10 +399,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildPortrait(AppLocalizations l10n) {
+  Widget _buildPortrait(AppLocalizations l10n, BoxConstraints constraints) {
+    // Phones use the full width; tablets in portrait grow up to 820.
+    const maxWidth = 820.0;
+    final width = min(constraints.maxWidth, maxWidth);
+    final padHeight = (width / 9 * 0.95).clamp(58.0, 84.0);
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 560),
+        constraints: const BoxConstraints(maxWidth: maxWidth),
         child: Column(
           children: [
             Padding(
@@ -428,6 +432,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                   game: _game,
                   notesMode: _notesMode,
                   onDigit: _onDigit,
+                  height: padHeight,
                 ),
               ),
               const SizedBox(height: 16),
