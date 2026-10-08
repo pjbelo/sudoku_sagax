@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sudoku Sagax — Fill the grid, sharpen your mind</title>
+  <meta name="description" content="Sudoku Sagax is classic sudoku with 9 levels from Beginner to Expert, notes, hints, a timer and a scoreboard. Pure logic, no guessing. Free for Android and iOS.">
+  <meta name="theme-color" content="#0F172A">
+  <link rel="canonical" href="https://sudoku.sagax-games.com/">
+  <link rel="alternate" hreflang="en" href="https://sudoku.sagax-games.com/?lang=en">
+  <link rel="alternate" hreflang="pt" href="https://sudoku.sagax-games.com/?lang=pt">
+  <link rel="alternate" hreflang="es" href="https://sudoku.sagax-games.com/?lang=es">
+  <link rel="alternate" hreflang="fr" href="https://sudoku.sagax-games.com/?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://sudoku.sagax-games.com/?lang=de">
+  <link rel="alternate" hreflang="x-default" href="https://sudoku.sagax-games.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sudoku.sagax-games.com/">
+  <meta property="og:site_name" content="Sudoku Sagax">
+  <meta property="og:title" content="Sudoku Sagax — by Sagax Games">
+  <meta property="og:description" content="Classic sudoku with 9 levels, notes, hints and a scoreboard. Pure logic, no guessing.">
+  <meta property="og:image" content="https://sudoku.sagax-games.com/img/sudoku-sagax-og.png">
+  <meta property="og:image:width" content="1024">
+  <meta property="og:image:height" content="500">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- TODO: once App Store Connect assigns the app id, add
+       <meta name="apple-itunes-app" content="app-id=APP_STORE_ID">
+       and set the App Store badge link below. -->
+  <link rel="icon" type="image/png" href="img/icon-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="home">
+
+  <!-- Language Switcher (botões gerados em js/main.js) -->
+  <nav class="lang-bar" aria-label="Language"></nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <img src="img/sudoku-sagax-transp.png" alt="Sudoku Sagax" class="logo" width="1712" height="560">
+    <p class="by" data-i18n="by">by Sagax Games</p>
+    <h1 class="tagline" data-i18n="tagline">Fill the grid, sharpen your mind 🧩</h1>
+    <p class="description" data-i18n="description"></p>
+    <div class="badges">
+      <a href="https://play.google.com/store/apps/details?id=com.tekinsight.sudokusagax" title="Google Play" target="_blank" rel="noopener">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
+      </a>
+      <!-- TODO: replace APP_STORE_ID with the id from App Store Connect -->
+      <a href="https://apps.apple.com/app/idAPP_STORE_ID" title="App Store" target="_blank" rel="noopener">
+        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Demo jogável: um sudoku de nível 1 gerado no browser (js/sudoku.js) -->
+    <section class="section" id="demo">
+      <h2 data-i18n="demoTitle">Try it right here</h2>
+      <p class="lead" data-i18n="demoLead"></p>
+      <div class="demo">
+        <div class="sudoku" id="sudoku" role="grid" aria-label="Sudoku"></div>
+        <div class="demo-side">
+          <div class="stats">
+            <div class="stat"><span class="label" data-i18n="time">Time</span><span class="value" id="demo-time">0:00</span></div>
+            <div class="stat"><span class="label" data-i18n="mistakes">Mistakes</span><span class="value" id="demo-mistakes">0</span></div>
+          </div>
+          <p class="demo-status" id="demo-status" aria-live="polite"></p>
+          <div class="numpad" id="numpad"></div>
+          <div class="demo-actions">
+            <button type="button" class="btn ghost" id="demo-erase" data-i18n="erase">Erase</button>
+            <button type="button" class="btn" id="demo-new" data-i18n="newPuzzle">New puzzle</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Níveis (manter em sincronia com sudokuLevels em lib/game/sudoku_generator.dart) -->
+    <section class="section">
+      <h2 data-i18n="levelsTitle">9 levels, from Beginner to Expert</h2>
+      <p class="lead" data-i18n="levelsLead"></p>
+      <div class="levels" id="levels"></div>
+    </section>
+
+    <!-- Benefícios -->
+    <section class="section">
+      <h2 data-i18n="benefitsTitle">Brain Benefits</h2>
+      <p class="lead" data-i18n="benefitsLead"></p>
+      <div class="benefits" id="benefits"></div>
+      <p class="evidence-note" data-i18n="evidenceNote"></p>
+      <details class="references">
+        <summary data-i18n="referencesTitle">Scientific References</summary>
+        <ol id="references"></ol>
+      </details>
+    </section>
+
+    <!-- Funcionalidades -->
+    <section class="section">
+      <h2 data-i18n="featuresTitle">Features</h2>
+      <ul class="features-list" id="features"></ul>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="section">
+      <h2 data-i18n="screenshotsTitle">Screenshots</h2>
+      <div class="screenshots" id="screenshots"></div>
+    </section>
+  </main>
+
+  <div class="lightbox" id="lightbox" tabindex="-1" role="dialog" aria-modal="true">
+    <img alt="">
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <img src="img/sagax-games-logo.png" alt="Sagax Games" class="footer-logo" width="916" height="646">
+    <p>&copy; <span id="year">2026</span> Tekinsight — Information Technologies. <span data-i18n="rights">All rights reserved.</span></p>
+    <div class="footer-links">
+      <a href="privacy.html" data-keep-lang data-i18n="privacyLink">Privacy Policy</a>
+      <a href="contact.html" data-keep-lang data-i18n="contactLink">Contact</a>
+    </div>
+    <p class="credits" data-i18n="credits"></p>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/sudoku.js"></script>
+</body>
+</html>
