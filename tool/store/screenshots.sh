@@ -76,8 +76,8 @@ else
   demo enter
   demo clock -e hhmm 0941
   demo battery -e level 100 -e plugged false
-  demo network -e wifi show -e level 4
-  demo network -e mobile show -e datatype none -e level 4
+  demo network -e wifi show -e level 4 -e fully true
+  demo network -e mobile show -e datatype none -e level 4 -e fully true
   demo notifications -e visible false
   capture() { "$adb" -s "$device" exec-out screencap -p > "$1"; }
 fi
