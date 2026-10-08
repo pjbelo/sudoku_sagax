@@ -1,0 +1,139 @@
+{
+  "@@locale": "en",
+  "appTitle": "Sudoku Sagax",
+  "bySagaxGames": "by Sagax Games",
+  "sagaxGames": "Sagax Games",
+  "tagline": "Fill the grid, sharpen your mind",
+  "selectLevel": "Select level:",
+  "levelSummary": "{band} · {clues} clues",
+  "@levelSummary": {
+    "placeholders": {
+      "band": { "type": "String" },
+      "clues": { "type": "int" }
+    }
+  },
+  "bandBeginner": "Beginner",
+  "bandEasy": "Easy",
+  "bandMedium": "Medium",
+  "bandHard": "Hard",
+  "bandExpert": "Expert",
+  "play": "PLAY",
+  "info": "Info",
+  "options": "Options",
+  "scoreboard": "Scoreboard",
+  "levelLabel": "Level",
+  "timeLabel": "Time",
+  "mistakesLabel": "Mistakes",
+  "statusPlay": "Pick a cell, then a number",
+  "statusNotes": "Notes: tap numbers to mark candidates",
+  "statusFullWrong": "The grid is full, but something is not right",
+  "solved": "Solved!",
+  "paused": "Paused",
+  "resume": "Resume",
+  "pause": "Pause",
+  "undo": "Undo",
+  "erase": "Erase",
+  "notes": "Notes",
+  "hint": "Hint +{seconds}s",
+  "@hint": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "on": "ON",
+  "off": "OFF",
+  "leaveGameTitle": "Leave this game?",
+  "leaveGameMessage": "Your progress on this puzzle will be lost.",
+  "leave": "Leave",
+  "stay": "Keep playing",
+  "congratulations": "Congratulations!",
+  "levelCompleted": "You solved level {level} in {time}!",
+  "@levelCompleted": {
+    "placeholders": {
+      "level": { "type": "int" },
+      "time": { "type": "String" }
+    }
+  },
+  "hintsAndMistakes": "Hints: {hints} · Mistakes: {mistakes}",
+  "@hintsAndMistakes": {
+    "placeholders": {
+      "hints": { "type": "int" },
+      "mistakes": { "type": "int" }
+    }
+  },
+  "newBestTime": "🏆 New best time for this level!",
+  "rankOnScoreboard": "#{rank} on the level {level} scoreboard",
+  "@rankOnScoreboard": {
+    "placeholders": {
+      "rank": { "type": "int" },
+      "level": { "type": "int" }
+    }
+  },
+  "nextLevelInfo": "Next level: {band} · {clues} clues",
+  "@nextLevelInfo": {
+    "placeholders": {
+      "band": { "type": "String" },
+      "clues": { "type": "int" }
+    }
+  },
+  "allLevelsComplete": "You conquered the hardest level!",
+  "nextLevel": "Next Level",
+  "sameLevel": "Same Level",
+  "playAgain": "Play Again",
+  "backToMenu": "Back to Menu",
+  "okButton": "OK",
+  "optionsTitle": "Options",
+  "optSound": "Sound",
+  "optSoundDesc": "Music and sound effects.",
+  "optTimer": "Timer",
+  "optTimerDesc": "Show the clock while you play. Your time is always recorded for the scoreboard.",
+  "optShowErrors": "Show errors",
+  "optShowErrorsDesc": "Mark a wrong number in red as soon as you enter it.",
+  "optHints": "Hint button",
+  "optHintsDesc": "Show a button that fills in a correct number (+{seconds} s).",
+  "@optHintsDesc": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
+  "defaultValue": "Default: {value}",
+  "@defaultValue": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "restoreDefaults": "Restore defaults",
+  "scoreboardTitle": "Scoreboard",
+  "noScores": "No puzzles solved at this level yet.",
+  "clearScores": "Clear scoreboard",
+  "clearScoresTitle": "Clear the scoreboard?",
+  "clearScoresMessage": "All scores for every level will be deleted. This cannot be undone.",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "infoScreenTitle": "Brain Benefits",
+  "howToPlayTitle": "How to play",
+  "howToPlayText": "Fill every empty cell so that each row, each column and each 3×3 box contains the digits 1 to 9 exactly once. Every puzzle has a single solution and can be solved by logic alone — no guessing needed. Use Notes to pencil in the candidates of a cell.",
+  "sudokuBenefitsTitle": "Why is Sudoku good for the brain?",
+  "sudokuBenefitsIntro": "Sudoku is a pure logic puzzle: no arithmetic, just deduction. Research on number puzzles and Sudoku points to these benefits:",
+  "benefit1Title": "🔢 Logical and Deductive Reasoning",
+  "benefit1Desc": "Every move is a deduction: \"this cell can only be 7\" or \"the 3 can only go here\". Sudoku-based training programmes target attention and logical-deductive reasoning, and a randomised trial in older adults with mild cognitive impairment reported gains in global cognition after Sudoku training.",
+  "benefit2Title": "🧠 Working Memory",
+  "benefit2Desc": "Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity.",
+  "benefit3Title": "🎯 Attention and Concentration",
+  "benefit3Desc": "In a study of over 19,000 adults aged 50 and over, those who did number puzzles more often scored better on tests of attention, reasoning and memory.",
+  "benefit4Title": "⚡ Processing Speed and Executive Function",
+  "benefit4Desc": "The same research linked regular number-puzzle play to faster information processing and better executive function — planning, checking and switching strategies.",
+  "benefit5Title": "🛡️ Cognitive Reserve and Healthy Ageing",
+  "benefit5Desc": "Long-term studies associate mentally stimulating games and puzzles with better cognitive function later in life and slower cognitive decline — consistent with building cognitive reserve. It's never too late: people who took up puzzles later also showed benefits.",
+  "benefit6Title": "😌 Focus, Flow and Well-being",
+  "benefit6Desc": "A puzzle matched to your skill invites \"flow\" — full absorption in the task — which is linked to enjoyment and reduced stress. Nine difficulty levels let you keep the challenge just right.",
+  "evidenceNote": "A note on the evidence: most of these studies are observational, so they show associations rather than proof of cause. Sudoku works best as one part of an active lifestyle that also includes exercise, sleep and social life.",
+  "scientificReferences": "Scientific References",
+  "developedBy": "Developed by Tekinsight - Information Technologies",
+  "credits": "Credits",
+  "music": "Music",
+  "sounds": "Sounds",
+  "license": "License",
+  "close": "Close",
+  "back": "Back"
+}
