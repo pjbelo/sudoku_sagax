@@ -51,17 +51,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAG0Jj4VM_zq-aeHfSD1AMT2MvlyEQ37nw',
-    appId: '1:828316887169:android:26df21e102871dfbd54580',
+    appId: '1:828316887169:android:030ae71bd30b1e41d54580',
     messagingSenderId: '828316887169',
     projectId: 'sudoku-sagax-games',
     storageBucket: 'sudoku-sagax-games.firebasestorage.app',
   );
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAENQMeY28ayJZEKm1gkhS378jjipu6xRo',
-    appId: '1:828316887169:ios:263d1b240657d3b2d54580',
+    appId: '1:828316887169:ios:4c0781e4c0207bbfd54580',
     messagingSenderId: '828316887169',
     projectId: 'sudoku-sagax-games',
     storageBucket: 'sudoku-sagax-games.firebasestorage.app',
-    iosBundleId: 'com.tekinsight.sudokusagax',
+    iosBundleId: 'com.tekinsight.sudoku',
   );
 }

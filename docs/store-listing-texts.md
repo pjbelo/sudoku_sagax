@@ -272,6 +272,35 @@ Bienvenue dans Sudoku Sagax ! Neuf niveaux de logique pure, de Débutant à Expe
 
 ---
 
+## Release notes
+
+All languages in the multi-language format that Google Play Console accepts in
+a release's *Release notes* field: paste the block as-is (≤500 characters per
+language). App Store Connect takes one language at a time — use the matching
+*What's new* text from each language section above.
+
+**Version 1.0.0 (1)**
+
+```
+<en-GB>
+Welcome to Sudoku Sagax! Nine levels of pure logic, from Beginner to Expert. Thank you for playing.
+</en-GB>
+<de-DE>
+Willkommen bei Sudoku Sagax! Neun Level reiner Logik, vom Anfänger bis zum Experten. Danke fürs Spielen.
+</de-DE>
+<es-ES>
+¡Bienvenido a Sudoku Sagax! Nueve niveles de lógica pura, de Principiante a Experto. Gracias por jugar.
+</es-ES>
+<fr-FR>
+Bienvenue dans Sudoku Sagax ! Neuf niveaux de logique pure, de Débutant à Expert. Merci de jouer.
+</fr-FR>
+<pt-PT>
+Bem-vindo ao Sudoku Sagax! Nove níveis de lógica pura, de Iniciante a Especialista. Obrigado por jogares.
+</pt-PT>
+```
+
+---
+
 ## Shared metadata (all locales)
 
 - **Developer / Publisher:** Sagax Games (Tekinsight — Information Technologies)

@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.tekinsight.sudokusagax"
+        applicationId = "com.tekinsight.sudoku"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

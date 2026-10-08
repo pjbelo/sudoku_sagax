@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:828316887169:android:030ae71bd30b1e41d54580",
+        "android_client_info": {
+          "package_name": "com.tekinsight.sudoku"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG0Jj4VM_zq-aeHfSD1AMT2MvlyEQ37nw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:828316887169:android:26df21e102871dfbd54580",
         "android_client_info": {
           "package_name": "com.tekinsight.sudokusagax"

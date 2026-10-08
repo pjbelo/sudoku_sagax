@@ -8,7 +8,12 @@ design with its sister games **Memorex** and **Slidox**.
 Targets **iOS** and **Android**.
 
 - App title: `Sudoku Sagax`
-- Bundle id / applicationId: `com.tekinsight.sudokusagax`
+- Bundle id / applicationId: `com.tekinsight.sudoku` (iOS and Android). The
+  Android namespace and Kotlin package stay `com.tekinsight.sudokusagax`; they
+  are internal and not seen by the stores.
+- Website: <https://sudoku.sagax-games.com>
+- Stores: [Google Play](https://play.google.com/store/apps/details?id=com.tekinsight.sudoku) ·
+  [App Store](https://apps.apple.com/app/id6820541123) (Apple ID `6820541123`)
 - Version: see `version:` in [pubspec.yaml](pubspec.yaml) (currently `1.0.0+1`)
 
 ## Gameplay
@@ -142,7 +147,7 @@ mode over `MethodChannel('com.tekinsight.sudokusagax/ringer')`, implemented in
 ## Firebase
 
 Project **`sudoku-sagax-games`**, with one Android and one iOS app, both
-`com.tekinsight.sudokusagax`. It is set up by
+`com.tekinsight.sudoku`. It is set up by
 [lib/main.dart](lib/main.dart) before `runApp`, **on Android and iOS only**:
 
 - **Core**.
@@ -169,7 +174,7 @@ To watch events live in the Firebase console's **DebugView**:
 
 ```bash
 # Android
-adb shell setprop debug.firebase.analytics.app com.tekinsight.sudokusagax
+adb shell setprop debug.firebase.analytics.app com.tekinsight.sudoku
 # iOS: in Xcode, Product → Scheme → Edit Scheme → Run → Arguments,
 #      add -FIRDebugEnabled
 ```
@@ -204,7 +209,7 @@ Uses Flutter's `gen-l10n` (configured by [l10n.yaml](l10n.yaml)).
 
 ## Website
 
-Static HTML/CSS/vanilla JS site in [website/](website/), meant for
+Static HTML/CSS/vanilla JS site in [website/](website/), published at
 <https://sudoku.sagax-games.com>. It has no build step and the same structure
 as the Slidox and Memorex sites.
 
@@ -237,13 +242,6 @@ cd website && python3 -m http.server 8000   # http://localhost:8000
 
 **Deploy:** upload the contents of `website/` to the document root of the
 domain on the Plesk server, as for slidox.sagax-games.com.
-
-**Before going live:**
-
-- replace `APP_STORE_ID` in `index.html` (the App Store badge, and the
-  commented `apple-itunes-app` meta tag) once App Store Connect assigns the id;
-- confirm the domain (`sudoku.sagax-games.com` in the canonical, `hreflang`,
-  `og:` tags, `robots.txt` and `sitemap.xml`).
 
 ## Testing
 
@@ -291,7 +289,7 @@ installed after you unplug.
 
 1. Open `ios/Runner.xcworkspace` in Xcode once. Under *Runner → Signing &
    Capabilities*, keep **Automatically manage signing** with team
-   `RC95G6W642`. Xcode registers `com.tekinsight.sudokusagax` for development.
+   `RC95G6W642`. Xcode registers `com.tekinsight.sudoku` for development.
 2. Connect the iPhone/iPad by cable and tap **Trust This Computer**. On iOS 16+,
    enable *Settings → Privacy & Security → **Developer Mode*** (the device
    restarts).
@@ -412,14 +410,14 @@ has been tested, promote the release to *Closed testing* or *Production*.
 **One-time setup**
 
 1. Apple Developer Program membership (team `RC95G6W642`). The App ID
-   `com.tekinsight.sudokusagax` must exist under *Certificates, Identifiers &
+   `com.tekinsight.sudoku` must exist under *Certificates, Identifiers &
    Profiles → Identifiers*. Xcode's automatic signing usually creates it.
 2. In [App Store Connect](https://appstoreconnect.apple.com): *Apps → **+** →
    New App*:
    - platform *iOS*;
    - name *Sudoku Sagax* (store names must be unique; *SAGAX: Sudoku* is the
      fallback in the sibling apps' style);
-   - bundle ID `com.tekinsight.sudokusagax`;
+   - bundle ID `com.tekinsight.sudoku`;
    - SKU e.g. `sudokusagax`.
 3. Complete:
    - **App Privacy**: declare the Firebase data (product interaction, crash
@@ -493,8 +491,7 @@ open build/ios/ipa/                          # Sudoku Sagax.ipa
 
 ## Not yet done
 
-- **Website go-live:** set the App Store id in `website/index.html`, confirm
-  the domain, and upload. The privacy policy URL for both stores is
+- **Website go-live:** upload `website/` to the Plesk document root. The privacy policy URL for both stores is
   `https://sudoku.sagax-games.com/privacy.html`.
 
 ## Credits
