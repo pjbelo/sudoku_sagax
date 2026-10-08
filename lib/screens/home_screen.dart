@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../game/sudoku_generator.dart';
 import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
+import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/fade_route.dart';
@@ -29,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedLevel = 1;
 
   final _audio = AudioService.instance;
+  final _analytics = AnalyticsService.instance;
 
   static const _languages = [
     ('en', '🇬🇧  English'),
@@ -50,8 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
         .$2;
   }
 
-  void _open(Widget screen) {
+  void _open(Widget screen, String event, [Map<String, Object>? parameters]) {
     unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85));
+    _analytics.log(event, parameters);
     Navigator.push(context, fadeRoute<void>(screen));
   }
 
@@ -102,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   unawaited(
                     _audio.playSfx(AudioService.buttonSfx, volume: 0.85),
                   );
+                  _analytics.log('language_changed', {'language_code': code});
                   SettingsService.instance.locale = Locale(code);
                   Navigator.pop(ctx);
                 },
@@ -165,6 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           volume: 0.75,
                         ),
                       );
+                      _analytics.log('level_chip_tapped', {'level': level});
                       setState(() => _selectedLevel = level);
                     },
                   ),
@@ -182,8 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () =>
-                          _open(GameScreen(initialLevel: _selectedLevel)),
+                      onPressed: () => _open(
+                        GameScreen(initialLevel: _selectedLevel),
+                        'level_selected',
+                        {
+                          'level': _selectedLevel,
+                          'clues': sudokuLevels[_selectedLevel - 1].clues,
+                        },
+                      ),
                       child: Text(l10n.play),
                     ),
                   ),
@@ -198,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           label: l10n.scoreboard,
                           onPressed: () => _open(
                             ScoreboardScreen(initialLevel: _selectedLevel),
+                            'scoreboard_opened',
                           ),
                         ),
                       ),
@@ -206,7 +219,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: _SecondaryButton(
                           icon: Icons.tune,
                           label: l10n.options,
-                          onPressed: () => _open(const OptionsScreen()),
+                          onPressed: () =>
+                              _open(const OptionsScreen(), 'options_opened'),
                         ),
                       ),
                     ],
@@ -219,7 +233,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     spacing: 16,
                     children: [
                       TextButton.icon(
-                        onPressed: () => _open(const InfoScreen()),
+                        onPressed: () =>
+                            _open(const InfoScreen(), 'info_opened'),
                         icon: Icon(Icons.info_outline, color: primary),
                         label: Text(
                           l10n.info,

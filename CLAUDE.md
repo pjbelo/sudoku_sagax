@@ -39,6 +39,6 @@ Release signing (Android) reads the gitignored `android/key.properties` + upload
 - Some section comments are in Portuguese, as in the sister apps; mirror the surrounding language.
 - The Info screen's benefit texts and references must stay within what `docs/research.md` supports (verified citations; associations, not causal claims).
 
-## Not configured
+## Firebase
 
-No Firebase yet; there is no project for this app. When adding it, follow Slidox's `main()` (Analytics + Crashlytics) and keep web unconfigured unless deliberately added.
+Project `sudoku-sagax-games` (Android + iOS). `main()` initialises Core, Crashlytics (collection off in debug) and Analytics **only on Android/iOS**; desktop and web skip Firebase. Log events with `AnalyticsService.instance.log(name, {…})`, never with `FirebaseAnalytics.instance` directly. It is a no-op until `init()`, which keeps widget tests Firebase-free. Parameter values must be `String`/`num` (bools as 0/1). Regenerate config with `flutterfire configure --project=sudoku-sagax-games --platforms=android,ios`; don't hand-edit `firebase_options.dart`.

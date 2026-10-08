@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../game/sudoku_game.dart';
 import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
+import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/settings_service.dart';
 
@@ -16,6 +17,11 @@ class OptionsScreen extends StatelessWidget {
 
   void _click() => unawaited(
     AudioService.instance.playSfx(AudioService.buttonSfx, volume: 0.85),
+  );
+
+  void _logChange(String option, bool value) => AnalyticsService.instance.log(
+    'option_changed',
+    {'option': option, 'value': value ? 1 : 0},
   );
 
   @override
@@ -42,6 +48,7 @@ class OptionsScreen extends StatelessWidget {
                     value: settings.sound,
                     onChanged: (v) {
                       settings.sound = v;
+                      _logChange('sound', v);
                       _click(); // after enabling, so turning sound on is heard
                     },
                   ),
@@ -53,6 +60,7 @@ class OptionsScreen extends StatelessWidget {
                     onChanged: (v) {
                       _click();
                       settings.timer = v;
+                      _logChange('timer', v);
                     },
                   ),
                   _OptionCard(
@@ -63,6 +71,7 @@ class OptionsScreen extends StatelessWidget {
                     onChanged: (v) {
                       _click();
                       settings.showErrors = v;
+                      _logChange('show_errors', v);
                     },
                   ),
                   _OptionCard(
@@ -73,6 +82,7 @@ class OptionsScreen extends StatelessWidget {
                     onChanged: (v) {
                       _click();
                       settings.hints = v;
+                      _logChange('hints', v);
                     },
                   ),
                   const SizedBox(height: 16),
@@ -83,6 +93,7 @@ class OptionsScreen extends StatelessWidget {
                           : () {
                               _click();
                               settings.restoreDefaults();
+                              AnalyticsService.instance.log('options_restored');
                             },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: primary,

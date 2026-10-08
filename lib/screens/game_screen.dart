@@ -9,6 +9,7 @@ import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
 import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
+import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/scoreboard_service.dart';
 import '../services/settings_service.dart';
@@ -33,6 +34,7 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   final _audio = AudioService.instance;
+  final _analytics = AnalyticsService.instance;
   final _settings = SettingsService.instance;
   final _focusNode = FocusNode();
 
@@ -131,6 +133,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _solved = false;
     _showWinBar = false;
     _rank = null;
+    _analytics.log('game_session_start', {
+      'level': level,
+      'clues': _game.puzzle.clueCount,
+      'timer_shown': _settings.timer ? 1 : 0,
+      'show_errors': _settings.showErrors ? 1 : 0,
+    });
   }
 
   void _startLevel(int level) => setState(() => _resetFor(level));
@@ -193,6 +201,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final cell = _game.hint(preferred: _selected);
     if (cell == null) return;
     unawaited(_audio.playSfx(AudioService.hintSfx, volume: 0.85));
+    _analytics.log('hint_used', {
+      'level': _level,
+      'hints_used': _game.hintsUsed,
+      'seconds': _seconds,
+    });
     setState(() {
       _seconds += hintPenaltySeconds;
       _selected = cell;
@@ -254,6 +267,13 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         date: DateTime.now(),
       ),
     );
+    _analytics.log('level_completed', {
+      'level': _level,
+      'seconds': _seconds,
+      'hints': _game.hintsUsed,
+      'mistakes': _game.mistakes,
+      'rank': rank ?? 0, // 0 = outside the top 10
+    });
     if (!mounted) return;
     setState(() {
       _rank = rank;
@@ -288,14 +308,21 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         // Dismissed with the system back gesture: bring the bar back.
         setState(() => _showWinBar = true);
       case _WinAction.menu:
+        _analytics.log('back_to_menu', {'level': _level});
         Navigator.of(context).pop();
       case _WinAction.sameLevel:
+        _analytics.log('same_level', {'level': _level});
         _startLevel(_level);
       case _WinAction.nextLevel:
         unawaited(_audio.playSfx(AudioService.levelUpSfx));
+        _analytics.log('next_level', {
+          'completed_level': _level,
+          'next_level': _level + 1,
+        });
         _startLevel(_level + 1);
       case _WinAction.playAgain:
         unawaited(_audio.playSfx(AudioService.levelUpSfx));
+        _analytics.log('play_again', {'completed_level': _level});
         _startLevel(1);
     }
   }
@@ -327,7 +354,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
         final leave = await _confirmLeave();
-        if (leave && context.mounted) Navigator.of(context).pop();
+        if (!leave || !context.mounted) return;
+        _analytics.log('game_abandoned', {
+          'level': _level,
+          'seconds': _seconds,
+          'hints': _game.hintsUsed,
+          'filled': _game.values.where((v) => v != 0).length,
+        });
+        Navigator.of(context).pop();
       },
       child: Scaffold(
         appBar: AppBar(

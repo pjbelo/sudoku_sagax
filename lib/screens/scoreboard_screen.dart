@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../game/sudoku_game.dart';
 import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
+import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/scoreboard_service.dart';
 import '../widgets/confirm_dialog.dart';
@@ -44,6 +45,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       destructive: true,
     );
     if (!confirmed) return;
+    AnalyticsService.instance.log('scoreboard_cleared');
     await _scores.clear();
     if (mounted) setState(() {});
   }

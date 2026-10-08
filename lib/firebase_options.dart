@@ -56,7 +56,6 @@ class DefaultFirebaseOptions {
     projectId: 'sudoku-sagax-games',
     storageBucket: 'sudoku-sagax-games.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAENQMeY28ayJZEKm1gkhS378jjipu6xRo',
     appId: '1:828316887169:ios:263d1b240657d3b2d54580',
