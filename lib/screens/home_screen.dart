@@ -128,12 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SudokuLogo(height: 180),
-                  const SizedBox(height: 8),
+                  const SudokuLogo(),
+                  const SizedBox(height: 14),
                   Text(
                     l10n.bySagaxGames,
                     style: GoogleFonts.inter(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: primary,
                       fontWeight: FontWeight.w300,
                       letterSpacing: 2,

@@ -40,8 +40,6 @@
       "seconds": { "type": "int" }
     }
   },
-  "on": "ON",
-  "off": "OFF",
   "leaveGameTitle": "Leave this game?",
   "leaveGameMessage": "Your progress on this puzzle will be lost.",
   "leave": "Leave",
@@ -96,12 +94,6 @@
       "seconds": { "type": "int" }
     }
   },
-  "defaultValue": "Default: {value}",
-  "@defaultValue": {
-    "placeholders": {
-      "value": { "type": "String" }
-    }
-  },
   "restoreDefaults": "Restore defaults",
   "scoreboardTitle": "Scoreboard",
   "noScores": "No puzzles solved at this level yet.",
@@ -110,7 +102,7 @@
   "clearScoresMessage": "All scores for every level will be deleted. This cannot be undone.",
   "cancel": "Cancel",
   "delete": "Delete",
-  "infoScreenTitle": "Brain Benefits",
+  "infoScreenTitle": "Info",
   "howToPlayTitle": "How to play",
   "howToPlayText": "Fill every empty cell so that each row, each column and each 3×3 box contains the digits 1 to 9 exactly once. Every puzzle has a single solution and can be solved by logic alone — no guessing needed. Use Notes to pencil in the candidates of a cell.",
   "sudokuBenefitsTitle": "Why is Sudoku good for the brain?",

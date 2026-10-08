@@ -9,8 +9,8 @@ import '../sagax_theme.dart';
 import '../services/audio_service.dart';
 import '../services/settings_service.dart';
 
-/// Sound, Timer, Show errors and Hint button switches, each with its
-/// default spelled out. Changes are saved immediately.
+/// Sound, Timer, Show errors and Hint button switches.
+/// Changes are saved immediately.
 class OptionsScreen extends StatelessWidget {
   const OptionsScreen({super.key});
 
@@ -23,8 +23,6 @@ class OptionsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final settings = SettingsService.instance;
     final primary = Theme.of(context).primaryColor;
-
-    String onOff(bool value) => value ? l10n.on : l10n.off;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.optionsTitle), centerTitle: true),
@@ -41,9 +39,6 @@ class OptionsScreen extends StatelessWidget {
                     icon: Icons.volume_up_outlined,
                     title: l10n.optSound,
                     description: l10n.optSoundDesc,
-                    defaultLabel: l10n.defaultValue(
-                      onOff(SettingsService.defaultSound),
-                    ),
                     value: settings.sound,
                     onChanged: (v) {
                       settings.sound = v;
@@ -54,9 +49,6 @@ class OptionsScreen extends StatelessWidget {
                     icon: Icons.timer_outlined,
                     title: l10n.optTimer,
                     description: l10n.optTimerDesc,
-                    defaultLabel: l10n.defaultValue(
-                      onOff(SettingsService.defaultTimer),
-                    ),
                     value: settings.timer,
                     onChanged: (v) {
                       _click();
@@ -67,9 +59,6 @@ class OptionsScreen extends StatelessWidget {
                     icon: Icons.error_outline,
                     title: l10n.optShowErrors,
                     description: l10n.optShowErrorsDesc,
-                    defaultLabel: l10n.defaultValue(
-                      onOff(SettingsService.defaultShowErrors),
-                    ),
                     value: settings.showErrors,
                     onChanged: (v) {
                       _click();
@@ -80,9 +69,6 @@ class OptionsScreen extends StatelessWidget {
                     icon: Icons.lightbulb_outline,
                     title: l10n.optHints,
                     description: l10n.optHintsDesc(hintPenaltySeconds),
-                    defaultLabel: l10n.defaultValue(
-                      onOff(SettingsService.defaultHints),
-                    ),
                     value: settings.hints,
                     onChanged: (v) {
                       _click();
@@ -148,7 +134,6 @@ class _OptionCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.description,
-    required this.defaultLabel,
     required this.value,
     required this.onChanged,
   });
@@ -156,7 +141,6 @@ class _OptionCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
-  final String defaultLabel;
   final bool value;
   final ValueChanged<bool> onChanged;
 
@@ -201,15 +185,6 @@ class _OptionCard extends StatelessWidget {
                       style: GoogleFonts.inter(
                         color: AppColors.softSlate,
                         fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      defaultLabel,
-                      style: GoogleFonts.inter(
-                        color: primary.withValues(alpha: 0.8),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],

@@ -278,18 +278,6 @@ abstract class AppLocalizations {
   /// **'Hint +{seconds}s'**
   String hint(int seconds);
 
-  /// No description provided for @on.
-  ///
-  /// In en, this message translates to:
-  /// **'ON'**
-  String get on;
-
-  /// No description provided for @off.
-  ///
-  /// In en, this message translates to:
-  /// **'OFF'**
-  String get off;
-
   /// No description provided for @leaveGameTitle.
   ///
   /// In en, this message translates to:
@@ -440,12 +428,6 @@ abstract class AppLocalizations {
   /// **'Show a button that fills in a correct number (+{seconds} s).'**
   String optHintsDesc(int seconds);
 
-  /// No description provided for @defaultValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Default: {value}'**
-  String defaultValue(String value);
-
   /// No description provided for @restoreDefaults.
   ///
   /// In en, this message translates to:
@@ -497,7 +479,7 @@ abstract class AppLocalizations {
   /// No description provided for @infoScreenTitle.
   ///
   /// In en, this message translates to:
-  /// **'Brain Benefits'**
+  /// **'Info'**
   String get infoScreenTitle;
 
   /// No description provided for @howToPlayTitle.

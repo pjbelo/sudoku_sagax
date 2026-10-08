@@ -103,12 +103,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get on => 'ACTIVÉ';
-
-  @override
-  String get off => 'DÉSACTIVÉ';
-
-  @override
   String get leaveGameTitle => 'Quitter cette partie ?';
 
   @override
@@ -198,11 +192,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String defaultValue(String value) {
-    return 'Par défaut : $value';
-  }
-
-  @override
   String get restoreDefaults => 'Rétablir les valeurs par défaut';
 
   @override
@@ -228,7 +217,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get delete => 'Supprimer';
 
   @override
-  String get infoScreenTitle => 'Bienfaits pour le Cerveau';
+  String get infoScreenTitle => 'Info';
 
   @override
   String get howToPlayTitle => 'Comment jouer';

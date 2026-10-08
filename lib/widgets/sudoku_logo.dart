@@ -3,11 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../sagax_theme.dart';
 
-/// Sudoku Sagax wordmark: a 3×3 box with a few digits above the name.
+/// Sudoku Sagax wordmark: a 3×3 box with a few digits beside the name.
 /// Drawn in code so it stays crisp at any size; swap for an image asset
 /// (like Slidox's `slidox-transp.png`) once a designed logo exists.
 class SudokuLogo extends StatelessWidget {
-  const SudokuLogo({super.key, this.height = 200});
+  const SudokuLogo({super.key, this.height = 84});
 
   final double height;
 
@@ -16,18 +16,19 @@ class SudokuLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scale = height / 200;
-    final cell = 26.0 * scale;
-    final gap = 4.0 * scale;
+    final scale = height / 96;
+    final gap = 5.0 * scale;
+    final cell = (height - gap * 2) / 3;
 
-    return SizedBox(
-      height: height,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    // Scales down on narrow screens instead of overflowing.
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: cell * 3 + gap * 2,
-            height: cell * 3 + gap * 2,
+            width: height,
+            height: height,
             child: GridView.count(
               crossAxisCount: 3,
               mainAxisSpacing: gap,
@@ -37,27 +38,32 @@ class SudokuLogo extends StatelessWidget {
               children: [for (int i = 0; i < 9; i++) _cell(i, cell)],
             ),
           ),
-          SizedBox(height: 14 * scale),
-          Text(
-            'SUDOKU',
-            style: GoogleFonts.exo2(
-              fontSize: 44 * scale,
-              height: 1,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 6 * scale,
-              color: AppColors.snowWhite,
-            ),
-          ),
-          SizedBox(height: 6 * scale),
-          Text(
-            'SAGAX',
-            style: GoogleFonts.exo2(
-              fontSize: 22 * scale,
-              height: 1,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 14 * scale,
-              color: AppColors.electricCyan,
-            ),
+          SizedBox(width: 18 * scale),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'SUDOKU',
+                style: GoogleFonts.exo2(
+                  fontSize: 46 * scale,
+                  height: 1,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 5 * scale,
+                  color: AppColors.snowWhite,
+                ),
+              ),
+              SizedBox(height: 8 * scale),
+              Text(
+                'SAGAX',
+                style: GoogleFonts.exo2(
+                  fontSize: 24 * scale,
+                  height: 1,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 14.5 * scale,
+                  color: AppColors.electricCyan,
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -102,12 +102,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get on => 'AN';
-
-  @override
-  String get off => 'AUS';
-
-  @override
   String get leaveGameTitle => 'Dieses Spiel verlassen?';
 
   @override
@@ -196,11 +190,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String defaultValue(String value) {
-    return 'Standard: $value';
-  }
-
-  @override
   String get restoreDefaults => 'Standardwerte wiederherstellen';
 
   @override
@@ -226,7 +215,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get delete => 'Löschen';
 
   @override
-  String get infoScreenTitle => 'Vorteile fürs Gehirn';
+  String get infoScreenTitle => 'Info';
 
   @override
   String get howToPlayTitle => 'So wird gespielt';

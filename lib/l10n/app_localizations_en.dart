@@ -101,12 +101,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get on => 'ON';
-
-  @override
-  String get off => 'OFF';
-
-  @override
   String get leaveGameTitle => 'Leave this game?';
 
   @override
@@ -194,11 +188,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String defaultValue(String value) {
-    return 'Default: $value';
-  }
-
-  @override
   String get restoreDefaults => 'Restore defaults';
 
   @override
@@ -224,7 +213,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get infoScreenTitle => 'Brain Benefits';
+  String get infoScreenTitle => 'Info';
 
   @override
   String get howToPlayTitle => 'How to play';

@@ -86,9 +86,6 @@ void main() {
     await tester.tap(find.text('Options'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Default: OFF'), findsOneWidget); // Show errors
-    expect(find.text('Default: ON'), findsNWidgets(3));
-
     await tester.tap(find.text('Show errors'));
     await tester.pumpAndSettle();
     expect(SettingsService.instance.showErrors, isTrue);

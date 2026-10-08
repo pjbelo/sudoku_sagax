@@ -102,12 +102,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get on => 'ACTIVADO';
-
-  @override
-  String get off => 'DESACTIVADO';
-
-  @override
   String get leaveGameTitle => '¿Salir de esta partida?';
 
   @override
@@ -195,11 +189,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String defaultValue(String value) {
-    return 'Predeterminado: $value';
-  }
-
-  @override
   String get restoreDefaults => 'Restablecer valores predeterminados';
 
   @override
@@ -225,7 +214,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get delete => 'Borrar';
 
   @override
-  String get infoScreenTitle => 'Beneficios para el Cerebro';
+  String get infoScreenTitle => 'Info';
 
   @override
   String get howToPlayTitle => 'Cómo jugar';
