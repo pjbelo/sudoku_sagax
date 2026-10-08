@@ -11,7 +11,6 @@ import '../services/audio_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
-import '../widgets/sudoku_logo.dart';
 import 'game_screen.dart';
 import 'info_screen.dart';
 import 'options_screen.dart';
@@ -133,8 +132,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SudokuLogo(),
-                  const SizedBox(height: 14),
+                  // Rendered from SudokuLogo by tool/store/logo_test.dart. The
+                  // PNG has 1/12 padding per side for the glow, so 98 here
+                  // shows the logo itself at 84.
+                  Image.asset(
+                    'assets/images/sudoku-sagax-transp.png',
+                    height: 98,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 8),
                   Text(
                     l10n.bySagaxGames,
                     style: GoogleFonts.inter(

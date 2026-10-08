@@ -4,8 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../sagax_theme.dart';
 
 /// Sudoku Sagax wordmark: a 3×3 box with a few digits beside the name.
-/// Drawn in code so it stays crisp at any size; swap for an image asset
-/// (like Slidox's `slidox-transp.png`) once a designed logo exists.
+/// Source of `assets/images/sudoku-sagax-transp.png` (the home-screen logo),
+/// rendered by tool/store/logo_test.dart. Also drawn live in the feature
+/// graphic. Everything scales with [height].
 class SudokuLogo extends StatelessWidget {
   const SudokuLogo({super.key, this.height = 84});
 
@@ -35,7 +36,7 @@ class SudokuLogo extends StatelessWidget {
               crossAxisSpacing: gap,
               physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
-              children: [for (int i = 0; i < 9; i++) _cell(i, cell)],
+              children: [for (int i = 0; i < 9; i++) _cell(i, cell, scale)],
             ),
           ),
           SizedBox(width: 18 * scale),
@@ -70,7 +71,7 @@ class SudokuLogo extends StatelessWidget {
     );
   }
 
-  Widget _cell(int i, double size) {
+  Widget _cell(int i, double size, double scale) {
     final digit = _digits[i];
     final isCenter = i == 4;
     return DecoratedBox(
@@ -79,14 +80,14 @@ class SudokuLogo extends StatelessWidget {
         borderRadius: BorderRadius.circular(size * 0.22),
         border: Border.all(
           color: AppColors.electricCyan.withValues(alpha: isCenter ? 1 : 0.4),
-          width: 1.5,
+          width: 1.5 * scale,
         ),
         boxShadow: isCenter
             ? [
                 BoxShadow(
                   color: AppColors.electricCyan.withValues(alpha: 0.45),
-                  blurRadius: 12,
-                  spreadRadius: 1,
+                  blurRadius: 12 * scale,
+                  spreadRadius: 1 * scale,
                 ),
               ]
             : null,

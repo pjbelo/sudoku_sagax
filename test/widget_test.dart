@@ -30,7 +30,10 @@ void main() {
   testWidgets('home shows the level selector and menu', (tester) async {
     await pumpApp(tester);
 
-    expect(find.text('SUDOKU'), findsOneWidget);
+    expect(
+      find.image(const AssetImage('assets/images/sudoku-sagax-transp.png')),
+      findsOneWidget,
+    );
     expect(find.text('PLAY'), findsOneWidget);
     expect(find.text('Scoreboard'), findsOneWidget);
     expect(find.text('Options'), findsOneWidget);

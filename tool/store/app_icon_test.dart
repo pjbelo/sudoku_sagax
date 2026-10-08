@@ -56,9 +56,7 @@ class IconMark extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: CustomPaint(
-              painter: _MarkPainter(monochrome: monochrome),
-            ),
+            child: CustomPaint(painter: _MarkPainter(monochrome: monochrome)),
           ),
           for (int i = 0; i < 9; i++)
             if (_digits[i] != 0)
