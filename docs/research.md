@@ -13,7 +13,10 @@ support.
   memory** in middle-aged and older adults. Brooker et al. 2019 is the largest
   study (n ≈ 19,000).
 - **Working memory** is the cognitive resource most directly tied to Sudoku
-  performance (Grabbe 2011, 2017).
+  performance (Grabbe 2011, 2017). Brain imaging agrees: solving Sudoku
+  engages frontoparietal networks for working memory and executive control
+  (Williams et al. 2026). That shows what the task *uses*, not that it
+  improves anything.
 - Longitudinal cohorts associate puzzles and games with **slower cognitive
   decline** and **better function years later** (Litwin et al. 2017; Altschul
   & Deary 2020; Verghese et al. 2003). That fits the **cognitive reserve**
@@ -21,7 +24,9 @@ support.
 - **Interventional evidence is thin but encouraging.** An RCT of a 24-week
   Sudoku training programme in older adults with mild cognitive impairment
   reported gains in global cognition, working memory and executive function
-  (Yu et al. 2023, so far published only as a conference abstract).
+  (Yu et al. 2023, so far published only as a conference abstract). A small
+  RCT in haemodialysis patients found less anxiety after four weeks of Sudoku,
+  but little effect on memory (Heydari et al. 2026).
 - **Caveat:** most studies are observational, so they show associations, not
   causation. People who are already cognitively sharp may simply enjoy puzzles
   more. The app says this explicitly ("A note on the evidence").
@@ -48,8 +53,9 @@ function and age-related cognitive decline. *International Journal of
 Geriatric Psychiatry, 30*(4), 422–430. doi:10.1002/gps.4155
 - Online sample of over 65,000 people (Cambridge Brain Sciences tests). Looked
   at crosswords, Sudoku, brain-training games and other video games.
-- Sudoku frequency was positively associated with performance on several
-  cognitive tasks. Cross-sectional.
+- Frequency of Sudoku or similar puzzles was positively associated with
+  grammatical reasoning, spatial working memory and episodic memory scores.
+  Cross-sectional; the authors call for further investigation.
 
 ### Working memory
 
@@ -60,8 +66,28 @@ doi:10.1080/01924788.2011.596748
 **Grabbe, J. W. (2017).** Sudoku and changes in working memory performance for
 older adults and younger adults. *Activities, Adaptation & Aging, 41*(1), 14–21.
 doi:10.1080/01924788.2016.1272390
-- Sudoku performance relates to working-memory capacity, and Sudoku shares the
-  cognitive processes working memory relies on. Small samples. → *Benefit 2.*
+- 2011: Sudoku performance relates to working-memory capacity, and Sudoku
+  shares the cognitive processes working memory relies on.
+- 2017: younger and older adults played Sudoku regularly for four months;
+  working memory improved, particularly digit symbol and letter memory. Both
+  groups played and there was no non-playing control, so practice effects on
+  the tests can't be ruled out. Don't cite it as proof that Sudoku trains
+  working memory.
+- Small samples. → *Benefit 2.*
+
+### Brain imaging
+
+**Williams, M. J., Williamson, E. J., & Brooks, S. J. (2026).** Neural
+correlates of Sudoku play: a systematic review of brain imaging studies.
+*Frontiers in Neuroimaging, 5*, 1756394. doi:10.3389/fnimg.2026.1756394
+- Six studies (five fMRI, one fNIRS; 2011–2025). Sudoku consistently engaged
+  frontoparietal networks (dorsolateral prefrontal cortex, intraparietal
+  sulcus) linked to executive control and visuospatial working memory, plus
+  the anterior cingulate cortex (performance monitoring, cognitive control).
+- The authors: "the limited number and heterogeneity of studies preclude firm
+  conclusions regarding efficacy". Only one study was longitudinal, and
+  whether this translates into everyday benefits is still open. → *Benefit 2*
+  ("engages", never "strengthens" or "improves").
 
 ### Longitudinal: healthy ageing and cognitive reserve
 
@@ -95,10 +121,11 @@ and the risk of dementia in the elderly. *New England Journal of Medicine,
 
 ### Intervention
 
-**Yu, D., Li, P., Two, W., & Waye, M. (2023).** Effects of gamified cognitive
+**Yu, D., Li, P., Tso, W. W., & Waye, M. (2023).** Effects of gamified cognitive
 training to deter the progression of mild cognitive impairment. *Innovation in
 Aging, 7*(Suppl. 1), 645. doi:10.1093/geroni/igad104.2098 — conference
-abstract. Trial registration: ClinicalTrials.gov NCT04913857.
+abstract. Trial registration: ClinicalTrials.gov NCT04913857. (Crossref lists
+the third author as "Two, Wung Wai", a metadata typo; PMC has Tso.)
 - Sudoku Mind Activation and Revitalizing Training (SMART): single-blind RCT
   with 288 older adults with MCI, run as 12 weeks of training plus 12 weeks of
   self-practice.
@@ -106,8 +133,8 @@ abstract. Trial registration: ClinicalTrials.gov NCT04913857.
   language, delayed recall, recognition memory and subjective memory
   complaints. The effects, plus executive function, were sustained to the end
   of the programme.
-- Not yet a full peer-reviewed paper; worth re-checking for a journal
-  publication before the store release. → *Benefit 1.*
+- Not yet a full peer-reviewed paper (still only the abstract as of October
+  2026); worth re-checking for a journal publication. → *Benefit 1.*
 
 ### Flow and well-being
 
@@ -144,6 +171,19 @@ evaluation. arXiv:1403.7373.
 | 9 | 24 | Expert | Same as 7–8, with fewer givens |
 
 ## Not used
+
+**Heydari, E., Rahzani, K., Hekmatpou, D., & Moeinzadeh, F. (2026).** The
+effect of Sudoku puzzle solving on memory and anxiety of hemodialysis patients:
+a randomized controlled clinical trial. *International Urology and Nephrology,
+58*(4), 1491–1497. doi:10.1007/s11255-025-04847-x
+- 64 haemodialysis patients; 20 min of Sudoku, three times a week for four
+  weeks, against no intervention. Trait and state anxiety fell (p = 0.001).
+  Memory didn't change within the Sudoku group; only an ANCOVA showed a
+  borderline between-group difference (p = 0.048). The authors conclude that
+  Sudoku has "little effect in improving memory".
+- The first Sudoku-specific evidence for less anxiety, but it's small, short,
+  in a clinical population, and has no active control. Kept as background for
+  Benefit 6, not cited in the app. Never use it for memory claims.
 
 - Popular claims that Sudoku "lowers cortisol" or "boosts dopamine" have no
   direct Sudoku-specific evidence. They are left out of the app on purpose.

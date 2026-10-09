@@ -243,7 +243,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get benefit2Desc =>
-      'Kandidaten und die Regeln von Zeilen, Spalten und Blöcken im Kopf zu behalten, beansprucht das Arbeitsgedächtnis. Studien mit älteren Erwachsenen zeigten, dass die Sudoku-Leistung mit der Kapazität des Arbeitsgedächtnisses zusammenhängt.';
+      'Kandidaten und die Regeln von Zeilen, Spalten und Blöcken im Kopf zu behalten, beansprucht das Arbeitsgedächtnis. Studien mit älteren Erwachsenen zeigten, dass die Sudoku-Leistung mit der Kapazität des Arbeitsgedächtnisses zusammenhängt. Studien mit bildgebenden Verfahren zeigen, dass das Lösen von Sudoku frontale und parietale Hirnnetzwerke aktiviert, die Arbeitsgedächtnis und exekutive Kontrolle unterstützen.';
 
   @override
   String get benefit3Title => '🎯 Aufmerksamkeit und Konzentration';

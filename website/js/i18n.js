@@ -88,7 +88,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "🧠",
         "Working Memory",
-        "Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity."
+        "Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity. Brain-imaging studies show that solving Sudoku engages the frontal and parietal networks that support working memory and executive control."
       ],
       [
         "🎯",
@@ -314,7 +314,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "🧠",
         "Memória de Trabalho",
-        "Manter em mente os candidatos e as regras de linhas, colunas e quadrados exige memória de trabalho. Estudos com adultos mais velhos mostraram que o desempenho no Sudoku está relacionado com a capacidade da memória de trabalho."
+        "Manter em mente os candidatos e as regras de linhas, colunas e quadrados exige memória de trabalho. Estudos com adultos mais velhos mostraram que o desempenho no Sudoku está relacionado com a capacidade da memória de trabalho. Estudos de imagiologia cerebral mostram que resolver Sudoku ativa as redes frontais e parietais que suportam a memória de trabalho e o controlo executivo."
       ],
       [
         "🎯",
@@ -540,7 +540,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "🧠",
         "Memoria de Trabajo",
-        "Tener presentes los candidatos y las reglas de filas, columnas y cajas exige memoria de trabajo. Estudios con adultos mayores mostraron que el rendimiento en Sudoku está relacionado con la capacidad de la memoria de trabajo."
+        "Tener presentes los candidatos y las reglas de filas, columnas y cajas exige memoria de trabajo. Estudios con adultos mayores mostraron que el rendimiento en Sudoku está relacionado con la capacidad de la memoria de trabajo. Estudios de neuroimagen muestran que resolver un Sudoku activa las redes frontales y parietales que sostienen la memoria de trabajo y el control ejecutivo."
       ],
       [
         "🎯",
@@ -766,7 +766,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "🧠",
         "Mémoire de Travail",
-        "Garder en tête les candidats et les contraintes des lignes, colonnes et carrés sollicite la mémoire de travail. Des études chez des adultes âgés ont montré que la performance au Sudoku est liée à la capacité de la mémoire de travail."
+        "Garder en tête les candidats et les contraintes des lignes, colonnes et carrés sollicite la mémoire de travail. Des études chez des adultes âgés ont montré que la performance au Sudoku est liée à la capacité de la mémoire de travail. Des études d'imagerie cérébrale montrent que résoudre un Sudoku active les réseaux frontaux et pariétaux qui soutiennent la mémoire de travail et le contrôle exécutif."
       ],
       [
         "🎯",
@@ -992,7 +992,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "🧠",
         "Arbeitsgedächtnis",
-        "Kandidaten und die Regeln von Zeilen, Spalten und Blöcken im Kopf zu behalten, beansprucht das Arbeitsgedächtnis. Studien mit älteren Erwachsenen zeigten, dass die Sudoku-Leistung mit der Kapazität des Arbeitsgedächtnisses zusammenhängt."
+        "Kandidaten und die Regeln von Zeilen, Spalten und Blöcken im Kopf zu behalten, beansprucht das Arbeitsgedächtnis. Studien mit älteren Erwachsenen zeigten, dass die Sudoku-Leistung mit der Kapazität des Arbeitsgedächtnisses zusammenhängt. Studien mit bildgebenden Verfahren zeigen, dass das Lösen von Sudoku frontale und parietale Hirnnetzwerke aktiviert, die Arbeitsgedächtnis und exekutive Kontrolle unterstützen."
       ],
       [
         "🎯",

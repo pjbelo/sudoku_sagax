@@ -241,7 +241,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get benefit2Desc =>
-      'Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity.';
+      'Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity. Brain-imaging studies show that solving Sudoku engages the frontal and parietal networks that support working memory and executive control.';
 
   @override
   String get benefit3Title => '🎯 Attention and Concentration';

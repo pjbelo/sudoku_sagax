@@ -25,6 +25,11 @@ class InfoScreen extends StatefulWidget {
       journal: 'Activities, Adaptation & Aging, 35(3), 241-254',
     ),
     (
+      authors: 'Williams, M. J., Williamson, E. J., & Brooks, S. J. (2026)',
+      title: 'Neural correlates of Sudoku play: a systematic review of brain imaging studies',
+      journal: 'Frontiers in Neuroimaging, 5, 1756394',
+    ),
+    (
       authors: 'Litwin, H., Schwartz, E., & Damri, N. (2017)',
       title: 'Cognitively Stimulating Leisure Activity and Subsequent Cognitive Function: A SHARE-based Analysis',
       journal: 'The Gerontologist, 57(5), 940-948',
@@ -35,7 +40,7 @@ class InfoScreen extends StatefulWidget {
       journal: 'International Journal of Geriatric Psychiatry, 30(4), 422-430',
     ),
     (
-      authors: 'Yu, D., Li, P., Two, W., & Waye, M. (2023)',
+      authors: 'Yu, D., Li, P., Tso, W. W., & Waye, M. (2023)',
       title: 'Effects of Gamified Cognitive Training to Deter the Progression of Mild Cognitive Impairment (Sudoku SMART trial)',
       journal: 'Innovation in Aging, 7(Suppl. 1), 645 — conference abstract; ClinicalTrials.gov NCT04913857',
     ),

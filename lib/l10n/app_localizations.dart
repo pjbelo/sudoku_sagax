@@ -527,7 +527,7 @@ abstract class AppLocalizations {
   /// No description provided for @benefit2Desc.
   ///
   /// In en, this message translates to:
-  /// **'Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity.'**
+  /// **'Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity. Brain-imaging studies show that solving Sudoku engages the frontal and parietal networks that support working memory and executive control.'**
   String get benefit2Desc;
 
   /// No description provided for @benefit3Title.

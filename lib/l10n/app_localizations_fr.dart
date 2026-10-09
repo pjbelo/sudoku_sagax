@@ -246,7 +246,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get benefit2Desc =>
-      'Garder en tête les candidats et les contraintes des lignes, colonnes et carrés sollicite la mémoire de travail. Des études chez des adultes âgés ont montré que la performance au Sudoku est liée à la capacité de la mémoire de travail.';
+      'Garder en tête les candidats et les contraintes des lignes, colonnes et carrés sollicite la mémoire de travail. Des études chez des adultes âgés ont montré que la performance au Sudoku est liée à la capacité de la mémoire de travail. Des études d\'imagerie cérébrale montrent que résoudre un Sudoku active les réseaux frontaux et pariétaux qui soutiennent la mémoire de travail et le contrôle exécutif.';
 
   @override
   String get benefit3Title => '🎯 Attention et Concentration';

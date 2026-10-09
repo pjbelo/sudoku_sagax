@@ -242,7 +242,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get benefit2Desc =>
-      'Manter em mente os candidatos e as regras de linhas, colunas e quadrados exige memória de trabalho. Estudos com adultos mais velhos mostraram que o desempenho no Sudoku está relacionado com a capacidade da memória de trabalho.';
+      'Manter em mente os candidatos e as regras de linhas, colunas e quadrados exige memória de trabalho. Estudos com adultos mais velhos mostraram que o desempenho no Sudoku está relacionado com a capacidade da memória de trabalho. Estudos de imagiologia cerebral mostram que resolver Sudoku ativa as redes frontais e parietais que suportam a memória de trabalho e o controlo executivo.';
 
   @override
   String get benefit3Title => '🎯 Atenção e Concentração';

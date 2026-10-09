@@ -243,7 +243,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get benefit2Desc =>
-      'Tener presentes los candidatos y las reglas de filas, columnas y cajas exige memoria de trabajo. Estudios con adultos mayores mostraron que el rendimiento en Sudoku está relacionado con la capacidad de la memoria de trabajo.';
+      'Tener presentes los candidatos y las reglas de filas, columnas y cajas exige memoria de trabajo. Estudios con adultos mayores mostraron que el rendimiento en Sudoku está relacionado con la capacidad de la memoria de trabajo. Estudios de neuroimagen muestran que resolver un Sudoku activa las redes frontales y parietales que sostienen la memoria de trabajo y el control ejecutivo.';
 
   @override
   String get benefit3Title => '🎯 Atención y Concentración';
