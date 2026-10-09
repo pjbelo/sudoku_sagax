@@ -46,3 +46,6 @@ Project `sudoku-sagax-games` (Android + iOS). `main()` initialises Core, Crashly
 ## Website (`website/`)
 
 Static HTML/CSS/vanilla JS site for `sudoku.sagax-games.com`, structured like the Slidox/Memorex sites (upload `website/` to the Plesk document root; no build step). `js/i18n.js` holds all strings for the 5 locales — benefit texts, evidence note, tagline, bands and game labels are copied from the `.arb` files, features from `docs/store-listing-texts.md`; keep them in sync. `js/sudoku.js` is a playable Beginner puzzle whose generator mirrors `lib/game/sudoku_generator.dart` (46 givens, singles-solvable, unique). The privacy page must describe exactly the app's data collection (Firebase Analytics + Crashlytics; options and scores stay on device). The App Store id is `6820541123` (badge link and `apple-itunes-app` meta in `index.html`).
+
+## My Preferences
+Never commit, I'll do that myself.

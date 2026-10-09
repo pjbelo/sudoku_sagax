@@ -2,6 +2,7 @@
 # Captures store screenshots on a simulator/emulator, for every language.
 #
 #   tool/store/screenshots.sh iphone         # App Store, iPhone 6.9"
+#   tool/store/screenshots.sh iphone-6.3     # App Store, iPhone 6.3" (and 6.1")
 #   tool/store/screenshots.sh ipad           # App Store, iPad 13"
 #   tool/store/screenshots.sh pixel          # Google Play, phone
 #   tool/store/screenshots.sh pixel-tablet   # Google Play, tablet
@@ -13,11 +14,12 @@
 set -eo pipefail
 cd "$(dirname "$0")/../.."
 
-target=${1:?usage: $0 <iphone|ipad|pixel|pixel-tablet> [langs]}
+target=${1:?usage: $0 <iphone|iphone-6.3|ipad|pixel|pixel-tablet> [langs]}
 langs=${2:-en,pt,es,fr,de}
 
 case $target in
   iphone)       platform=ios;     sim="iPhone 17 Pro Max";     out="docs/app-store/screenshots/iPhone 17 Pro Max" ;;
+  iphone-6.3)   platform=ios;     sim="iPhone 17 Pro";         out="docs/app-store/screenshots/iPhone 17 Pro" ;;
   ipad)         platform=ios;     sim="iPad Pro 13-inch (M5)"; out="docs/app-store/screenshots/iPad Pro 13-inch" ;;
   pixel)        platform=android; avd=SudokuSagax_Pixel_9_Pro;   out="docs/google-play/screenshots/pixel-9-pro" ;;
   pixel-tablet) platform=android; avd=SudokuSagax_Pixel_Tablet;  out="docs/google-play/screenshots/pixel-tablet" ;;
@@ -25,6 +27,7 @@ case $target in
 esac
 
 if [ $platform = ios ]; then
+  command -v ffmpeg >/dev/null || { echo "ffmpeg not found (brew install ffmpeg)" >&2; exit 1; }
   device=$(xcrun simctl list devices available | grep -F "$sim (" | head -1 | grep -oE '[0-9A-F-]{36}')
   open "$(xcode-select -p)/Applications/Simulator.app" 2>/dev/null || true  # optional: just to watch
   # The iPad status bar shows the date in the system language, which simctl
@@ -49,9 +52,28 @@ if [ $platform = ios ]; then
   # The simulator service can't write to every volume (e.g. external
   # drives), so capture into the local temp dir and move it.
   capture() {
-    local tmp="${TMPDIR:-/tmp}/sudoku-sagax-shot.png"
-    xcrun simctl io "$device" screenshot "$tmp" >/dev/null 2>&1
+    local tmp="${TMPDIR:-/tmp}/sudoku-sagax-shot.png" try
+    for try in 1 2 3 4 5 6; do
+      xcrun simctl io "$device" screenshot "$tmp" >/dev/null 2>&1
+      if [ "$target" = ipad ] || ! island_visible "$tmp"; then break; fi
+      echo "  (Dynamic Island in the shot, capturing again)"
+      sleep 0.4
+    done
     mv "$tmp" "$1"
+  }
+  # The iPhone simulator now and then draws the Dynamic Island into the
+  # screenshot. The app's status bar area is plain navy, so the island shows
+  # as a patch darker than the background beside it.
+  island_visible() {
+    local w island bg
+    w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/{print $2}')
+    island=$(mean_gray "$1" "200:50:$((w / 2 - 100)):40")
+    bg=$(mean_gray "$1" "100:50:$((w / 2 - 330)):40")
+    [ "$island" -lt $((bg - 6)) ]
+  }
+  mean_gray() {
+    ffmpeg -v error -i "$1" -vf "crop=$2,scale=1:1" -f rawvideo -pix_fmt gray - |
+      od -An -tu1 | tr -d ' '
   }
 else
   adb=$(command -v adb || echo "${ANDROID_HOME:-$HOME/Library/Android/sdk}/platform-tools/adb")
