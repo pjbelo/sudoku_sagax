@@ -457,6 +457,44 @@ has been tested, promote the release to *Closed testing* or *Production*.
    search results 2168×1030), because the App Store crops the rest per
    device. The script strips the alpha channel, which App Store Connect
    rejects.
+6. **App Review Information** (*Informações para a equipa de revisão de
+   apps*): no sign-in is required, so leave the demo account off. Fill in
+   the contact details and paste the text below into **Notes**. The 1.0
+   submission was held under *Guideline 2.1 – Information Needed* until
+   Apple received exactly these answers, so keep the text in the Notes field
+   for every future submission.
+
+   Apple also wants a **screen recording made on a physical device**
+   running the latest iOS. Simulator videos and the store preview video
+   don't count. Install the build through TestFlight, add *Screen
+   Recording* to Control Center, start recording on the home screen, then
+   tap the app icon, so the video begins with the launch. Then play a
+   Beginner game through to the win: enter digits, turn on Notes, use a
+   hint, undo, pause and resume. After the win summary, open the
+   Scoreboard, Options and Info. Attach the video to the reply in App Store
+   Connect, or link to an unlisted upload that opens without signing in.
+   Update the iOS version in item 1 before sending.
+
+   ```text
+   1. Screen recording
+   Attached: a recording made on a physical iPhone running iOS [XX.X]. It starts with launching the app and shows the typical flow: choosing a level, playing (digits, notes, hint, undo, pause), finishing a puzzle, the scoreboard, the options and the Info screen.
+   The app has no account registration or login, no user-generated content, and no paid content or in-app purchases.
+
+   2. Purpose and target audience
+   Sudoku Sagax is a classic 9x9 sudoku game for casual and experienced puzzle players of all ages (rated 4+). It generates a new puzzle every game, each with a single solution that can be reached by logic alone, across 9 difficulty levels from Beginner (46 givens) to Expert (24 givens). It gives players a calm, ad-free way to exercise attention and reasoning. Features: pencil notes, undo/erase, optional hints, optional error highlighting, a timer with pause, and a local scoreboard of the 10 best times per level. The Info screen summarises published research on number puzzles and cognition, with references.
+
+   3. Setup and access
+   No login, account or setup is needed. Launch the app, tap PLAY, choose a level and start playing. Tap a cell, then a number to fill it; use the Notes toggle to pencil in candidates, and the Hint button to fill a correct cell (+30 s). Options (sound, timer, show errors, hints, language) and the Scoreboard are on the home screen. The app works fully offline.
+
+   4. External services
+   The game runs entirely on the device and needs no external service for its core functionality. It uses Google Firebase Analytics (anonymous usage statistics) and Firebase Crashlytics (crash reports) only to improve the app. Options and scores are stored only on the device. No ads, no payment processors, no authentication and no AI services.
+
+   5. Regional differences
+   The app works the same in all regions. It is localised in English, Portuguese, Spanish, French and German; only the interface language changes.
+
+   6. Regulated industry / third-party material
+   Not applicable. The app is not in a regulated industry and contains no protected third-party material. Puzzles are generated on the device, and the icon, logo and graphics are original. The music ("Solar Sail" by Vitalezzz, OpenGameArt) and sound effects ("Digital Audio" by Kenney.nl) are public domain under Creative Commons CC0 1.0. The bundled fonts (Exo 2, Inter) are under the SIL Open Font License 1.1. All of them are credited on the app's Info screen.
+   ```
 
 ### Store screenshots
 
