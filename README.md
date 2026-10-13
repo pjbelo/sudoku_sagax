@@ -211,31 +211,64 @@ Uses Flutter's `gen-l10n` (configured by [l10n.yaml](l10n.yaml)).
 ## Website
 
 Static HTML/CSS/vanilla JS site in [website/](website/), published at
-<https://sudoku.sagax-games.com>. It has no build step and the same structure
-as the Slidox and Memorex sites.
+<https://sudoku.sagax-games.com>, structured like the Slidox, Memorex and
+MasterCode sites. The only build step is `node tools/build.js` (no
+dependencies), which writes a static page per language; see "Languages" below.
 
 ```
 website/
-  index.html  privacy.html  contact.html  robots.txt  sitemap.xml
-  css/style.css     Sagax palette (same as lib/sagax_theme.dart)
-  js/i18n.js        All strings for the 5 locales
-  js/main.js        Language detection/switching (?lang=, localStorage, browser) + section rendering
+  index.html  privacy.html  contact.html   English pages, also the templates
+  pt/ es/ fr/ de/   Generated copies of the three pages above; do not edit
+  sitemap.xml       Generated, with hreflang alternates for every page
+  robots.txt
+  tools/build.js    Generates the language pages and the sitemap from js/i18n.js
+  css/style.css     Sagax palette (same as lib/sagax_theme.dart) + the demo board
+  js/i18n.js        All strings for the 5 locales; read only by tools/build.js
+  js/main.js        Saves the language choice, screenshot lightbox, footer year
   js/sudoku.js      Playable Beginner sudoku, generated in the browser
   img/              Logos, favicons, social image (sudoku-sagax-og.png = feature graphic)
   img/screenshots/<lang>/   1_home, 2_game, 4_scoreboard, 6_info (Pixel 9 Pro shots)
 ```
 
+### Languages
+
+Every language has its own static page, so search engines index the
+translated text without running JavaScript: English at the root (also
+`x-default`), the others in `pt/`, `es/`, `fr/` and `de/`.
+
+- **Editing text:** change `js/i18n.js`, or the HTML of the root pages (they
+  are the templates), then run `node website/tools/build.js`. It rewrites the
+  root pages in English, regenerates the four language folders and
+  `sitemap.xml` (`lastmod` = the day it runs). Commit the generated files too.
+- **Markup:** elements use `data-i18n="key"` (text), `data-i18n-html="key"`
+  (static markup) or `data-i18n-alt="key"` (image alt). Dotted keys reach
+  array items, e.g. `data-i18n="benefits.0.1"`; the build stops if a key is
+  missing or if the template shows fewer benefits, features, screenshots or
+  levels than `i18n.js` has. `img[data-shot]` gets the language's screenshot.
+- **Generated per page:** `<html lang>`, title, meta description, `og:*`,
+  canonical, `hreflang` links, the language switcher, each level's band and
+  clue count (from `LEVELS` in `build.js`, which mirrors `sudokuLevels`), the
+  demo's strings (`script#demo-text`) and the privacy policy text.
+- **Automatic choice** (inline script at the top of each page, before it is
+  painted): `?lang=` (old links, sagax-games.com) wins and is saved; then the
+  saved choice (`localStorage` key `sudokusagax.lang`) redirects to that
+  language's page. Only the English pages also follow the browser language.
+- **Manual choice:** the language links save the choice and keep the current
+  `#section`.
+
+### Content
+
 - **i18n.js:** the benefit texts, evidence note, tagline, difficulty names and
   game labels are copied from `lib/l10n/app_<locale>.arb`. The features list
   matches `docs/store-listing-texts.md`. Keep both in sync with the app.
 - **sudoku.js:** ports the app's generator, so every demo puzzle has 46 givens
-  and a unique solution. The levels list and scientific references in
-  `main.js` mirror `sudokuLevels` and the Info screen.
+  and a unique solution. The level cards and the scientific references in
+  `index.html` mirror `sudokuLevels` and the Info screen.
 - **Privacy policy:** describes exactly what the app does. It uses Firebase
   Analytics and Crashlytics, with no Performance Monitoring, and keeps options
   and scores on the device. Update it if the Firebase setup changes. Its URL,
   <https://sudoku.sagax-games.com/privacy.html>, is the privacy policy URL in
-  both stores.
+  both stores (it redirects to the visitor's language).
 
 Preview locally:
 
@@ -243,9 +276,10 @@ Preview locally:
 cd website && python3 -m http.server 8000   # http://localhost:8000
 ```
 
-**Deploy:** the site is live. To update it, upload the contents of `website/`
-to the document root of the domain on the Plesk server, as for
-slidox.sagax-games.com.
+**Deploy:** the site is live. To update it, run `node website/tools/build.js`,
+then upload the contents of `website/` (including `pt/`, `es/`, `fr/`, `de/`
+and `sitemap.xml`) to the document root of the domain on the Plesk server, as
+for slidox.sagax-games.com.
 
 ## Testing
 

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutzerklärung — Sudoku Sagax</title>
+  <meta name="description" content="Datenschutzerklärung von Sudoku Sagax: keine personenbezogenen Daten; nur anonyme Nutzungs- und Absturzdaten über Firebase. Deine Optionen und Bestzeiten bleiben auf deinem Gerät.">
+  <meta name="theme-color" content="#0F172A">
+  <!-- i18n:head (gerado por tools/build.js) -->
+  <link rel="canonical" href="https://sudoku.sagax-games.com/de/privacy.html">
+  <link rel="alternate" hreflang="de" href="https://sudoku.sagax-games.com/de/privacy.html">
+  <link rel="alternate" hreflang="en" href="https://sudoku.sagax-games.com/privacy.html">
+  <link rel="alternate" hreflang="es" href="https://sudoku.sagax-games.com/es/privacy.html">
+  <link rel="alternate" hreflang="fr" href="https://sudoku.sagax-games.com/fr/privacy.html">
+  <link rel="alternate" hreflang="pt" href="https://sudoku.sagax-games.com/pt/privacy.html">
+  <link rel="alternate" hreflang="x-default" href="https://sudoku.sagax-games.com/privacy.html">
+  <script>
+  (function () {
+    var urls = {"pt":"../pt/privacy.html","en":"../privacy.html","es":"../es/privacy.html","fr":"../fr/privacy.html","de":"../de/privacy.html"}, cur = 'de', key = 'sudokusagax.lang', lang = null, saved = null;
+    var ok = function (l) { return Object.prototype.hasOwnProperty.call(urls, l); };
+    var param = new URLSearchParams(location.search).get('lang');
+    try {
+      if (ok(param)) localStorage.setItem(key, param);
+      saved = localStorage.getItem(key);
+    } catch (e) {}
+    lang = ok(param) ? param : ok(saved) ? saved : null;
+    if (!lang && cur === 'en') {
+      var prefs = navigator.languages || [navigator.language || ''];
+      for (var i = 0; i < prefs.length && !lang; i++) {
+        var code = String(prefs[i]).slice(0, 2).toLowerCase();
+        if (ok(code)) lang = code;
+      }
+    }
+    if (lang && lang !== cur) location.replace(urls[lang] + location.hash);
+    else if (param !== null) history.replaceState(null, '', location.pathname + location.hash);
+  })();
+  </script>
+  <!-- /i18n:head -->
+  <link rel="icon" type="image/png" href="../img/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-page="privacy">
+
+  <nav class="lang-bar" aria-label="Language">
+    <a href="../pt/privacy.html" hreflang="pt" lang="pt" title="Português">PT</a>
+    <a href="../privacy.html" hreflang="en" lang="en" title="English">EN</a>
+    <a href="../es/privacy.html" hreflang="es" lang="es" title="Español">ES</a>
+    <a href="../fr/privacy.html" hreflang="fr" lang="fr" title="Français">FR</a>
+    <a href="../de/privacy.html" hreflang="de" lang="de" title="Deutsch" aria-current="page">DE</a>
+  </nav>
+
+  <main class="container">
+    <a href="index.html" class="back-link" data-i18n="back">← Zurück zur Startseite</a>
+    <article id="privacy">
+      <h1>Datenschutzerklärung</h1>
+      <p class="last-updated">Zuletzt aktualisiert: 8. Oktober 2026</p>
+      <p>Diese Datenschutzerklärung beschreibt, wie <strong>Tekinsight — Information Technologies</strong> („wir", „unser" oder „Tekinsight") Informationen der Nutzer der App <strong>Sudoku Sagax</strong> („App" oder „Sudoku Sagax"), veröffentlicht unter der Marke Sagax Games, erhebt, verwendet und schützt.</p>
+      <div class="highlight"><p><strong>Zusammenfassung:</strong> Sudoku Sagax erhebt keine personenbezogenen Daten. Wir nutzen ausschließlich Google-Firebase-Dienste, um anonyme Nutzungs- und Stabilitätsdaten zu erheben und so die App zu verbessern. Deine Optionen und Bestzeiten bleiben auf deinem Gerät.</p></div>
+      <h2>1. Welche Informationen wir erheben</h2>
+      <p>Die App erhebt, speichert oder verarbeitet <strong>keine</strong> personenbezogenen Daten wie Name, E-Mail-Adresse, Telefonnummer oder genauen Standort.</p>
+      <p>Über Firebase erheben wir automatisch anonyme, aggregierte Daten, insbesondere:</p>
+      <ul>
+        <li>Gerätetyp und Betriebssystem;</li>
+        <li>Gerätesprache;</li>
+        <li>Nutzungsereignisse der App (z. B. gewählte Level, gestartete Spiele, genutzte Tipps, abgeschlossene Level, geänderte Optionen);</li>
+        <li>Ungefähre Sitzungsdauer;</li>
+        <li>Absturzberichte und Fehlerdiagnosen (Firebase Crashlytics);</li>
+        <li>Land/Region (anhand der IP-Adresse, ohne die IP zu speichern).</li>
+      </ul>
+      <h2>2. Wie wir die Informationen verwenden</h2>
+      <p>Die erhobenen anonymen Daten werden ausschließlich verwendet, um:</p>
+      <ul>
+        <li>zu verstehen, wie Nutzer mit der App interagieren;</li>
+        <li>Abstürze und technische Probleme zu erkennen und zu beheben;</li>
+        <li>das Nutzungserlebnis und die Leistung der App zu verbessern;</li>
+        <li>fundierte Entscheidungen über künftige Funktionen und Updates zu treffen.</li>
+      </ul>
+      <h2>3. Weitergabe von Informationen</h2>
+      <p>Wir verkaufen, vermieten oder teilen keine Nutzerdaten mit Dritten, außer wie in dieser Erklärung beschrieben. Die von Firebase erhobenen anonymen Daten werden von Google gemäß der <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Datenschutzerklärung von Google</a> verarbeitet.</p>
+      <h2>4. Dienste Dritter</h2>
+      <p>Die App nutzt folgende Dienste Dritter:</p>
+      <ul>
+        <li><strong>Firebase Analytics (Google)</strong> — anonyme Nutzungsanalyse;</li>
+        <li><strong>Firebase Crashlytics (Google)</strong> — Absturzberichte. <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Mehr erfahren</a>.</li>
+      </ul>
+      <p>Diese Dienste können Informationen erheben, die zur Identifizierung des Geräts dienen (etwa Installations- oder Gerätekennungen), wie in ihren jeweiligen Richtlinien beschrieben.</p>
+      <h2>5. Daten von Kindern</h2>
+      <p>Die App richtet sich nicht speziell an Kinder unter 13 Jahren. Wir erheben wissentlich keine personenbezogenen Daten von Kindern. Sollten wir feststellen, dass personenbezogene Daten eines Kindes erhoben wurden, werden wir diese umgehend löschen.</p>
+      <h2>6. Datenspeicherung</h2>
+      <p>Die App funktioniert vollständig offline. Deine Optionen, die gewählte Sprache und die Bestenliste werden nur auf deinem Gerät gespeichert und nie an uns gesendet; sie werden beim Deinstallieren der App gelöscht. Analyse- und Absturzdaten werden auf den Servern von Google Firebase gemäß deren Sicherheits- und Aufbewahrungsrichtlinien verarbeitet und gespeichert.</p>
+      <h2>7. Sicherheit</h2>
+      <p>Wir ergreifen angemessene Maßnahmen, um die erhobenen Informationen zu schützen. Keine Methode der Übertragung über das Internet oder der elektronischen Speicherung ist jedoch zu 100 % sicher, daher können wir keine absolute Sicherheit garantieren.</p>
+      <h2>8. Ihre Rechte</h2>
+      <p>Gemäß der Datenschutz-Grundverordnung (DSGVO) und sonstigen anwendbaren Gesetzen haben Sie das Recht:</p>
+      <ul>
+        <li>Auskunft über die erhobenen Daten zu verlangen;</li>
+        <li>die Löschung aller mit Ihrem Gerät verbundenen Daten zu verlangen;</li>
+        <li>der Erhebung von Analysedaten über die Geräteeinstellungen zu widersprechen;</li>
+        <li>uns zu kontaktieren, um Ihre Rechte auszuüben.</li>
+      </ul>
+      <h2>9. Änderungen dieser Erklärung</h2>
+      <p>Wir behalten uns das Recht vor, diese Datenschutzerklärung jederzeit zu aktualisieren. Änderungen werden auf dieser Seite mit dem überarbeiteten Datum veröffentlicht. Wir empfehlen, diese Seite regelmäßig zu besuchen.</p>
+      <h2>10. Kontakt</h2>
+      <p>Bei Fragen, Anliegen oder Anmerkungen zu dieser Datenschutzerklärung kontaktieren Sie uns unter <a href="mailto:sagax-games@tek-insight.com">sagax-games@tek-insight.com</a>.</p>
+    </article>
+  </main>
+
+  <footer>
+    <img src="../img/sagax-games-logo.png" alt="Sagax Games" class="footer-logo" width="916" height="646">
+    <p>&copy; <span id="year">2026</span> Tekinsight — Information Technologies. <span data-i18n="rights">Alle Rechte vorbehalten.</span></p>
+    <div class="footer-links">
+      <a href="contact.html" data-i18n="contactLink">Kontakt</a>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

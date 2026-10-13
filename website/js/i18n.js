@@ -2,6 +2,8 @@
 // Benefícios, nota sobre as evidências, tagline, níveis e etiquetas do jogo vêm
 // de lib/l10n/app_<locale>.arb; as funcionalidades de docs/store-listing-texts.md.
 // Manter em sincronia com a app ao alterar qualquer uma dessas fontes.
+// Chaves com pontos no HTML (data-i18n="benefits.0.1") apontam para arrays daqui.
+// Lido só por tools/build.js, que gera as páginas de cada idioma — correr após editar.
 window.SUDOKU_SAGAX_I18N = {
   "en": {
     "htmlLang": "en",
@@ -77,6 +79,8 @@ window.SUDOKU_SAGAX_I18N = {
     "credits": "Music — \"Solar Sail\" by Vitalezzz · Sounds — Kenney.nl · CC0",
     "back": "← Back to home page",
     "contactTitle": "Contact",
+    "contactMeta": "Contact Sagax Games / Tekinsight, the makers of Sudoku Sagax: feedback, ideas, bug reports or press enquiries.",
+    "privacyMeta": "Sudoku Sagax privacy policy: no personal data; only anonymous usage and crash data via Firebase. Options and scores stay on your device.",
     "tagline": "Fill the grid, sharpen your mind 🧩",
     "benefitsLead": "Sudoku is a pure logic puzzle: no arithmetic, just deduction. Research on number puzzles and Sudoku points to these benefits:",
     "benefits": [
@@ -303,6 +307,8 @@ window.SUDOKU_SAGAX_I18N = {
     "credits": "Música — \"Solar Sail\" por Vitalezzz · Sons — Kenney.nl · CC0",
     "back": "← Voltar à página inicial",
     "contactTitle": "Contacto",
+    "contactMeta": "Contacta a Sagax Games / Tekinsight, criadores do Sudoku Sagax: sugestões, ideias, erros ou pedidos de imprensa.",
+    "privacyMeta": "Política de privacidade do Sudoku Sagax: sem dados pessoais; só dados anónimos de utilização e de falhas via Firebase. As tuas opções e recordes ficam no teu dispositivo.",
     "tagline": "Preenche a grelha, afia a mente 🧩",
     "benefitsLead": "O Sudoku é um puzzle de lógica pura: não há contas, apenas dedução. A investigação sobre puzzles numéricos e Sudoku aponta para estes benefícios:",
     "benefits": [
@@ -529,6 +535,8 @@ window.SUDOKU_SAGAX_I18N = {
     "credits": "Música — \"Solar Sail\" de Vitalezzz · Sonidos — Kenney.nl · CC0",
     "back": "← Volver a la página de inicio",
     "contactTitle": "Contacto",
+    "contactMeta": "Contacta con Sagax Games / Tekinsight, los creadores de Sudoku Sagax: comentarios, ideas, errores o consultas de prensa.",
+    "privacyMeta": "Política de privacidad de Sudoku Sagax: sin datos personales; solo datos anónimos de uso y de fallos vía Firebase. Tus opciones y récords se quedan en tu dispositivo.",
     "tagline": "Completa la cuadrícula, agudiza tu mente 🧩",
     "benefitsLead": "El Sudoku es un puzle de lógica pura: no hay cálculos, solo deducción. La investigación sobre puzles numéricos y Sudoku apunta a estos beneficios:",
     "benefits": [
@@ -755,6 +763,8 @@ window.SUDOKU_SAGAX_I18N = {
     "credits": "Musique — « Solar Sail » par Vitalezzz · Sons — Kenney.nl · CC0",
     "back": "← Retour à la page d'accueil",
     "contactTitle": "Contact",
+    "contactMeta": "Contactez Sagax Games / Tekinsight, les créateurs de Sudoku Sagax : avis, idées, signalements de bugs ou demandes presse.",
+    "privacyMeta": "Politique de confidentialité de Sudoku Sagax : aucune donnée personnelle ; seules des données anonymes d'utilisation et de plantage via Firebase. Vos options et vos records restent sur votre appareil.",
     "tagline": "Remplissez la grille, aiguisez votre esprit 🧩",
     "benefitsLead": "Le Sudoku est un pur casse-tête logique : pas de calcul, seulement de la déduction. La recherche sur les casse-têtes numériques et le Sudoku met en avant ces bienfaits :",
     "benefits": [
@@ -981,6 +991,8 @@ window.SUDOKU_SAGAX_I18N = {
     "credits": "Musik — „Solar Sail\" von Vitalezzz · Klänge — Kenney.nl · CC0",
     "back": "← Zurück zur Startseite",
     "contactTitle": "Kontakt",
+    "contactMeta": "Kontakt zu Sagax Games / Tekinsight, den Machern von Sudoku Sagax: Feedback, Ideen, Fehlermeldungen oder Presseanfragen.",
+    "privacyMeta": "Datenschutzerklärung von Sudoku Sagax: keine personenbezogenen Daten; nur anonyme Nutzungs- und Absturzdaten über Firebase. Deine Optionen und Bestzeiten bleiben auf deinem Gerät.",
     "tagline": "Fülle das Gitter, schärfe deinen Geist 🧩",
     "benefitsLead": "Sudoku ist ein reines Logikrätsel: kein Rechnen, nur Schlussfolgern. Die Forschung zu Zahlenrätseln und Sudoku weist auf diese Vorteile hin:",
     "benefits": [

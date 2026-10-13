@@ -6,18 +6,42 @@
   <title>Sudoku Sagax — Fill the grid, sharpen your mind</title>
   <meta name="description" content="Sudoku Sagax is classic sudoku with 9 levels from Beginner to Expert, notes, hints, a timer and a scoreboard. Pure logic, no guessing. Free for Android and iOS.">
   <meta name="theme-color" content="#0F172A">
+  <!-- i18n:head (gerado por tools/build.js) -->
   <link rel="canonical" href="https://sudoku.sagax-games.com/">
-  <link rel="alternate" hreflang="en" href="https://sudoku.sagax-games.com/?lang=en">
-  <link rel="alternate" hreflang="pt" href="https://sudoku.sagax-games.com/?lang=pt">
-  <link rel="alternate" hreflang="es" href="https://sudoku.sagax-games.com/?lang=es">
-  <link rel="alternate" hreflang="fr" href="https://sudoku.sagax-games.com/?lang=fr">
-  <link rel="alternate" hreflang="de" href="https://sudoku.sagax-games.com/?lang=de">
+  <link rel="alternate" hreflang="de" href="https://sudoku.sagax-games.com/de/">
+  <link rel="alternate" hreflang="en" href="https://sudoku.sagax-games.com/">
+  <link rel="alternate" hreflang="es" href="https://sudoku.sagax-games.com/es/">
+  <link rel="alternate" hreflang="fr" href="https://sudoku.sagax-games.com/fr/">
+  <link rel="alternate" hreflang="pt" href="https://sudoku.sagax-games.com/pt/">
   <link rel="alternate" hreflang="x-default" href="https://sudoku.sagax-games.com/">
+  <script>
+  (function () {
+    var urls = {"pt":"pt/","en":"./","es":"es/","fr":"fr/","de":"de/"}, cur = 'en', key = 'sudokusagax.lang', lang = null, saved = null;
+    var ok = function (l) { return Object.prototype.hasOwnProperty.call(urls, l); };
+    var param = new URLSearchParams(location.search).get('lang');
+    try {
+      if (ok(param)) localStorage.setItem(key, param);
+      saved = localStorage.getItem(key);
+    } catch (e) {}
+    lang = ok(param) ? param : ok(saved) ? saved : null;
+    if (!lang && cur === 'en') {
+      var prefs = navigator.languages || [navigator.language || ''];
+      for (var i = 0; i < prefs.length && !lang; i++) {
+        var code = String(prefs[i]).slice(0, 2).toLowerCase();
+        if (ok(code)) lang = code;
+      }
+    }
+    if (lang && lang !== cur) location.replace(urls[lang] + location.hash);
+    else if (param !== null) history.replaceState(null, '', location.pathname + location.hash);
+  })();
+  </script>
+  <!-- /i18n:head -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://sudoku.sagax-games.com/">
+  <meta property="og:locale" content="en_GB">
   <meta property="og:site_name" content="Sudoku Sagax">
-  <meta property="og:title" content="Sudoku Sagax — by Sagax Games">
-  <meta property="og:description" content="Classic sudoku with 9 levels, notes, hints and a scoreboard. Pure logic, no guessing.">
+  <meta property="og:title" content="Sudoku Sagax — Fill the grid, sharpen your mind">
+  <meta property="og:description" content="Sudoku Sagax is classic sudoku with 9 levels from Beginner to Expert, notes, hints, a timer and a scoreboard. Pure logic, no guessing. Free for Android and iOS.">
   <meta property="og:image" content="https://sudoku.sagax-games.com/img/sudoku-sagax-og.png">
   <meta property="og:image:width" content="1024">
   <meta property="og:image:height" content="500">
@@ -32,15 +56,21 @@
 </head>
 <body data-page="home">
 
-  <!-- Language Switcher (botões gerados em js/main.js) -->
-  <nav class="lang-bar" aria-label="Language"></nav>
+  <!-- Language Switcher (links gerados por tools/build.js, um por idioma) -->
+  <nav class="lang-bar" aria-label="Language">
+    <a href="pt/" hreflang="pt" lang="pt" title="Português">PT</a>
+    <a href="./" hreflang="en" lang="en" title="English" aria-current="page">EN</a>
+    <a href="es/" hreflang="es" lang="es" title="Español">ES</a>
+    <a href="fr/" hreflang="fr" lang="fr" title="Français">FR</a>
+    <a href="de/" hreflang="de" lang="de" title="Deutsch">DE</a>
+  </nav>
 
   <!-- Hero -->
   <header class="hero">
     <img src="img/sudoku-sagax-transp.png" alt="Sudoku Sagax" class="logo" width="1712" height="560">
     <p class="by" data-i18n="by">by Sagax Games</p>
     <h1 class="tagline" data-i18n="tagline">Fill the grid, sharpen your mind 🧩</h1>
-    <p class="description" data-i18n="description"></p>
+    <p class="description" data-i18n="description">Classic sudoku with a clean, modern design. Every puzzle has a single solution and is solved by logic alone — from gentle Beginner grids to demanding Expert ones. Available for Android and iOS.</p>
     <div class="badges">
       <a href="https://play.google.com/store/apps/details?id=com.tekinsight.sudoku" title="Google Play" target="_blank" rel="noopener">
         <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
@@ -55,7 +85,7 @@
     <!-- Demo jogável: um sudoku de nível 1 gerado no browser (js/sudoku.js) -->
     <section class="section" id="demo">
       <h2 data-i18n="demoTitle">Try it right here</h2>
-      <p class="lead" data-i18n="demoLead"></p>
+      <p class="lead" data-i18n="demoLead">A fresh Beginner puzzle, generated in your browser. Pick a cell, then a number — or use your keyboard.</p>
       <div class="demo">
         <div class="sudoku" id="sudoku" role="grid" aria-label="Sudoku"></div>
         <div class="demo-side">
@@ -63,7 +93,7 @@
             <div class="stat"><span class="label" data-i18n="time">Time</span><span class="value" id="demo-time">0:00</span></div>
             <div class="stat"><span class="label" data-i18n="mistakes">Mistakes</span><span class="value" id="demo-mistakes">0</span></div>
           </div>
-          <p class="demo-status" id="demo-status" aria-live="polite"></p>
+          <p class="demo-status" id="demo-status" aria-live="polite" data-i18n="statusPlaying">Pick a cell, then a number</p>
           <div class="numpad" id="numpad"></div>
           <div class="demo-actions">
             <button type="button" class="btn ghost" id="demo-erase" data-i18n="erase">Erase</button>
@@ -73,35 +103,153 @@
       </div>
     </section>
 
-    <!-- Níveis (manter em sincronia com sudokuLevels em lib/game/sudoku_generator.dart) -->
+    <!-- Níveis (manter em sincronia com sudokuLevels em lib/game/sudoku_generator.dart e LEVELS em tools/build.js) -->
     <section class="section">
       <h2 data-i18n="levelsTitle">9 levels, from Beginner to Expert</h2>
-      <p class="lead" data-i18n="levelsLead"></p>
-      <div class="levels" id="levels"></div>
+      <p class="lead" data-i18n="levelsLead">Fewer given numbers and harder deductions at every level. Levels 1–5 can be solved one step at a time; at Hard and Expert, notes become essential.</p>
+      <div class="levels" id="levels">
+        <div class="level">
+          <b>1</b>
+          <span class="band" data-i18n="levelBands.0">Beginner</span>
+          <span data-i18n="levelClues.0">46 clues</span>
+        </div>
+        <div class="level">
+          <b>2</b>
+          <span class="band" data-i18n="levelBands.1">Beginner</span>
+          <span data-i18n="levelClues.1">42 clues</span>
+        </div>
+        <div class="level">
+          <b>3</b>
+          <span class="band" data-i18n="levelBands.2">Easy</span>
+          <span data-i18n="levelClues.2">38 clues</span>
+        </div>
+        <div class="level">
+          <b>4</b>
+          <span class="band" data-i18n="levelBands.3">Easy</span>
+          <span data-i18n="levelClues.3">35 clues</span>
+        </div>
+        <div class="level">
+          <b>5</b>
+          <span class="band" data-i18n="levelBands.4">Medium</span>
+          <span data-i18n="levelClues.4">32 clues</span>
+        </div>
+        <div class="level">
+          <b>6</b>
+          <span class="band" data-i18n="levelBands.5">Medium</span>
+          <span data-i18n="levelClues.5">30 clues</span>
+        </div>
+        <div class="level">
+          <b>7</b>
+          <span class="band" data-i18n="levelBands.6">Hard</span>
+          <span data-i18n="levelClues.6">28 clues</span>
+        </div>
+        <div class="level">
+          <b>8</b>
+          <span class="band" data-i18n="levelBands.7">Hard</span>
+          <span data-i18n="levelClues.7">26 clues</span>
+        </div>
+        <div class="level">
+          <b>9</b>
+          <span class="band" data-i18n="levelBands.8">Expert</span>
+          <span data-i18n="levelClues.8">24 clues</span>
+        </div>
+      </div>
     </section>
 
     <!-- Benefícios -->
     <section class="section">
       <h2 data-i18n="benefitsTitle">Brain Benefits</h2>
-      <p class="lead" data-i18n="benefitsLead"></p>
-      <div class="benefits" id="benefits"></div>
-      <p class="evidence-note" data-i18n="evidenceNote"></p>
+      <p class="lead" data-i18n="benefitsLead">Sudoku is a pure logic puzzle: no arithmetic, just deduction. Research on number puzzles and Sudoku points to these benefits:</p>
+      <div class="benefits" id="benefits">
+        <article class="benefit-card">
+          <div class="icon" data-i18n="benefits.0.0">🔢</div>
+          <h3 data-i18n="benefits.0.1">Logical and Deductive Reasoning</h3>
+          <p data-i18n="benefits.0.2">Every move is a deduction: "this cell can only be 7" or "the 3 can only go here". Sudoku-based training programmes target attention and logical-deductive reasoning, and a randomised trial in older adults with mild cognitive impairment reported gains in global cognition after Sudoku training.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="icon" data-i18n="benefits.1.0">🧠</div>
+          <h3 data-i18n="benefits.1.1">Working Memory</h3>
+          <p data-i18n="benefits.1.2">Keeping candidates and the constraints of rows, columns and boxes in mind loads working memory. Studies in older adults found that Sudoku performance relates to working-memory capacity. Brain-imaging studies show that solving Sudoku engages the frontal and parietal networks that support working memory and executive control.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="icon" data-i18n="benefits.2.0">🎯</div>
+          <h3 data-i18n="benefits.2.1">Attention and Concentration</h3>
+          <p data-i18n="benefits.2.2">In a study of over 19,000 adults aged 50 and over, those who did number puzzles more often scored better on tests of attention, reasoning and memory.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="icon" data-i18n="benefits.3.0">⚡</div>
+          <h3 data-i18n="benefits.3.1">Processing Speed and Executive Function</h3>
+          <p data-i18n="benefits.3.2">The same research linked regular number-puzzle play to faster information processing and better executive function — planning, checking and switching strategies.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="icon" data-i18n="benefits.4.0">🛡️</div>
+          <h3 data-i18n="benefits.4.1">Cognitive Reserve and Healthy Ageing</h3>
+          <p data-i18n="benefits.4.2">Long-term studies associate mentally stimulating games and puzzles with better cognitive function later in life and slower cognitive decline — consistent with building cognitive reserve. It's never too late: people who took up puzzles later also showed benefits.</p>
+        </article>
+        <article class="benefit-card">
+          <div class="icon" data-i18n="benefits.5.0">😌</div>
+          <h3 data-i18n="benefits.5.1">Focus, Flow and Well-being</h3>
+          <p data-i18n="benefits.5.2">A puzzle matched to your skill invites "flow" — full absorption in the task — which is linked to enjoyment and reduced stress. Nine difficulty levels let you keep the challenge just right.</p>
+        </article>
+      </div>
+      <p class="evidence-note" data-i18n="evidenceNote">A note on the evidence: most of these studies are observational, so they show associations rather than proof of cause. Sudoku works best as one part of an active lifestyle that also includes exercise, sleep and social life.</p>
       <details class="references">
         <summary data-i18n="referencesTitle">Scientific References</summary>
-        <ol id="references"></ol>
+        <!-- Mesmas referências do ecrã Info da app (lib/screens/info_screen.dart) -->
+        <ol id="references">
+          <li>Brooker, H., Wesnes, K. A., Ballard, C., et al. (2019). <cite>The relationship between the frequency of number-puzzle use and baseline cognitive function in a large online sample of adults aged 50 and over</cite>. International Journal of Geriatric Psychiatry, 34(7), 932–940.</li>
+          <li>Grabbe, J. W. (2011). <cite>Sudoku and Working Memory Performance for Older Adults</cite>. Activities, Adaptation &amp; Aging, 35(3), 241–254.</li>
+          <li>Williams, M. J., Williamson, E. J., &amp; Brooks, S. J. (2026). <cite>Neural correlates of Sudoku play: a systematic review of brain imaging studies</cite>. Frontiers in Neuroimaging, 5, 1756394.</li>
+          <li>Litwin, H., Schwartz, E., &amp; Damri, N. (2017). <cite>Cognitively Stimulating Leisure Activity and Subsequent Cognitive Function: A SHARE-based Analysis</cite>. The Gerontologist, 57(5), 940–948.</li>
+          <li>Ferreira, N., Owen, A., Mohan, A., Corbett, A., &amp; Ballard, C. (2015). <cite>Associations between cognitively stimulating leisure activities, cognitive function and age-related cognitive decline</cite>. International Journal of Geriatric Psychiatry, 30(4), 422–430.</li>
+          <li>Yu, D., Li, P., Tso, W. W., &amp; Waye, M. (2023). <cite>Effects of Gamified Cognitive Training to Deter the Progression of Mild Cognitive Impairment (Sudoku SMART trial)</cite>. Innovation in Aging, 7(Suppl. 1), 645 — conference abstract; ClinicalTrials.gov NCT04913857.</li>
+          <li>Altschul, D. M., &amp; Deary, I. J. (2020). <cite>Playing Analog Games Is Associated With Reduced Declines in Cognitive Function: A 68-Year Longitudinal Cohort Study</cite>. The Journals of Gerontology: Series B, 75(3), 474–482.</li>
+          <li>Verghese, J., Lipton, R. B., Katz, M. J., et al. (2003). <cite>Leisure Activities and the Risk of Dementia in the Elderly</cite>. New England Journal of Medicine, 348(25), 2508–2516.</li>
+          <li>Stern, Y. (2012). <cite>Cognitive reserve in ageing and Alzheimer's disease</cite>. The Lancet Neurology, 11(11), 1006–1012.</li>
+          <li>Nakamura, J., &amp; Csikszentmihalyi, M. (2014). <cite>The Concept of Flow</cite>. Flow and the Foundations of Positive Psychology, Springer, 239–263.</li>
+        </ol>
       </details>
     </section>
 
     <!-- Funcionalidades -->
     <section class="section">
       <h2 data-i18n="featuresTitle">Features</h2>
-      <ul class="features-list" id="features"></ul>
+      <ul class="features-list" id="features">
+        <li><span class="icon" aria-hidden="true" data-i18n="features.0.0">🎮</span><span data-i18n="features.0.1">9 difficulty levels, from 46 to 24 given numbers</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.1.0">🧩</span><span data-i18n="features.1.1">A new puzzle every game, always with a unique solution</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.2.0">✏️</span><span data-i18n="features.2.1">Notes: pencil in the candidates of a cell</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.3.0">↩️</span><span data-i18n="features.3.1">Undo and erase</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.4.0">⏱️</span><span data-i18n="features.4.1">Timer with pause — or switch it off</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.5.0">❌</span><span data-i18n="features.5.1">Show errors — optional, off by default</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.6.0">💡</span><span data-i18n="features.6.1">Hint button fills in a correct number (+30 s) — optional</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.7.0">🏆</span><span data-i18n="features.7.1">Scoreboard with your 10 best times per level</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.8.0">🎵</span><span data-i18n="features.8.1">Relaxing music and sound effects</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.9.0">🌍</span><span data-i18n="features.9.1">Available in English, Portuguese, Spanish, French and German</span></li>
+        <li><span class="icon" aria-hidden="true" data-i18n="features.10.0">✈️</span><span data-i18n="features.10.1">Play offline, anywhere — free, no ads, no in-app purchases</span></li>
+      </ul>
     </section>
 
-    <!-- Screenshots -->
+    <!-- Screenshots: img/screenshots/<lang>/<nome>.png (capturas do Pixel 9 Pro, de docs/google-play/screenshots/) -->
     <section class="section">
       <h2 data-i18n="screenshotsTitle">Screenshots</h2>
-      <div class="screenshots" id="screenshots"></div>
+      <div class="screenshots" id="screenshots">
+        <figure>
+          <button type="button"><img src="img/screenshots/en/1_home.png" data-shot="1_home" data-i18n-alt="shots.0" alt="Home" width="1280" height="2856" loading="lazy" decoding="async"></button>
+          <figcaption data-i18n="shots.0">Home</figcaption>
+        </figure>
+        <figure>
+          <button type="button"><img src="img/screenshots/en/2_game.png" data-shot="2_game" data-i18n-alt="shots.1" alt="Gameplay" width="1280" height="2856" loading="lazy" decoding="async"></button>
+          <figcaption data-i18n="shots.1">Gameplay</figcaption>
+        </figure>
+        <figure>
+          <button type="button"><img src="img/screenshots/en/4_scoreboard.png" data-shot="4_scoreboard" data-i18n-alt="shots.2" alt="Scoreboard" width="1280" height="2856" loading="lazy" decoding="async"></button>
+          <figcaption data-i18n="shots.2">Scoreboard</figcaption>
+        </figure>
+        <figure>
+          <button type="button"><img src="img/screenshots/en/6_info.png" data-shot="6_info" data-i18n-alt="shots.3" alt="Brain Benefits" width="1280" height="2856" loading="lazy" decoding="async"></button>
+          <figcaption data-i18n="shots.3">Brain Benefits</figcaption>
+        </figure>
+      </div>
     </section>
   </main>
 
@@ -114,13 +262,14 @@
     <img src="img/sagax-games-logo.png" alt="Sagax Games" class="footer-logo" width="916" height="646">
     <p>&copy; <span id="year">2026</span> Tekinsight — Information Technologies. <span data-i18n="rights">All rights reserved.</span></p>
     <div class="footer-links">
-      <a href="privacy.html" data-keep-lang data-i18n="privacyLink">Privacy Policy</a>
-      <a href="contact.html" data-keep-lang data-i18n="contactLink">Contact</a>
+      <a href="privacy.html" data-i18n="privacyLink">Privacy Policy</a>
+      <a href="contact.html" data-i18n="contactLink">Contact</a>
     </div>
-    <p class="credits" data-i18n="credits"></p>
+    <p class="credits" data-i18n="credits">Music — "Solar Sail" by Vitalezzz · Sounds — Kenney.nl · CC0</p>
   </footer>
 
-  <script src="js/i18n.js"></script>
+  <!-- Textos do sudoku de demonstração (gerado por tools/build.js) -->
+  <script type="application/json" id="demo-text">{"statusPlaying":"Pick a cell, then a number","statusFull":"The grid is full, but something is not right","statusWin":"🎉 Solved in {t}! The app has 8 more levels waiting, up to Expert."}</script>
   <script src="js/main.js"></script>
   <script src="js/sudoku.js"></script>
 </body>

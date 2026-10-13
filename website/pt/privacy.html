@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidade — Sudoku Sagax</title>
+  <meta name="description" content="Política de privacidade do Sudoku Sagax: sem dados pessoais; só dados anónimos de utilização e de falhas via Firebase. As tuas opções e recordes ficam no teu dispositivo.">
+  <meta name="theme-color" content="#0F172A">
+  <!-- i18n:head (gerado por tools/build.js) -->
+  <link rel="canonical" href="https://sudoku.sagax-games.com/pt/privacy.html">
+  <link rel="alternate" hreflang="de" href="https://sudoku.sagax-games.com/de/privacy.html">
+  <link rel="alternate" hreflang="en" href="https://sudoku.sagax-games.com/privacy.html">
+  <link rel="alternate" hreflang="es" href="https://sudoku.sagax-games.com/es/privacy.html">
+  <link rel="alternate" hreflang="fr" href="https://sudoku.sagax-games.com/fr/privacy.html">
+  <link rel="alternate" hreflang="pt" href="https://sudoku.sagax-games.com/pt/privacy.html">
+  <link rel="alternate" hreflang="x-default" href="https://sudoku.sagax-games.com/privacy.html">
+  <script>
+  (function () {
+    var urls = {"pt":"../pt/privacy.html","en":"../privacy.html","es":"../es/privacy.html","fr":"../fr/privacy.html","de":"../de/privacy.html"}, cur = 'pt', key = 'sudokusagax.lang', lang = null, saved = null;
+    var ok = function (l) { return Object.prototype.hasOwnProperty.call(urls, l); };
+    var param = new URLSearchParams(location.search).get('lang');
+    try {
+      if (ok(param)) localStorage.setItem(key, param);
+      saved = localStorage.getItem(key);
+    } catch (e) {}
+    lang = ok(param) ? param : ok(saved) ? saved : null;
+    if (!lang && cur === 'en') {
+      var prefs = navigator.languages || [navigator.language || ''];
+      for (var i = 0; i < prefs.length && !lang; i++) {
+        var code = String(prefs[i]).slice(0, 2).toLowerCase();
+        if (ok(code)) lang = code;
+      }
+    }
+    if (lang && lang !== cur) location.replace(urls[lang] + location.hash);
+    else if (param !== null) history.replaceState(null, '', location.pathname + location.hash);
+  })();
+  </script>
+  <!-- /i18n:head -->
+  <link rel="icon" type="image/png" href="../img/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-page="privacy">
+
+  <nav class="lang-bar" aria-label="Language">
+    <a href="../pt/privacy.html" hreflang="pt" lang="pt" title="Português" aria-current="page">PT</a>
+    <a href="../privacy.html" hreflang="en" lang="en" title="English">EN</a>
+    <a href="../es/privacy.html" hreflang="es" lang="es" title="Español">ES</a>
+    <a href="../fr/privacy.html" hreflang="fr" lang="fr" title="Français">FR</a>
+    <a href="../de/privacy.html" hreflang="de" lang="de" title="Deutsch">DE</a>
+  </nav>
+
+  <main class="container">
+    <a href="index.html" class="back-link" data-i18n="back">← Voltar à página inicial</a>
+    <article id="privacy">
+      <h1>Política de Privacidade</h1>
+      <p class="last-updated">Última atualização: 8 de outubro de 2026</p>
+      <p>A presente Política de Privacidade descreve como a <strong>Tekinsight — Information Technologies</strong> ("nós", "nosso" ou "Tekinsight") recolhe, utiliza e protege as informações dos utilizadores da aplicação <strong>Sudoku Sagax</strong> ("Aplicação" ou "Sudoku Sagax"), publicada sob a marca Sagax Games.</p>
+      <div class="highlight"><p><strong>Resumo:</strong> O Sudoku Sagax não recolhe dados pessoais identificáveis. Utilizamos apenas serviços Google Firebase para recolher dados anónimos de utilização e estabilidade, com o objetivo de melhorar a Aplicação. As tuas opções e recordes ficam no teu dispositivo.</p></div>
+      <h2>1. Informações que Recolhemos</h2>
+      <p>A Aplicação <strong>não</strong> recolhe, armazena ou processa quaisquer dados pessoais identificáveis, tais como nome, endereço de e-mail, número de telefone ou localização precisa.</p>
+      <p>Através do Firebase, recolhemos automaticamente dados anónimos e agregados, nomeadamente:</p>
+      <ul>
+        <li>Tipo de dispositivo e sistema operativo;</li>
+        <li>Idioma do dispositivo;</li>
+        <li>Eventos de utilização da aplicação (ex.: níveis selecionados, jogos iniciados, ajudas usadas, níveis concluídos, opções alteradas);</li>
+        <li>Duração aproximada das sessões;</li>
+        <li>Relatórios de falhas e diagnóstico de erros (Firebase Crashlytics);</li>
+        <li>País/região (com base no endereço IP, sem armazenar o IP).</li>
+      </ul>
+      <h2>2. Como Utilizamos as Informações</h2>
+      <p>Os dados anónimos recolhidos são utilizados exclusivamente para:</p>
+      <ul>
+        <li>Compreender como os utilizadores interagem com a Aplicação;</li>
+        <li>Identificar e corrigir falhas e problemas técnicos;</li>
+        <li>Melhorar a experiência do utilizador e o desempenho da Aplicação;</li>
+        <li>Tomar decisões informadas sobre futuras funcionalidades e atualizações.</li>
+      </ul>
+      <h2>3. Partilha de Informações</h2>
+      <p>Não vendemos, alugamos, nem partilhamos quaisquer dados dos utilizadores com terceiros, exceto conforme descrito nesta política. Os dados anónimos recolhidos pelo Firebase são processados pela Google de acordo com a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Política de Privacidade da Google</a>.</p>
+      <h2>4. Serviços de Terceiros</h2>
+      <p>A Aplicação utiliza os seguintes serviços de terceiros:</p>
+      <ul>
+        <li><strong>Firebase Analytics (Google)</strong> — análise anónima de utilização;</li>
+        <li><strong>Firebase Crashlytics (Google)</strong> — relatórios de falhas. <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Saber mais</a>.</li>
+      </ul>
+      <p>Estes serviços podem recolher informações utilizadas para identificar o dispositivo do utilizador (como identificadores de instalação ou de dispositivo), conforme descrito nas respetivas políticas.</p>
+      <h2>5. Dados de Crianças</h2>
+      <p>A Aplicação não se destina especificamente a crianças com idade inferior a 13 anos. Não recolhemos intencionalmente dados pessoais de crianças. Se tomarmos conhecimento de que foram recolhidos dados pessoais de uma criança, tomaremos medidas imediatas para os eliminar.</p>
+      <h2>6. Armazenamento de Dados</h2>
+      <p>A Aplicação funciona totalmente offline. As tuas opções, o idioma escolhido e os recordes são guardados apenas no teu dispositivo e nunca nos são enviados; são apagados quando desinstalas a Aplicação. Os dados analíticos e de falhas são processados e armazenados nos servidores da Google Firebase, de acordo com as suas políticas de segurança e retenção.</p>
+      <h2>7. Segurança</h2>
+      <p>Empregamos medidas razoáveis para proteger as informações recolhidas. No entanto, nenhum método de transmissão pela Internet ou de armazenamento eletrónico é 100% seguro, pelo que não podemos garantir segurança absoluta.</p>
+      <h2>8. Os Seus Direitos</h2>
+      <p>De acordo com o Regulamento Geral sobre a Proteção de Dados (RGPD) e demais legislação aplicável, o utilizador tem o direito de:</p>
+      <ul>
+        <li>Solicitar informações sobre os dados recolhidos;</li>
+        <li>Solicitar a eliminação de quaisquer dados associados ao seu dispositivo;</li>
+        <li>Desativar a recolha de dados analíticos através das definições do dispositivo;</li>
+        <li>Contactar-nos para exercer qualquer dos seus direitos.</li>
+      </ul>
+      <h2>9. Alterações a Esta Política</h2>
+      <p>Reservamo-nos o direito de atualizar esta Política de Privacidade a qualquer momento. Quaisquer alterações serão publicadas nesta página com a data de atualização revista. Recomendamos a consulta periódica desta página.</p>
+      <h2>10. Contacto</h2>
+      <p>Para questões, pedidos ou esclarecimentos relacionados com esta Política de Privacidade, contacte-nos através de <a href="mailto:sagax-games@tek-insight.com">sagax-games@tek-insight.com</a>.</p>
+    </article>
+  </main>
+
+  <footer>
+    <img src="../img/sagax-games-logo.png" alt="Sagax Games" class="footer-logo" width="916" height="646">
+    <p>&copy; <span id="year">2026</span> Tekinsight — Information Technologies. <span data-i18n="rights">Todos os direitos reservados.</span></p>
+    <div class="footer-links">
+      <a href="contact.html" data-i18n="contactLink">Contacto</a>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

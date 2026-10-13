@@ -227,6 +227,9 @@
     mistakesEl = document.getElementById('demo-mistakes');
     statusEl = document.getElementById('demo-status');
 
+    // Textos no idioma da página (script#demo-text, gerado por tools/build.js)
+    try { t = JSON.parse(document.getElementById('demo-text').textContent); } catch (e) { t = null; }
+
     for (var i = 0; i < 81; i++) {
       var cell = document.createElement('button');
       cell.type = 'button';
@@ -266,11 +269,6 @@
 
     newPuzzle();
   }
-
-  document.addEventListener('sudoku:lang', function (e) {
-    t = e.detail.t;
-    if (board) renderStatus();
-  });
 
   document.addEventListener('DOMContentLoaded', build);
 

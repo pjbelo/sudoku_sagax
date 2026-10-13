@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto — Sudoku Sagax</title>
+  <meta name="description" content="Contacta a Sagax Games / Tekinsight, criadores do Sudoku Sagax: sugestões, ideias, erros ou pedidos de imprensa.">
+  <meta name="theme-color" content="#0F172A">
+  <!-- i18n:head (gerado por tools/build.js) -->
+  <link rel="canonical" href="https://sudoku.sagax-games.com/pt/contact.html">
+  <link rel="alternate" hreflang="de" href="https://sudoku.sagax-games.com/de/contact.html">
+  <link rel="alternate" hreflang="en" href="https://sudoku.sagax-games.com/contact.html">
+  <link rel="alternate" hreflang="es" href="https://sudoku.sagax-games.com/es/contact.html">
+  <link rel="alternate" hreflang="fr" href="https://sudoku.sagax-games.com/fr/contact.html">
+  <link rel="alternate" hreflang="pt" href="https://sudoku.sagax-games.com/pt/contact.html">
+  <link rel="alternate" hreflang="x-default" href="https://sudoku.sagax-games.com/contact.html">
+  <script>
+  (function () {
+    var urls = {"pt":"../pt/contact.html","en":"../contact.html","es":"../es/contact.html","fr":"../fr/contact.html","de":"../de/contact.html"}, cur = 'pt', key = 'sudokusagax.lang', lang = null, saved = null;
+    var ok = function (l) { return Object.prototype.hasOwnProperty.call(urls, l); };
+    var param = new URLSearchParams(location.search).get('lang');
+    try {
+      if (ok(param)) localStorage.setItem(key, param);
+      saved = localStorage.getItem(key);
+    } catch (e) {}
+    lang = ok(param) ? param : ok(saved) ? saved : null;
+    if (!lang && cur === 'en') {
+      var prefs = navigator.languages || [navigator.language || ''];
+      for (var i = 0; i < prefs.length && !lang; i++) {
+        var code = String(prefs[i]).slice(0, 2).toLowerCase();
+        if (ok(code)) lang = code;
+      }
+    }
+    if (lang && lang !== cur) location.replace(urls[lang] + location.hash);
+    else if (param !== null) history.replaceState(null, '', location.pathname + location.hash);
+  })();
+  </script>
+  <!-- /i18n:head -->
+  <link rel="icon" type="image/png" href="../img/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-page="contact">
+
+  <nav class="lang-bar" aria-label="Language">
+    <a href="../pt/contact.html" hreflang="pt" lang="pt" title="Português" aria-current="page">PT</a>
+    <a href="../contact.html" hreflang="en" lang="en" title="English">EN</a>
+    <a href="../es/contact.html" hreflang="es" lang="es" title="Español">ES</a>
+    <a href="../fr/contact.html" hreflang="fr" lang="fr" title="Français">FR</a>
+    <a href="../de/contact.html" hreflang="de" lang="de" title="Deutsch">DE</a>
+  </nav>
+
+  <main>
+    <div class="container" style="padding-bottom: 0;">
+      <a href="index.html" class="back-link" data-i18n="back">← Voltar à página inicial</a>
+    </div>
+    <div class="contact-wrap" style="padding-top: 16px;">
+      <div class="contact-card">
+        <img src="../img/sagax-games-logo.png" alt="Sagax Games" class="logo" width="916" height="646">
+        <h1 data-i18n="contactTitle">Contacto</h1>
+        <div class="divider"></div>
+
+        <div class="contact-item">
+          <span aria-hidden="true">🌐</span>
+          <a href="https://www.tek-insight.com/" target="_blank" rel="noopener">www.tek-insight.com</a>
+        </div>
+        <div class="contact-item">
+          <span aria-hidden="true">✉️</span>
+          <a href="mailto:sagax-games@tek-insight.com">sagax-games@tek-insight.com</a>
+        </div>
+
+        <p class="company-name">Tekinsight — Information Technologies</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year">2026</span> Tekinsight — Information Technologies. <span data-i18n="rights">Todos os direitos reservados.</span></p>
+    <div class="footer-links">
+      <a href="privacy.html" data-i18n="privacyLink">Política de Privacidade</a>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

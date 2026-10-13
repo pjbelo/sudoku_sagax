@@ -47,19 +47,15 @@ a:hover { text-decoration: underline; }
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(56, 189, 248, .1);
 }
-.lang-bar button {
-  font: inherit;
+.lang-bar a {
   padding: 4px 12px;
-  border: 0;
   border-radius: 6px;
   font-size: 0.85rem;
   color: var(--soft-slate);
-  background: transparent;
-  cursor: pointer;
   transition: background .2s, color .2s;
 }
-.lang-bar button:hover { background: rgba(56, 189, 248, .1); color: var(--snow-white); }
-.lang-bar button[aria-pressed="true"] { background: var(--electric-cyan); color: var(--midnight-navy); font-weight: 600; }
+.lang-bar a:hover { background: rgba(56, 189, 248, .1); color: var(--snow-white); text-decoration: none; }
+.lang-bar a[aria-current="page"] { background: var(--electric-cyan); color: var(--midnight-navy); font-weight: 600; }
 
 /* Hero */
 .hero {
