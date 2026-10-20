@@ -16,7 +16,7 @@ flutter test             # unit + widget tests (generator, game model, services,
 flutter gen-l10n         # regenerate localizations after editing .arb
 ```
 
-Release signing (Android) reads the gitignored `android/key.properties` + upload keystore; without them release builds fall back to the debug key (fine for `flutter run --release`, rejected by Play). Device testing and store publishing steps are in README.md (`## Testing`, `## Publishing`).
+Release signing (Android) reads the gitignored `android/key.properties` + upload keystore; without them release builds fall back to the debug key (fine for `flutter run --release`, rejected by Play). Device testing, one-time store setup and the store-asset workflow live in `docs/publishing.md`; per-release steps in README.md, `## Publishing`.
 
 ## Architecture
 
@@ -32,7 +32,7 @@ Release signing (Android) reads the gitignored `android/key.properties` + upload
 
 ## Conventions
 
-- All user-facing strings go through `AppLocalizations.of(context)!`, in 5 locales (en, pt, es, fr, de). `app_en.arb` is the template. Generated `app_localizations*.dart` files are committed; never hand-edit them.
+- All user-facing strings go through `AppLocalizations.of(context)!`, in 5 locales (en, pt, es, fr, de). `app_en.arb` is the template. Generated `app_localizations*.dart` files are committed; never hand-edit them. iOS declares the same locales in `CFBundleLocalizations` (`ios/Runner/Info.plist`), which feeds the App Store's Languages list; add any new locale there too.
 - Use `AppColors` and `sagaxTheme` (`lib/sagax_theme.dart`) rather than new colours. `errorRed` and `hintAmber` are the game's additions.
 - Fonts are bundled in `google_fonts/` and runtime fetching is disabled. Only Exo2 400/600/700 and Inter 300/400/500/700 exist; any other weight falls back and logs an exception.
 - Fire-and-forget async calls (audio) are wrapped in `unawaited(...)`.
