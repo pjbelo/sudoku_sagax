@@ -48,4 +48,9 @@ Project `sudoku-sagax-games` (Android + iOS). `main()` initialises Core, Crashly
 Static HTML/CSS/vanilla JS site for `sudoku.sagax-games.com`, structured like the Slidox/Memorex/MasterCode sites. It has one build step: `node website/tools/build.js` (no dependencies) writes a static page per language from `js/i18n.js`. The root `index.html`, `privacy.html` and `contact.html` are the English pages and the templates (`data-i18n*` attributes, dotted keys into arrays); `pt/`, `es/`, `fr/`, `de/` and `sitemap.xml` are generated, so never edit them: edit the templates or `i18n.js`, then rerun the build and upload `website/` to the Plesk document root. `js/i18n.js` is read only by the build and holds all strings for the 5 locales — benefit texts, evidence note, tagline, bands and game labels are copied from the `.arb` files, features from `docs/store-listing-texts.md`; keep them in sync. `LEVELS` in `tools/build.js` mirrors `sudokuLevels`. `js/sudoku.js` is a playable Beginner puzzle whose generator mirrors `lib/game/sudoku_generator.dart` (46 givens, singles-solvable, unique); it reads its strings from `script#demo-text`, written by the build. The privacy page must describe exactly the app's data collection (Firebase Analytics + Crashlytics; options and scores stay on device). The App Store id is `6820541123` (badge link and `apple-itunes-app` meta in `index.html`).
 
 ## My Preferences
-Never commit, I'll do that myself.
+
+Allways use english in code comments, but also in class names, methods names, functions, variables, so english team members can understand the project.
+
+Allways use simple code that a beguinner developer could understand. If there is any situation you think more advanced code could improve very much code performance, say it and ask if you should implement it.
+
+Never commit. When you think a commit should be done, suggest it and suggest a commit message (in english).
