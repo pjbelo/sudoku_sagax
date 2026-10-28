@@ -55,7 +55,8 @@ Geriatric Psychiatry, 30*(4), 422–430. doi:10.1002/gps.4155
   at crosswords, Sudoku, brain-training games and other video games.
 - Frequency of Sudoku or similar puzzles was positively associated with
   grammatical reasoning, spatial working memory and episodic memory scores.
-  Cross-sectional; the authors call for further investigation.
+  Cross-sectional; the authors call for further investigation. → *Benefits 2
+  and 3.*
 
 ### Working memory
 
@@ -72,8 +73,9 @@ doi:10.1080/01924788.2016.1272390
   working memory improved, particularly digit symbol and letter memory. Both
   groups played and there was no non-playing control, so practice effects on
   the tests can't be ruled out. Don't cite it as proof that Sudoku trains
-  working memory.
-- Small samples. → *Benefit 2.*
+  working memory. Background only: the app and the website list only the 2011
+  paper.
+- Small samples. → *Benefit 2* (2011).
 
 ### Brain imaging
 
@@ -106,18 +108,19 @@ doi:10.1093/geronb/gbz149
 - Lothian Birth Cohort 1936 (n = 1,091), tested from age 11 to 79. More
   game-playing was associated with less cognitive decline from 70 to 79,
   especially in memory. Covers board and card games as well as puzzles.
+  → *Benefit 5.*
 
 **Verghese, J., Lipton, R. B., Katz, M. J., et al. (2003).** Leisure activities
 and the risk of dementia in the elderly. *New England Journal of Medicine,
 348*(25), 2508–2516. doi:10.1056/NEJMoa022252
 - Bronx Aging Study. Cognitive leisure activities (puzzles, board games,
   reading) were associated with lower dementia risk. Predates Sudoku's
-  popularity, so it's cited for puzzles in general.
+  popularity, so it's cited for puzzles in general. → *Benefit 5.*
 
 **Stern, Y. (2012).** Cognitive reserve in ageing and Alzheimer's disease.
 *The Lancet Neurology, 11*(11), 1006–1012. doi:10.1016/S1474-4422(12)70191-6
 - The theoretical framework: lifelong mental stimulation builds reserve that
-  buffers age-related decline.
+  buffers age-related decline. → *Benefit 5* ("cognitive reserve").
 
 ### Intervention
 
@@ -133,6 +136,10 @@ the third author as "Two, Wung Wai", a metadata typo; PMC has Tso.)
   language, delayed recall, recognition memory and subjective memory
   complaints. The effects, plus executive function, were sustained to the end
   of the programme.
+- The registry entry (University of Hong Kong) gives the trial as completed in
+  December 2023, with an actual enrolment of 262, not the abstract's 288, and
+  lists no results publication. Quote the abstract's figures only with that
+  caveat.
 - Not yet a full peer-reviewed paper (still only the abstract as of October
   2026); worth re-checking for a journal publication. → *Benefit 1.*
 
