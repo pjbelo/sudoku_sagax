@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -41,45 +43,50 @@ class LevelSelector extends StatelessWidget {
     final primary = Theme.of(context).primaryColor;
     const spacing = 10.0;
 
+    // The text is sized from the chips, so system text scaling stays out.
     if (singleRow) {
       // Shrink the chips so all 9 fit the available width.
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          const gap = 6.0;
-          final fit = (constraints.maxWidth - 32) / 9 - gap;
-          final size = fit.clamp(28.0, chipSize);
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (final spec in sudokuLevels)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: gap / 2),
-                    child: _chip(spec, primary, size),
-                  ),
-              ],
-            ),
-          );
-        },
+      return MediaQuery.withNoTextScaling(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            const gap = 6.0;
+            final fit = (constraints.maxWidth - 32) / 9 - gap;
+            final size = fit.clamp(20.0, chipSize);
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (final spec in sudokuLevels)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: gap / 2),
+                      child: _chip(spec, primary, size),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
       );
     }
 
-    return SizedBox(
-      width: chipSize * 3 + spacing * 2,
-      child: Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
-        children: [
-          for (final spec in sudokuLevels) _chip(spec, primary, chipSize),
-        ],
+    return MediaQuery.withNoTextScaling(
+      child: SizedBox(
+        width: chipSize * 3 + spacing * 2,
+        child: Wrap(
+          spacing: spacing,
+          runSpacing: spacing,
+          children: [
+            for (final spec in sudokuLevels) _chip(spec, primary, chipSize),
+          ],
+        ),
       ),
     );
   }
 
   Widget _chip(SudokuLevel spec, Color primary, double chipSize) {
     final isSelected = spec.level == selected;
-    final showClues = chipSize >= 56;
+    final showClues = chipSize >= 50;
     return GestureDetector(
       onTap: () => onSelected(spec.level),
       child: AnimatedContainer(
@@ -110,7 +117,9 @@ class LevelSelector extends StatelessWidget {
               Text(
                 '${spec.level}',
                 style: GoogleFonts.exo2(
-                  fontSize: showClues ? 20 : 16,
+                  fontSize: showClues
+                      ? chipSize * 0.3125
+                      : min(16, chipSize * 0.5),
                   fontWeight: FontWeight.bold,
                   color: isSelected
                       ? AppColors.midnightNavy
@@ -121,7 +130,7 @@ class LevelSelector extends StatelessWidget {
                 Text(
                   '${spec.clues}',
                   style: GoogleFonts.inter(
-                    fontSize: 10,
+                    fontSize: max(9, chipSize * 0.156),
                     color: isSelected
                         ? AppColors.midnightNavy.withValues(alpha: 0.7)
                         : AppColors.softSlate,

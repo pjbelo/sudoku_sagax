@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foldable/foldable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'firebase_options.dart';
@@ -13,6 +14,7 @@ import 'services/analytics_service.dart';
 import 'services/audio_service.dart';
 import 'services/scoreboard_service.dart';
 import 'services/settings_service.dart';
+import 'widgets/adaptive_layout.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,18 +60,25 @@ class SudokuSagaxApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Rebuilds when the language changes (stored with the other options).
-    return ListenableBuilder(
-      listenable: SettingsService.instance,
-      builder: (context, _) => MaterialApp(
-        title: 'Sudoku Sagax',
-        debugShowCheckedModeBanner: false,
-        theme: sagaxTheme,
-        locale: SettingsService.instance.locale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        navigatorObservers: AnalyticsService.instance.observers,
-        home: const HomeScreen(),
+    // iPhone Duo: fold posture and regions for the two-pane layouts
+    // (DuoMediaQuery). The full bridge also keeps dialogs and bottom sheets
+    // on one side of the fold. Elsewhere it reports no hinge.
+    return FoldableProvider(
+      bridgeMode: DisplayFeatureBridgeMode.full,
+      // Rebuilds when the language changes (stored with the other options).
+      child: ListenableBuilder(
+        listenable: SettingsService.instance,
+        builder: (context, _) => MaterialApp(
+          title: 'Sudoku Sagax',
+          debugShowCheckedModeBanner: false,
+          theme: sagaxTheme,
+          locale: SettingsService.instance.locale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          navigatorObservers: AnalyticsService.instance.observers,
+          builder: (context, child) => LargeScreenText(child: child!),
+          home: const HomeScreen(),
+        ),
       ),
     );
   }

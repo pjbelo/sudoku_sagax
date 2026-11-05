@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/audio_service.dart';
+import '../widgets/adaptive_layout.dart';
 
 /// How to play, "Brain Benefits" backed by the references below, and
 /// credits. See docs/research.md for the full literature notes.
@@ -172,105 +173,109 @@ class _InfoScreenState extends State<InfoScreen> {
     );
 
     final body = SafeArea(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 720),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: CenteredPane(
+        maxWidth: 1200,
+        alignment: Alignment.topCenter,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.howToPlayTitle, style: sectionStyle()),
+            const SizedBox(height: 16),
+            _InfoCard(
+              title: '🧩 Sudoku',
+              description: l10n.howToPlayText,
+              titleColor: primary,
+            ),
+            const SizedBox(height: 14),
+            Text(l10n.sudokuBenefitsTitle, style: sectionStyle()),
+            const SizedBox(height: 20),
+            Text(
+              l10n.sudokuBenefitsIntro,
+              style: GoogleFonts.inter(
+                color: AppColors.snowWhite,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 20),
+            TwoColumnCards(
               children: [
-                Text(l10n.howToPlayTitle, style: sectionStyle()),
-                const SizedBox(height: 16),
-                _InfoCard(
-                  title: '🧩 Sudoku',
-                  description: l10n.howToPlayText,
-                  titleColor: primary,
-                ),
-                const SizedBox(height: 14),
-                Text(l10n.sudokuBenefitsTitle, style: sectionStyle()),
-                const SizedBox(height: 20),
-                Text(
-                  l10n.sudokuBenefitsIntro,
-                  style: GoogleFonts.inter(
-                    color: AppColors.snowWhite,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: 20),
                 for (final b in benefits)
                   _InfoCard(
                     title: b.title,
                     description: b.desc,
                     titleColor: primary,
                   ),
-                _InfoCard(
-                  title: 'ℹ️',
-                  description: l10n.evidenceNote,
-                  titleColor: AppColors.hintAmber,
-                ),
-                const SizedBox(height: 30),
-                Text(l10n.scientificReferences, style: sectionStyle()),
-                const SizedBox(height: 20),
+              ],
+            ),
+            _InfoCard(
+              title: 'ℹ️',
+              description: l10n.evidenceNote,
+              titleColor: AppColors.hintAmber,
+            ),
+            const SizedBox(height: 30),
+            Text(l10n.scientificReferences, style: sectionStyle()),
+            const SizedBox(height: 20),
+            TwoColumnCards(
+              children: [
                 for (final r in InfoScreen._references)
                   _ReferenceCard(
                     authors: r.authors,
                     title: r.title,
                     journal: r.journal,
                   ),
-                const SizedBox(height: 30),
-                Center(
-                  child: Image.asset(
-                    'assets/images/sagax-games-logo.png',
-                    height: 200,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Center(
-                  child: Text(
-                    l10n.developedBy,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: AppColors.softSlate,
-                      fontWeight: FontWeight.w300,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _playClick();
-                      _showCredits(context);
-                    },
-                    child: Text(
-                      l10n.credits,
-                      style: GoogleFonts.exo2(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Center(
-                  child: TextButton(
-                    onPressed: _onBackPressed,
-                    child: Text(
-                      l10n.back,
-                      style: GoogleFonts.exo2(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: primary,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
               ],
             ),
-          ),
+            const SizedBox(height: 30),
+            Center(
+              child: Image.asset(
+                'assets/images/sagax-games-logo.png',
+                height: 200,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                l10n.developedBy,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: AppColors.softSlate,
+                  fontWeight: FontWeight.w300,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 30),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  _playClick();
+                  _showCredits(context);
+                },
+                child: Text(
+                  l10n.credits,
+                  style: GoogleFonts.exo2(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: TextButton(
+                onPressed: _onBackPressed,
+                child: Text(
+                  l10n.back,
+                  style: GoogleFonts.exo2(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: primary,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );

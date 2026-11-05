@@ -67,8 +67,11 @@ unplug.
 - sound with the mute switch on and off (iOS) and in silent mode (Android);
 - that the timer pauses when the app goes to the background, and with the
   pause button;
-- portrait phones and landscape tablets (in landscape the number pad becomes
-  a 3×3 block);
+- phones and tablets in both orientations (in landscape the number pad becomes
+  a 3×3 block, and Home and the scoreboard use two panes), plus iPad Split View;
+- iPhone Duo in each pose, set by hand in DeviceHub: closed (Back, the stats and
+  Pause in the side strip), open flat, and partly folded both ways (board and
+  controls on either side of the fold, dialogs on one side of it);
 - all 5 languages.
 
 ## Google Play (Android)

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:foldable/foldable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../game/sudoku_game.dart';
@@ -13,7 +14,9 @@ import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/scoreboard_service.dart';
 import '../services/settings_service.dart';
+import '../widgets/adaptive_layout.dart';
 import '../widgets/confirm_dialog.dart';
+import '../widgets/duo_layout.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
 import '../widgets/number_pad.dart';
@@ -37,6 +40,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   final _analytics = AnalyticsService.instance;
   final _settings = SettingsService.instance;
   final _focusNode = FocusNode();
+
+  /// iPhone Duo side strip for the controls (set in build); null elsewhere.
+  SideRail? _rail;
 
   late int _level;
   late SudokuGame _game;
@@ -348,6 +354,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    // iPhone Duo with a side strip: Back, the stats and Pause go there. Folded
+    // like a laptop they go below the fold, which leaves the whole upper half
+    // to the board.
+    _rail = sideRailOf(context);
+    final rail = _rail;
+    final showAppBar = rail == null && !isLaptopPose(context);
 
     return PopScope(
       canPop: !_hasProgress,
@@ -364,55 +376,76 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         Navigator.of(context).pop();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.appTitle),
-          centerTitle: true,
-          actions: [
-            if (_settings.timer && !_solved)
-              IconButton(
-                tooltip: _userPaused ? l10n.resume : l10n.pause,
-                onPressed: _onTogglePause,
-                icon: Icon(
-                  _userPaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
-                  color: AppColors.electricCyan,
+        appBar: showAppBar
+            ? AppBar(
+                title: Text(l10n.appTitle),
+                centerTitle: true,
+                actions: [if (_canPause) _buildPauseButton(l10n)],
+              )
+            : null,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Focus(
+              focusNode: _focusNode,
+              autofocus: true,
+              onKeyEvent: _onKey,
+              child: SafeArea(
+                child: FoldAwareBuilder(
+                  builder: (context, constraints, fold) {
+                    final foldRect = foldAcross(fold, constraints.biggest);
+                    if (foldRect != null) {
+                      return _buildFolded(l10n, foldRect, constraints.biggest);
+                    }
+                    final landscape =
+                        constraints.maxWidth > constraints.maxHeight * 1.1;
+                    return landscape
+                        ? _buildLandscape(l10n, constraints)
+                        : _buildPortrait(l10n, constraints);
+                  },
                 ),
               ),
-          ],
-        ),
-        body: Focus(
-          focusNode: _focusNode,
-          autofocus: true,
-          onKeyEvent: _onKey,
-          child: SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final landscape =
-                    constraints.maxWidth > constraints.maxHeight * 1.1;
-                return landscape
-                    ? _buildLandscape(l10n, constraints)
-                    : _buildPortrait(l10n, constraints);
-              },
             ),
-          ),
+            if (rail != null)
+              RailBar(
+                rail: rail,
+                children: [
+                  const BackButton(color: AppColors.electricCyan),
+                  ..._statBadges(l10n, compact: true),
+                  if (_canPause) _buildPauseButton(l10n),
+                ],
+              ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildPortrait(AppLocalizations l10n, BoxConstraints constraints) {
-    // Phones use the full width; tablets in portrait grow up to 820.
-    const maxWidth = 820.0;
-    final width = min(constraints.maxWidth, maxWidth);
-    final padHeight = (width / 9 * 0.95).clamp(58.0, 84.0);
+    // Phones use the full width. On larger screens the height decides: the
+    // board takes what the other rows leave, and they line up with the board.
+    var width = constraints.maxWidth;
+    if (width >= 600) {
+      final otherRows = 276 * uiScaleOf(context);
+      width = (constraints.maxHeight - otherRows).clamp(400.0, width);
+    }
+    // With the stats in the side rail, the keys of iPhone Duo's outer display
+    // can use the height they free.
+    final padHeight = _rail != null
+        ? 72.0
+        : (width / 9 * 0.95).clamp(58.0, 110.0);
     return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: maxWidth),
+      child: SizedBox(
+        width: width,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-              child: _buildStats(l10n),
-            ),
+            if (_rail == null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                child: _buildStats(l10n),
+              )
+            else
+              const SizedBox(height: 8),
             _buildStatus(l10n),
             Expanded(
               child: Padding(
@@ -424,16 +457,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
             if (_showWinBar)
               _buildWinBar(l10n)
             else if (!_solved) ...[
-              _buildControls(l10n),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: _buildControls(l10n),
+              ),
               const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: NumberPad(
-                  game: _game,
-                  notesMode: _notesMode,
-                  onDigit: _onDigit,
-                  height: padHeight,
-                ),
+                child: _buildNumberPad(height: padHeight),
               ),
               const SizedBox(height: 16),
             ],
@@ -444,58 +475,164 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   Widget _buildLandscape(AppLocalizations l10n, BoxConstraints constraints) {
+    // The board takes all the height, as long as the panel keeps enough
+    // width. The side strip of the iPhone Duo already holds the stats.
+    const margin = 12.0;
+    final minPanelWidth = _rail == null ? 300.0 : 230.0;
+    final boardSize = min(
+      constraints.maxHeight - margin * 2,
+      constraints.maxWidth - minPanelWidth - margin * 2,
+    );
+    final panelWidth = min(
+      constraints.maxWidth - boardSize - margin * 2,
+      520.0,
+    );
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Center(child: _buildBoardArea(l10n)),
+        Padding(
+          padding: const EdgeInsets.all(margin),
+          child: SizedBox.square(
+            dimension: boardSize,
+            child: _buildBoardArea(l10n),
           ),
         ),
         SizedBox(
-          width: min(400, constraints.maxWidth * 0.45),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(4, 12, 16, 12),
-            child: Column(
-              children: [
-                _buildStats(l10n),
-                _buildStatus(l10n),
-                const SizedBox(height: 8),
-                if (_showWinBar)
-                  _buildWinBar(l10n)
-                else if (!_solved) ...[
-                  _buildControls(l10n),
-                  const SizedBox(height: 12),
-                  NumberPad(
-                    game: _game,
-                    notesMode: _notesMode,
-                    onDigit: _onDigit,
-                    height: 64,
-                    grid: true,
-                  ),
-                ],
-              ],
-            ),
-          ),
+          width: panelWidth,
+          child: _buildPanel(l10n, Size(panelWidth, constraints.maxHeight)),
         ),
       ],
+    );
+  }
+
+  /// Partly folded iPhone Duo: the board on one side of the fold, the rest
+  /// on the other. [area] is the space around the fold.
+  Widget _buildFolded(AppLocalizations l10n, Rect fold, Size area) {
+    final sideBySide = fold.height >= fold.width;
+    return FoldPanes(
+      fold: fold,
+      first: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Center(child: _buildBoardArea(l10n)),
+      ),
+      second: sideBySide
+          ? _buildPanel(l10n, Size(area.width - fold.right, area.height))
+          : _buildLowerHalf(l10n, area.height - fold.bottom),
+    );
+  }
+
+  /// Everything but the board, in one column, for a pane of [size]. The keys
+  /// form a 3×3 block that grows into the free height, up to square keys.
+  Widget _buildPanel(AppLocalizations l10n, Size size) {
+    final scale = uiScaleOf(context);
+    final twoRows = size.width < 320;
+    final otherRows = (_rail == null ? 130 : 50) + (twoRows ? 130 : 70);
+    final freeHeight = (size.height - otherRows * scale - 24) / 3 - 8;
+    final keyWidth = (size.width - 20) / 3 - 8;
+    final keyHeight = max(52.0, min(freeHeight, keyWidth));
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(4, 12, 16, 12),
+        child: Column(
+          children: [
+            if (_rail == null) _buildStats(l10n),
+            _buildStatus(l10n),
+            const SizedBox(height: 8),
+            if (_showWinBar)
+              _buildWinBar(l10n)
+            else if (!_solved) ...[
+              _buildControls(l10n, twoRows: twoRows),
+              const SizedBox(height: 12),
+              _buildNumberPad(height: keyHeight, grid: true),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Below the fold of an iPhone Duo folded like a laptop: everything but the
+  /// board, Back and Pause included, in a pane of [height].
+  Widget _buildLowerHalf(AppLocalizations l10n, double height) {
+    final padHeight = (height - 190).clamp(58.0, 90.0);
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const BackButton(color: AppColors.electricCyan),
+                Expanded(child: _buildStats(l10n)),
+                // Keeps the stats centred when there is no Pause button.
+                SizedBox(
+                  width: 48,
+                  child: _canPause ? _buildPauseButton(l10n) : null,
+                ),
+              ],
+            ),
+            _buildStatus(l10n),
+            if (_showWinBar)
+              _buildWinBar(l10n)
+            else if (!_solved) ...[
+              _buildControls(l10n),
+              const SizedBox(height: 8),
+              _buildNumberPad(height: padHeight),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNumberPad({required double height, bool grid = false}) {
+    return NumberPad(
+      game: _game,
+      notesMode: _notesMode,
+      onDigit: _onDigit,
+      height: height,
+      grid: grid,
     );
   }
 
   Widget _buildStats(AppLocalizations l10n) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _StatBadge(label: l10n.levelLabel, value: '$_level'),
-        if (_settings.timer)
-          _StatBadge(label: l10n.timeLabel, value: formatTime(_seconds)),
-        if (_settings.showErrors)
-          _StatBadge(
-            label: l10n.mistakesLabel,
-            value: '${_game.mistakes}',
-            valueColor: _game.mistakes > 0 ? AppColors.errorRed : null,
-          ),
-      ],
+      children: _statBadges(l10n),
+    );
+  }
+
+  /// Level, time and mistakes; [compact] for the iPhone Duo side rail.
+  List<Widget> _statBadges(AppLocalizations l10n, {bool compact = false}) {
+    return [
+      _StatBadge(label: l10n.levelLabel, value: '$_level', compact: compact),
+      if (_settings.timer)
+        _StatBadge(
+          label: l10n.timeLabel,
+          value: formatTime(_seconds),
+          compact: compact,
+        ),
+      if (_settings.showErrors)
+        _StatBadge(
+          label: l10n.mistakesLabel,
+          value: '${_game.mistakes}',
+          valueColor: _game.mistakes > 0 ? AppColors.errorRed : null,
+          compact: compact,
+        ),
+    ];
+  }
+
+  bool get _canPause => _settings.timer && !_solved;
+
+  Widget _buildPauseButton(AppLocalizations l10n) {
+    return IconButton(
+      tooltip: _userPaused ? l10n.resume : l10n.pause,
+      onPressed: _onTogglePause,
+      icon: Icon(
+        _userPaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
+        color: AppColors.electricCyan,
+        size: 24 * uiScaleOf(context),
+      ),
     );
   }
 
@@ -555,33 +692,44 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildControls(AppLocalizations l10n) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  /// Undo, Erase, Notes and Hint, in [twoRows] when the pane is narrow.
+  Widget _buildControls(AppLocalizations l10n, {bool twoRows = false}) {
+    final buttons = <Widget>[
+      _ControlButton(
+        icon: Icons.undo_rounded,
+        label: l10n.undo,
+        onPressed: _game.canUndo ? _onUndo : null,
+      ),
+      _ControlButton(
+        icon: Icons.backspace_outlined,
+        label: l10n.erase,
+        onPressed: _onErase,
+      ),
+      _ControlButton(
+        icon: _notesMode ? Icons.edit : Icons.edit_outlined,
+        label: l10n.notes,
+        onPressed: _onToggleNotes,
+        active: _notesMode,
+      ),
+      if (_settings.hints)
+        _ControlButton(
+          icon: Icons.lightbulb_outline,
+          label: l10n.hint(hintPenaltySeconds),
+          onPressed: _onHint,
+          color: AppColors.hintAmber,
+        ),
+    ];
+
+    Widget row(Iterable<Widget> items) {
+      return Row(children: [for (final item in items) Expanded(child: item)]);
+    }
+
+    if (!twoRows) return row(buttons);
+    return Column(
       children: [
-        _ControlButton(
-          icon: Icons.undo_rounded,
-          label: l10n.undo,
-          onPressed: _game.canUndo ? _onUndo : null,
-        ),
-        _ControlButton(
-          icon: Icons.backspace_outlined,
-          label: l10n.erase,
-          onPressed: _onErase,
-        ),
-        _ControlButton(
-          icon: _notesMode ? Icons.edit : Icons.edit_outlined,
-          label: l10n.notes,
-          onPressed: _onToggleNotes,
-          active: _notesMode,
-        ),
-        if (_settings.hints)
-          _ControlButton(
-            icon: Icons.lightbulb_outline,
-            label: l10n.hint(hintPenaltySeconds),
-            onPressed: _onHint,
-            color: AppColors.hintAmber,
-          ),
+        row(buttons.take(2)),
+        const SizedBox(height: 6),
+        row(buttons.skip(2)),
       ],
     );
   }
@@ -612,17 +760,30 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
 /// Small stat badge used in the header.
 class _StatBadge extends StatelessWidget {
-  const _StatBadge({required this.label, required this.value, this.valueColor});
+  const _StatBadge({
+    required this.label,
+    required this.value,
+    this.valueColor,
+    this.compact = false,
+  });
 
   final String label;
   final String value;
   final Color? valueColor;
 
+  /// Narrow and full-width, for the iPhone Duo side rail.
+  final bool compact;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(minWidth: 88),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      width: compact ? double.infinity : null,
+      constraints: BoxConstraints(
+        minWidth: compact ? 0 : 88 * uiScaleOf(context),
+      ),
+      padding: compact
+          ? const EdgeInsets.symmetric(horizontal: 4, vertical: 6)
+          : const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.cardDark,
         borderRadius: BorderRadius.circular(15),
@@ -632,18 +793,27 @@ class _StatBadge extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(
-            label,
-            style: GoogleFonts.inter(fontSize: 13, color: AppColors.softSlate),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: compact ? 11 : 13,
+                color: AppColors.softSlate,
+              ),
+            ),
           ),
           const SizedBox(height: 2),
-          Text(
-            value,
-            style: GoogleFonts.exo2(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: valueColor ?? AppColors.snowWhite,
-              fontFeatures: const [FontFeature.tabularFigures()],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: GoogleFonts.exo2(
+                fontSize: compact ? 18 : 22,
+                fontWeight: FontWeight.bold,
+                color: valueColor ?? AppColors.snowWhite,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
         ],
@@ -673,37 +843,40 @@ class _ControlButton extends StatelessWidget {
     final base = color ?? AppColors.electricCyan;
     final enabled = onPressed != null;
     final fg = enabled ? base : base.withValues(alpha: 0.35);
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: 80,
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        decoration: BoxDecoration(
-          color: active ? base.withValues(alpha: 0.18) : null,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: active ? base : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: fg, size: 26),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.exo2(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: fg,
-              ),
+    final scale = uiScaleOf(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 6 * scale),
+          decoration: BoxDecoration(
+            color: active ? base.withValues(alpha: 0.18) : null,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: active ? base : Colors.transparent,
+              width: 1.5,
             ),
-          ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: fg, size: 26 * scale),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.exo2(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: fg,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -744,104 +917,121 @@ class _WinSummaryScreen extends StatelessWidget {
     final hasNext = level < sudokuLevels.length;
     final rank = this.rank;
 
+    final result = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          l10n.congratulations,
+          style: Theme.of(context).textTheme.headlineMedium,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+        Text(
+          l10n.levelCompleted(level, formatTime(seconds)),
+          style: Theme.of(context).textTheme.bodyLarge,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l10n.hintsAndMistakes(hints, mistakes),
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+        if (rank != null) ...[
+          const SizedBox(height: 16),
+          Text(
+            rank == 1 ? l10n.newBestTime : l10n.rankOnScoreboard(rank, level),
+            style: GoogleFonts.exo2(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: rank == 1 ? AppColors.hintAmber : primary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ],
+    );
+
+    final actions = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          hasNext
+              ? l10n.nextLevelInfo(
+                  bandName(l10n, sudokuLevels[level].band),
+                  sudokuLevels[level].clues,
+                )
+              : l10n.allLevelsComplete,
+          style: Theme.of(context).textTheme.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 32),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => _close(
+              context,
+              hasNext ? _WinAction.nextLevel : _WinAction.playAgain,
+            ),
+            child: Text(hasNext ? l10n.nextLevel : l10n.playAgain),
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: () => _close(context, _WinAction.sameLevel),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: primary,
+              side: BorderSide(color: primary.withValues(alpha: 0.6)),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+            icon: const Icon(Icons.refresh),
+            label: Text(
+              l10n.sameLevel,
+              style: GoogleFonts.exo2(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        TextButton(
+          onPressed: () => _close(context, _WinAction.menu),
+          child: Text(
+            l10n.backToMenu,
+            style: GoogleFonts.exo2(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.electricCyan,
+            ),
+          ),
+        ),
+      ],
+    );
+
+    Widget pane(Widget child) {
+      return CenteredPane(
+        maxWidth: 480 * uiScaleOf(context),
+        padding: 32,
+        child: child,
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.midnightNavy,
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(32),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    l10n.congratulations,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    l10n.levelCompleted(level, formatTime(seconds)),
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.hintsAndMistakes(hints, mistakes),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  if (rank != null) ...[
-                    const SizedBox(height: 16),
-                    Text(
-                      rank == 1
-                          ? l10n.newBestTime
-                          : l10n.rankOnScoreboard(rank, level),
-                      style: GoogleFonts.exo2(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: rank == 1 ? AppColors.hintAmber : primary,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  Text(
-                    hasNext
-                        ? l10n.nextLevelInfo(
-                            bandName(l10n, sudokuLevels[level].band),
-                            sudokuLevels[level].clues,
-                          )
-                        : l10n.allLevelsComplete,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _close(
-                        context,
-                        hasNext ? _WinAction.nextLevel : _WinAction.playAgain,
-                      ),
-                      child: Text(hasNext ? l10n.nextLevel : l10n.playAgain),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () => _close(context, _WinAction.sameLevel),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: primary,
-                        side: BorderSide(color: primary.withValues(alpha: 0.6)),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      icon: const Icon(Icons.refresh),
-                      label: Text(
-                        l10n.sameLevel,
-                        style: GoogleFonts.exo2(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextButton(
-                    onPressed: () => _close(context, _WinAction.menu),
-                    child: Text(
-                      l10n.backToMenu,
-                      style: GoogleFonts.exo2(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.electricCyan,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+        child: TwoPaneLayout(
+          // A large screen shows it all in one calm column; short windows
+          // need both halves to avoid scrolling.
+          splitWhenWide: isCompactHeight(context),
+          first: pane(result),
+          second: pane(actions),
+          single: pane(
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [result, const SizedBox(height: 16), actions],
             ),
           ),
         ),

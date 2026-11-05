@@ -256,7 +256,10 @@ Future<void> _tapDigit(WidgetTester tester, int digit) async {
     find.descendant(
       of: find.byType(NumberPad),
       matching: find.byWidgetPredicate(
-        (w) => w is Text && w.data == '$digit' && (w.style?.fontSize ?? 0) > 14,
+        (w) =>
+            w is Text &&
+            w.data == '$digit' &&
+            (w.style?.fontFamily ?? '').startsWith('Exo2'), // not the count
       ),
     ),
   );

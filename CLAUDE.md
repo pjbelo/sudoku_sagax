@@ -29,6 +29,15 @@ Release signing (Android) reads the gitignored `android/key.properties` + upload
   - `AudioService` owns one music player and one SFX player. It plays only when `SettingsService.sound` is on and the device isn't silent. Players are created in `init()`; until then, as in tests, every call is a no-op.
 - **`lib/screens/`**: Home → Game / Scoreboard / Options / Info. `GameScreen` owns timing (ticks even when the clock is hidden; +`hintPenaltySeconds` per hint), pause (user and app lifecycle), the win bar and the `_WinSummaryScreen` flow, copied from Slidox.
 - **`lib/widgets/`**: `SudokuBoard` (one GestureDetector maps taps to cells; a CustomPainter draws the grid), `NumberPad` (row, or 3×3 in landscape), `LevelSelector`, `SudokuLogo`, `showConfirmDialog`, `fadeRoute`.
+- **Large screens** (`lib/widgets/adaptive_layout.dart`): every size comes from the window, not the device, so iPad Split View and Stage Manager get the layout that suits their space.
+  - `uiScaleOf` is 1 on phones and iPhone Duo and grows to 1.3 on large tablets. `LargeScreenText` (`MaterialApp.builder`) applies it to all text, on top of the system text size; text sized from a shape (board, number pad, level chips) opts out with `MediaQuery.withNoTextScaling`.
+  - `TwoPaneLayout` splits a screen around a fold or in a wide window, `CenteredPane` centres content and scrolls from the empty margins too, `TwoColumnCards` pairs cards. `isCompactHeight` tells screens to tighten up.
+  - `GameScreen` sizes the board from the space left by the other rows, and the 3×3 keys fill the panel's height.
+- **iPhone Duo** (`lib/widgets/duo_layout.dart`, as in MasterCode): `FoldableProvider` (package `foldable`) wraps the app in `main.dart`; elsewhere it reports no hinge and nothing changes.
+  - Where the safe area has a side strip (the outer display, and the inner one in landscape), `RailBar` holds Back, the stats and Pause on `GameScreen`, and Info and the language on `HomeScreen`, below the camera (`sideRailOf`), following Apple's "vertical controls".
+  - While partly folded (`foldAcross`, which trusts the posture because a region can stay active just after laying flat), `FoldPanes` splits the game, home, scoreboard, options and win summary around the fold. Folded like a laptop (`isLaptopPose`), `GameScreen` drops the `AppBar` to give the board the whole upper half.
+  - `bridgeMode: full` keeps dialogs and bottom sheets on one side of the fold.
+  - Real geometry (simulator): outer 466×678 pt (84 pt right strip, camera to y 174); inner 951×669 landscape / 669×951 portrait, fold 40 pt wide at the centre. `test/layout_test_helpers.dart` holds these windows and feeds the fold states through `FoldableProvider(debugData:)`. The simulator can't be folded from the command line (DeviceHub only).
 
 ## Conventions
 
@@ -46,6 +55,15 @@ Project `sudoku-sagax-games` (Android + iOS). `main()` initialises Core, Crashly
 ## Website (`website/`)
 
 Static HTML/CSS/vanilla JS site for `sudoku.sagax-games.com`, structured like the Slidox/Memorex/MasterCode sites. It has one build step: `node website/tools/build.js` (no dependencies) writes a static page per language from `js/i18n.js`. The root `index.html`, `privacy.html` and `contact.html` are the English pages and the templates (`data-i18n*` attributes, dotted keys into arrays); `pt/`, `es/`, `fr/`, `de/` and `sitemap.xml` are generated, so never edit them: edit the templates or `i18n.js`, then rerun the build and upload `website/` to the Plesk document root. `js/i18n.js` is read only by the build and holds all strings for the 5 locales — benefit texts, evidence note, tagline, bands and game labels are copied from the `.arb` files, features from `docs/store-listing-texts.md`; keep them in sync. `LEVELS` in `tools/build.js` mirrors `sudokuLevels`. `js/sudoku.js` is a playable Beginner puzzle whose generator mirrors `lib/game/sudoku_generator.dart` (46 givens, singles-solvable, unique); it reads its strings from `script#demo-text`, written by the build. The privacy page must describe exactly the app's data collection (Firebase Analytics + Crashlytics; options and scores stay on device). The App Store id is `6820541123` (badge link and `apple-itunes-app` meta in `index.html`).
+
+## App Store Guideline 4.3 (Spam)
+
+Check this app against [Guideline 4.3](https://developer.apple.com/app-store/review/guidelines/) (and 4.2, Minimum Functionality) when planning features and before every submission; re-read the page, as Apple updates it.
+
+- **4.3(a):** don't submit multiple Bundle IDs of the same app; put variations (locations, themes, levels) inside one app.
+- **4.3(b):** apps "indistinguishable from what's already widely available" are rejected; crowded categories need "a meaningfully different or improved experience".
+- **Why:** MasterCode (Sagax Games) was rejected under 4.3(a) on 2026-10-30 as too similar to existing code-breaking apps. It was resubmitted with a deduction coach and game review, guided lessons, a classic-variant skin, Game Center and iPhone Duo layouts. Sister apps share one architecture and look, so each must stand on its own features.
+- **How:** ask what makes the app meaningfully different from what's already on the store, and say so if the answer is thin. Prefer visible differentiators (coaching, analysis of the player's play, original modes, accessibility, platform features, research-backed content), and make them prominent in the screenshots, the description and the App Review notes.
 
 ## My Preferences
 

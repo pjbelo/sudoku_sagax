@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,15 +29,19 @@ class NumberPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!grid) return _row(1, 9, 2.5);
-    return Column(
-      children: [
-        for (int first = 1; first <= 7; first += 3)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: _row(first, 3, 4),
-          ),
-      ],
+    // The digits are sized from the keys, so system text scaling stays out.
+    return MediaQuery.withNoTextScaling(
+      child: grid
+          ? Column(
+              children: [
+                for (int first = 1; first <= 7; first += 3)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: _row(first, 3, 4),
+                  ),
+              ],
+            )
+          : _row(1, 9, 2.5),
     );
   }
 
@@ -90,7 +96,7 @@ class NumberPad extends StatelessWidget {
               Text(
                 '$remaining',
                 style: GoogleFonts.inter(
-                  fontSize: 10,
+                  fontSize: max(10, height * 0.15),
                   height: 1,
                   color: AppColors.electricCyan.withValues(alpha: 0.8),
                 ),

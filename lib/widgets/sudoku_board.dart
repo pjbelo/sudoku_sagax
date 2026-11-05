@@ -31,52 +31,55 @@ class SudokuBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final size = constraints.maxWidth;
-          final cell = size / 9;
-          return Container(
-            decoration: BoxDecoration(
-              color: AppColors.cardDark,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: AppColors.electricCyan.withValues(alpha: 0.6),
-                width: 2,
+      // The digits are sized from the cells, so system text scaling stays out.
+      child: MediaQuery.withNoTextScaling(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final size = constraints.maxWidth;
+            final cell = size / 9;
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.cardDark,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.electricCyan.withValues(alpha: 0.6),
+                  width: 2,
+                ),
               ),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTapDown: hidden
-                    ? null
-                    : (d) {
-                        // Account for the 2px border around the cells.
-                        final inner = (size - 4) / 9;
-                        final r = (d.localPosition.dy ~/ inner).clamp(0, 8);
-                        final c = (d.localPosition.dx ~/ inner).clamp(0, 8);
-                        onCellTap(r * 9 + c);
-                      },
-                child: CustomPaint(
-                  foregroundPainter: _GridPainter(),
-                  child: Column(
-                    children: [
-                      for (int r = 0; r < 9; r++)
-                        Expanded(
-                          child: Row(
-                            children: [
-                              for (int c = 0; c < 9; c++)
-                                Expanded(child: _buildCell(r * 9 + c, cell)),
-                            ],
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapDown: hidden
+                      ? null
+                      : (d) {
+                          // Account for the 2px border around the cells.
+                          final inner = (size - 4) / 9;
+                          final r = (d.localPosition.dy ~/ inner).clamp(0, 8);
+                          final c = (d.localPosition.dx ~/ inner).clamp(0, 8);
+                          onCellTap(r * 9 + c);
+                        },
+                  child: CustomPaint(
+                    foregroundPainter: _GridPainter(),
+                    child: Column(
+                      children: [
+                        for (int r = 0; r < 9; r++)
+                          Expanded(
+                            child: Row(
+                              children: [
+                                for (int c = 0; c < 9; c++)
+                                  Expanded(child: _buildCell(r * 9 + c, cell)),
+                              ],
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -187,9 +190,10 @@ class _GridPainter extends CustomPainter {
     final thin = Paint()
       ..color = AppColors.softSlate.withValues(alpha: 0.2)
       ..strokeWidth = 1;
+    // A touch heavier on large boards, so the 3×3 boxes still stand out.
     final thick = Paint()
       ..color = AppColors.electricCyan.withValues(alpha: 0.55)
-      ..strokeWidth = 2;
+      ..strokeWidth = size.width >= 600 ? 3 : 2;
     final step = size.width / 9;
     for (int k = 1; k < 9; k++) {
       final paint = k % 3 == 0 ? thick : thin;
