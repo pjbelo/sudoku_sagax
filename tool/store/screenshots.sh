@@ -12,7 +12,10 @@
 #
 # integration_test/store_screenshots_test.dart drives the app and prints
 # `SHOT:<lang>_<name>` at each scene; this script grabs the real device screen
-# (status bar set to 9:41, full battery) into docs/<store>/screenshots/.
+# (status bar set to 9:41, full battery) into build/store_screenshots/raw/.
+# Then tool/store/screenshot_captions_test.dart puts a caption above each one,
+# and the framed images go to docs/<store>/screenshots/ as plain RGB PNGs:
+# both stores reject images with an alpha channel.
 #
 # iPhone Duo: the simulator can't be folded from the command line, so put it
 # in the pose you want in DeviceHub (closed for duo-outer, open for
@@ -36,8 +39,16 @@ case $target in
   *) echo "unknown target: $target" >&2; exit 1 ;;
 esac
 
+command -v ffmpeg >/dev/null || { echo "ffmpeg not found (brew install ffmpeg)" >&2; exit 1; }
+raw="build/store_screenshots/raw/$target"
+framed="build/store_screenshots/framed/$target"
+
+# Saves a PNG as plain RGB (no alpha channel), losslessly.
+save_rgb() {
+  ffmpeg -nostdin -v error -y -i "$1" -pix_fmt rgb24 "$2"
+}
+
 if [ $platform = ios ]; then
-  command -v ffmpeg >/dev/null || { echo "ffmpeg not found (brew install ffmpeg)" >&2; exit 1; }
   # A simulator that is already running comes first: it may have several
   # copies, and the iPhone Duo's pose is set on the one you have open.
   device=$(xcrun simctl list devices booted | grep -F "$sim (" | head -1 | grep -oE '[0-9A-F-]{36}' || true)
@@ -91,7 +102,8 @@ if [ $platform = ios ]; then
       echo "  (Dynamic Island or camera in the shot, capturing again)"
       sleep 0.4
     done
-    mv "$tmp" "$1"
+    save_rgb "$tmp" "$1"
+    rm "$tmp"
   }
   # The iPhone simulator now and then draws the Dynamic Island into the
   # screenshot, and the iPhone Duo its outer camera. The app's status bar
@@ -149,7 +161,12 @@ else
   demo network -e wifi show -e level 4 -e fully true
   demo network -e mobile show -e datatype none -e level 4 -e fully true
   demo notifications -e visible false
-  capture() { "$adb" -s "$device" exec-out screencap -p > "$1"; }
+  capture() {
+    local tmp="${TMPDIR:-/tmp}/sudoku-sagax-shot.png"
+    "$adb" -s "$device" exec-out screencap -p > "$tmp"
+    save_rgb "$tmp" "$1"
+    rm "$tmp"
+  }
 fi
 
 run() {
@@ -164,15 +181,35 @@ run() {
       *SHOT:*)
         shot=${line##*SHOT:}
         lang=${shot%%_*}
-        mkdir -p "$out/$lang"
-        capture "$out/$lang/${shot#*_}.png"
-        echo "  -> $out/$lang/${shot#*_}.png"
+        mkdir -p "$raw/$lang"
+        capture "$raw/$lang/${shot#*_}.png"
+        echo "  -> $raw/$lang/${shot#*_}.png"
         ;;
     esac
   done
 }
 
+# Captions every raw capture of $langs and copies the framed images, without
+# an alpha channel, to $out. Earlier screenshots of those languages are
+# removed first, so files of renamed scenes don't linger.
+add_captions() {
+  echo "Adding captions"
+  flutter test tool/store/screenshot_captions_test.dart --update-goldens \
+    --dart-define=TARGET="$target" --dart-define=LANGS="$langs"
+  for lang in ${langs//,/ }; do
+    mkdir -p "$out/$lang"
+    rm -f "${out:?}/${lang:?}"/*.png
+    for f in "$framed/$lang"/*.png; do
+      save_rgb "$f" "$out/$lang/$(basename "$f")"
+    done
+    echo "  -> $out/$lang/"
+  done
+}
+
 echo "Capturing $langs on $target ($device) into $out"
+for lang in ${langs//,/ }; do
+  rm -rf "${raw:?}/${lang:?}" "${framed:?}/${lang:?}"
+done
 if [ $platform = ios ]; then
   for lang in ${langs//,/ }; do
     set_language "$lang"
@@ -188,3 +225,5 @@ else
   demo exit
   "$adb" -s "$device" emu kill >/dev/null
 fi
+
+add_captions

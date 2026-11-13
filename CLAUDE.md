@@ -36,7 +36,7 @@ Release signing (Android) reads the gitignored `android/key.properties` + upload
 - **iPhone Duo** (`lib/widgets/duo_layout.dart`, as in MasterCode): `FoldableProvider` (package `foldable`) wraps the app in `main.dart`; elsewhere it reports no hinge and nothing changes.
   - Where the safe area has a side strip (the outer display, and the inner one in landscape), `RailBar` holds Back, the stats and Pause on `GameScreen`, and Info and the language on `HomeScreen`, below the camera (`sideRailOf`), following Apple's "vertical controls".
   - While partly folded (`foldAcross`, which trusts the posture because a region can stay active just after laying flat), `FoldPanes` splits the game, home, scoreboard, options and win summary around the fold. Folded like a laptop (`isLaptopPose`), `GameScreen` drops the `AppBar` to give the board the whole upper half.
-  - `bridgeMode: full` keeps dialogs and bottom sheets on one side of the fold.
+  - `bridgeMode: full` (iOS only; Android reports display features itself) keeps dialogs and bottom sheets on one side of the fold.
   - Real geometry (simulator): outer 466×678 pt (84 pt right strip, camera to y 174); inner 951×669 landscape / 669×951 portrait, fold 40 pt wide at the centre. `test/layout_test_helpers.dart` holds these windows and feeds the fold states through `FoldableProvider(debugData:)`. The simulator can't be folded from the command line (DeviceHub only).
 
 ## Conventions

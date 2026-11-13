@@ -2,7 +2,12 @@
 // At each scene it prints `SHOT:<lang>_<name>` and holds still while
 // tool/store/screenshots.sh captures the device screen (status bar included).
 //
-//   tool/store/screenshots.sh <iphone|ipad|pixel|pixel-tablet> [en,pt,...]
+//   tool/store/screenshots.sh <iphone-6.3|ipad|duo-outer|...> [en,pt,...]
+//
+// The scenes play in the app's natural order, but their numbers set the
+// order on the store page, which leads with the game: 1_game, 2_solved,
+// 3_info, 4_home, 5_scoreboard, 6_options. Each scene name needs a caption
+// in tool/store/screenshot_captions_test.dart.
 //
 // Firebase and audio are never initialised here, so nothing is logged to
 // Analytics and the run is silent.
@@ -54,7 +59,7 @@ void main() {
           matching: find.text('$_level'),
         ),
       );
-      await _shot(tester, lang, '1_home');
+      await _shot(tester, lang, '4_home');
 
       // 2. A game in progress: entries, a hint, notes and highlights.
       await tester.tap(find.byType(ElevatedButton)); // PLAY
@@ -84,7 +89,7 @@ void main() {
         (i) => i >= 27 && i < 45 && game.values[i] == 0,
       );
       await _enter(tester, focus, game.solution[focus]);
-      await _shot(tester, lang, '2_game');
+      await _shot(tester, lang, '1_game');
 
       // 3. Solved grid with the Congratulations bar. Let the clock run first
       // so the final time looks like a person's, not a robot's.
@@ -94,7 +99,7 @@ void main() {
           await _enter(tester, i, game.solution[i]);
         }
       }
-      await _shot(tester, lang, '3_solved');
+      await _shot(tester, lang, '2_solved');
 
       // Win summary → back to the menu.
       await tester.tap(find.byType(ElevatedButton)); // OK
@@ -104,7 +109,7 @@ void main() {
 
       // 4. Scoreboard with the new best time on top.
       await tester.tap(find.byIcon(Icons.emoji_events_outlined));
-      await _shot(tester, lang, '4_scoreboard');
+      await _shot(tester, lang, '5_scoreboard');
       await tester.tap(
         find.byType(BackButton),
       ); // not pageBack(): its tooltip is localised
@@ -112,7 +117,7 @@ void main() {
 
       // 5. Options.
       await tester.tap(find.byIcon(Icons.tune));
-      await _shot(tester, lang, '5_options');
+      await _shot(tester, lang, '6_options');
       await tester.tap(
         find.byType(BackButton),
       ); // not pageBack(): its tooltip is localised
@@ -120,7 +125,7 @@ void main() {
 
       // 6. Info: how to play and brain benefits.
       await tester.tap(find.byIcon(Icons.info_outline));
-      await _shot(tester, lang, '6_info');
+      await _shot(tester, lang, '3_info');
     });
   }
 }

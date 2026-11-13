@@ -19,7 +19,7 @@ target=${1:?usage: $0 <iphone|ipad> [langs]}
 langs=${2:-en,pt,es,fr,de}
 
 case $target in
-  iphone) sim="iPhone 17 Pro Max" ;;
+  iphone) sim="iPhone 17 Pro" ;;  # 6.3", the required App Store size
   ipad)   sim="iPad Pro 13-inch (M5)" ;;
   *) echo "unknown target: $target" >&2; exit 1 ;;
 esac

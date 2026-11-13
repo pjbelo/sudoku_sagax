@@ -62,9 +62,13 @@ class SudokuSagaxApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // iPhone Duo: fold posture and regions for the two-pane layouts
     // (DuoMediaQuery). The full bridge also keeps dialogs and bottom sheets
-    // on one side of the fold. Elsewhere it reports no hinge.
+    // on one side of the fold. Elsewhere it reports no hinge. The bridge is
+    // for iOS only: Android already reports display features (folds, camera
+    // cutouts) itself, and the package flags a second source in debug runs.
     return FoldableProvider(
-      bridgeMode: DisplayFeatureBridgeMode.full,
+      bridgeMode: defaultTargetPlatform == TargetPlatform.iOS
+          ? DisplayFeatureBridgeMode.full
+          : DisplayFeatureBridgeMode.none,
       // Rebuilds when the language changes (stored with the other options).
       child: ListenableBuilder(
         listenable: SettingsService.instance,

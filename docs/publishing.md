@@ -262,17 +262,19 @@ are backdrop.
 ### Store screenshots
 
 [tool/store/screenshots.sh](../tool/store/screenshots.sh) captures six
-screenshots per language on a simulator or emulator:
+screenshots per language on a simulator or emulator, numbered in the order
+they go on the store page, best features first (the first three also show in
+App Store search results):
 
-1. home;
-2. a game in progress (entries, a hint, notes);
-3. the solved grid;
-4. the scoreboard;
-5. options;
-6. info.
+1. a game in progress (entries, a hint, notes);
+2. the solved grid;
+3. info (the science);
+4. home (the nine levels);
+5. the scoreboard;
+6. options.
 
 ```bash
-tool/store/screenshots.sh iphone         # iPhone 17 Pro Max (6.9", optional) → docs/app-store/…
+tool/store/screenshots.sh iphone         # iPhone 17 Pro Max (6.9", optional; simulator no longer installed) → docs/app-store/…
 tool/store/screenshots.sh iphone-6.3     # iPhone 17 Pro (6.3", required) → docs/app-store/…
 tool/store/screenshots.sh ipad           # iPad Pro 13-inch (M5)     → docs/app-store/…
 tool/store/screenshots.sh duo-outer      # iPhone Duo, closed        → docs/app-store/…
@@ -286,6 +288,21 @@ tool/store/screenshots.sh iphone en,pt   # only some languages
 plays the game through the real UI. At each scene it prints a marker, and the
 script grabs the device screen with `simctl` or `adb`, so the status bar,
 icons and emoji are real. The status bar is set to 9:41 with full battery.
+
+The raw captures go to `build/store_screenshots/raw/<target>/<lang>/`. Then
+[tool/store/screenshot_captions_test.dart](../tool/store/screenshot_captions_test.dart)
+puts a short caption above each one, in the store art of the preview video
+(navy grid, violet glow, white and pale-yellow Exo 2), with the screenshot
+below it, scaled down, with rounded corners. The framed image keeps the
+capture's size, so the store accepts it. The script saves it to `docs/` as a
+plain RGB PNG: both stores reject images with an alpha channel. It replaces
+the earlier screenshots of the languages it ran.
+
+The captions are store copy, written per language in that file, and follow
+Apple's advice: a short phrase that adds to the image. Keep them within
+[docs/research.md](research.md) (Sudoku *engages* memory and attention,
+never "improves"), with no prices, rankings or awards. A new scene needs a
+caption there, or the run fails.
 
 The iPhone Duo can't be folded from the command line. Put it in the pose
 yourself in DeviceHub (Xcode's simulator app): closed for `duo-outer`, open
