@@ -1,7 +1,7 @@
 #!/bin/bash
 # Records the store preview video on a simulator, for every language.
 #
-#   tool/store/video.sh iphone         # App Store app preview, iPhone 6.9" (886×1920)
+#   tool/store/video.sh iphone         # App Store app preview, iPhone and iPhone Duo (886×1920)
 #   tool/store/video.sh ipad           # App Store app preview, iPad 13" (1200×1600)
 #   tool/store/video.sh iphone en,pt   # only some languages
 #

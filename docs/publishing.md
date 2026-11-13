@@ -184,12 +184,21 @@ unplug.
 5. Screenshots, per Apple's
    [screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications)
    (the app supports iPhone and iPad, `TARGETED_DEVICE_FAMILY = 1,2`):
-   - **iPhone 6.9"** (1320×2868), **required**:
+   - **iPhone with Dynamic Island, medium display** (6.1"/6.3", 1206×2622),
+     **required**: `docs/app-store/screenshots/iPhone 17 Pro/<lang>/`. This
+     is the iPhone slot App Store Connect shows (checked 2026-11-13), and
+     Apple doesn't scale the 6.9" shots down to fill it;
+   - **iPhone with Dynamic Island, large display** (6.9", 1320×2868),
+     optional, used as is on the larger iPhones:
      `docs/app-store/screenshots/iPhone 17 Pro Max/<lang>/`;
-   - **iPhone 6.1"/6.3"** (1206×2622), only if App Store Connect asks for
-     it: `docs/app-store/screenshots/iPhone 17 Pro/<lang>/`;
    - **iPad 13"** (2064×2752), **required**:
-     `docs/app-store/screenshots/iPad Pro 13-inch/<lang>/`.
+     `docs/app-store/screenshots/iPad Pro 13-inch/<lang>/`;
+   - **iPhone Duo**, outer display (1398×2034) and inner display
+     (2007×2853), or the same sizes rotated: `docs/app-store/screenshots/iPhone
+     Duo outer/<lang>/` and `…/iPhone Duo inner/<lang>/`. Uploading them adds
+     the "made for iPhone Duo" badge to the product page, and from April 2027
+     they are **required** for apps using the iOS 27.1 SDK or later (Xcode
+     27.2 is).
 
    File names are the same in every folder, so check the folder before
    dragging. App previews (videos) are optional; see
@@ -263,9 +272,11 @@ screenshots per language on a simulator or emulator:
 6. info.
 
 ```bash
-tool/store/screenshots.sh iphone         # iPhone 17 Pro Max (6.9")  → docs/app-store/…
-tool/store/screenshots.sh iphone-6.3     # iPhone 17 Pro (6.3")      → docs/app-store/…
+tool/store/screenshots.sh iphone         # iPhone 17 Pro Max (6.9", optional) → docs/app-store/…
+tool/store/screenshots.sh iphone-6.3     # iPhone 17 Pro (6.3", required) → docs/app-store/…
 tool/store/screenshots.sh ipad           # iPad Pro 13-inch (M5)     → docs/app-store/…
+tool/store/screenshots.sh duo-outer      # iPhone Duo, closed        → docs/app-store/…
+tool/store/screenshots.sh duo-inner      # iPhone Duo, open          → docs/app-store/…
 tool/store/screenshots.sh pixel          # Pixel 9 Pro (AVD SudokuSagax_Pixel_9_Pro)  → docs/google-play/…
 tool/store/screenshots.sh pixel-tablet   # Pixel Tablet (AVD SudokuSagax_Pixel_Tablet, landscape) → docs/google-play/…
 tool/store/screenshots.sh iphone en,pt   # only some languages
@@ -275,6 +286,12 @@ tool/store/screenshots.sh iphone en,pt   # only some languages
 plays the game through the real UI. At each scene it prints a marker, and the
 script grabs the device screen with `simctl` or `adb`, so the status bar,
 icons and emoji are real. The status bar is set to 9:41 with full battery.
+
+The iPhone Duo can't be folded from the command line. Put it in the pose
+yourself in DeviceHub (Xcode's simulator app): closed for `duo-outer`, open
+for `duo-inner`. The script uses the iPhone Duo that is already running, waits
+for you again after each language's reboot, and captures only the display it
+was asked for.
 
 Some details of the run:
 
@@ -293,7 +310,7 @@ Some details of the run:
 language from real footage of the app:
 
 ```bash
-tool/store/video.sh iphone         # App Store iPhone 6.9" app preview (886×1920)
+tool/store/video.sh iphone         # App Store iPhone app preview (886×1920)
 tool/store/video.sh ipad           # App Store iPad 13" app preview (1200×1600)
 tool/store/video.sh iphone en,pt   # only some languages
 ```
@@ -324,8 +341,11 @@ How it is made:
    app preview spec: 15–30 s, 30 fps, H.264, stereo 256 kbps AAC.
 
 **App Store:** in the version page, under *Previews and Screenshots*, drag the
-video into the iPhone 6.9" or iPad 13" slot of each localisation (up to 3 per
-device and language). Pick a poster frame, for example the game in progress.
+video into the slot of each localisation (up to 3 per device and language):
+the iPhone video (886×1920) into the iPhone 6.1"/6.3" slot, the iPad video
+(1200×1600) into the iPad 12.9"/13" slot. The iPhone Duo slot also takes
+886×1920, so the iPhone video can go there too until there is footage from
+the Duo itself. Pick a poster frame, for example the game in progress.
 
 **Google Play:** upload the iPhone video to the Sagax Games YouTube channel
 as public or unlisted, with ads off and embedding allowed. Paste the

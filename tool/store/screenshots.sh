@@ -1,9 +1,11 @@
 #!/bin/bash
 # Captures store screenshots on a simulator/emulator, for every language.
 #
-#   tool/store/screenshots.sh iphone         # App Store, iPhone 6.9"
-#   tool/store/screenshots.sh iphone-6.3     # App Store, iPhone 6.3" (and 6.1")
+#   tool/store/screenshots.sh iphone         # App Store, iPhone 6.9" (optional)
+#   tool/store/screenshots.sh iphone-6.3     # App Store, iPhone 6.3" and 6.1" (required)
 #   tool/store/screenshots.sh ipad           # App Store, iPad 13"
+#   tool/store/screenshots.sh duo-outer      # App Store, iPhone Duo outer display
+#   tool/store/screenshots.sh duo-inner      # App Store, iPhone Duo inner display
 #   tool/store/screenshots.sh pixel          # Google Play, phone
 #   tool/store/screenshots.sh pixel-tablet   # Google Play, tablet
 #   tool/store/screenshots.sh iphone en,pt   # only some languages
@@ -11,16 +13,24 @@
 # integration_test/store_screenshots_test.dart drives the app and prints
 # `SHOT:<lang>_<name>` at each scene; this script grabs the real device screen
 # (status bar set to 9:41, full battery) into docs/<store>/screenshots/.
+#
+# iPhone Duo: the simulator can't be folded from the command line, so put it
+# in the pose you want in DeviceHub (closed for duo-outer, open for
+# duo-inner); after each language's reboot the script waits for you to do it
+# again. Each display is captured on its own, at the size App Store Connect
+# expects (outer 1398×2034, inner 2007×2853, or rotated).
 set -eo pipefail
 cd "$(dirname "$0")/../.."
 
-target=${1:?usage: $0 <iphone|iphone-6.3|ipad|pixel|pixel-tablet> [langs]}
+target=${1:?usage: $0 <iphone|iphone-6.3|ipad|duo-outer|duo-inner|pixel|pixel-tablet> [langs]}
 langs=${2:-en,pt,es,fr,de}
 
 case $target in
   iphone)       platform=ios;     sim="iPhone 17 Pro Max";     out="docs/app-store/screenshots/iPhone 17 Pro Max" ;;
   iphone-6.3)   platform=ios;     sim="iPhone 17 Pro";         out="docs/app-store/screenshots/iPhone 17 Pro" ;;
   ipad)         platform=ios;     sim="iPad Pro 13-inch (M5)"; out="docs/app-store/screenshots/iPad Pro 13-inch" ;;
+  duo-outer)    platform=ios;     sim="iPhone Duo"; display_width=1398; out="docs/app-store/screenshots/iPhone Duo outer" ;;
+  duo-inner)    platform=ios;     sim="iPhone Duo"; display_width=2007; out="docs/app-store/screenshots/iPhone Duo inner" ;;
   pixel)        platform=android; avd=SudokuSagax_Pixel_9_Pro;   out="docs/google-play/screenshots/pixel-9-pro" ;;
   pixel-tablet) platform=android; avd=SudokuSagax_Pixel_Tablet;  out="docs/google-play/screenshots/pixel-tablet" ;;
   *) echo "unknown target: $target" >&2; exit 1 ;;
@@ -28,8 +38,15 @@ esac
 
 if [ $platform = ios ]; then
   command -v ffmpeg >/dev/null || { echo "ffmpeg not found (brew install ffmpeg)" >&2; exit 1; }
-  device=$(xcrun simctl list devices available | grep -F "$sim (" | head -1 | grep -oE '[0-9A-F-]{36}')
-  open "$(xcode-select -p)/Applications/Simulator.app" 2>/dev/null || true  # optional: just to watch
+  # A simulator that is already running comes first: it may have several
+  # copies, and the iPhone Duo's pose is set on the one you have open.
+  device=$(xcrun simctl list devices booted | grep -F "$sim (" | head -1 | grep -oE '[0-9A-F-]{36}' || true)
+  if [ -z "$device" ]; then
+    device=$(xcrun simctl list devices available | grep -F "$sim (" | head -1 | grep -oE '[0-9A-F-]{36}')
+  fi
+  # Optional, just to watch; needed on iPhone Duo to set the pose. DeviceHub
+  # replaced Simulator in recent Xcode versions.
+  open -a DeviceHub 2>/dev/null || open "$(xcode-select -p)/Applications/Simulator.app" 2>/dev/null || true
   # The iPad status bar shows the date in the system language, which simctl
   # can't override, so the simulator is switched to each language in turn.
   set_language() {
@@ -48,22 +65,51 @@ if [ $platform = ios ]; then
     xcrun simctl status_bar "$device" override --time 9:41 \
       --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active \
       --cellularBars 4 --batteryState discharging --batteryLevel 100
+    if [ -n "$display_width" ]; then
+      read -r -p "Put the iPhone Duo in the pose for $target in DeviceHub, then press Enter. " </dev/tty
+    fi
+  }
+  # iPhone Duo: the display whose framebuffer is $display_width pixels wide.
+  duo_display() {
+    xcrun simctl io "$device" enumerate |
+      awk -v w="$display_width" '/UUID:/{u=$2} /Default width:/{if ($3 == w) {print u; exit}}'
+  }
+  shoot() {
+    if [ -n "$display_width" ]; then
+      xcrun simctl io "$device" screenshot --display="$(duo_display)" "$1" >/dev/null 2>&1
+    else
+      xcrun simctl io "$device" screenshot "$1" >/dev/null 2>&1
+    fi
   }
   # The simulator service can't write to every volume (e.g. external
   # drives), so capture into the local temp dir and move it.
   capture() {
     local tmp="${TMPDIR:-/tmp}/sudoku-sagax-shot.png" try
     for try in 1 2 3 4 5 6; do
-      xcrun simctl io "$device" screenshot "$tmp" >/dev/null 2>&1
-      if [ "$target" = ipad ] || ! island_visible "$tmp"; then break; fi
-      echo "  (Dynamic Island in the shot, capturing again)"
+      shoot "$tmp"
+      if ! sensors_visible "$tmp"; then break; fi
+      echo "  (Dynamic Island or camera in the shot, capturing again)"
       sleep 0.4
     done
     mv "$tmp" "$1"
   }
   # The iPhone simulator now and then draws the Dynamic Island into the
-  # screenshot. The app's status bar area is plain navy, so the island shows
-  # as a patch darker than the background beside it.
+  # screenshot, and the iPhone Duo its outer camera. The app's status bar
+  # area is plain navy, so they show as a patch darker than the background
+  # beside it.
+  sensors_visible() {
+    case $target in
+      ipad|duo-inner) return 1 ;;
+      duo-outer) camera_visible "$1" ;;
+      *) island_visible "$1" ;;
+    esac
+  }
+  camera_visible() {
+    local camera bg
+    camera=$(mean_gray "$1" "60:60:1225:115")
+    bg=$(mean_gray "$1" "30:60:1155:115")
+    [ "$camera" -lt $((bg - 6)) ]
+  }
   island_visible() {
     local w island bg
     w=$(sips -g pixelWidth "$1" | awk '/pixelWidth/{print $2}')
@@ -72,7 +118,9 @@ if [ $platform = ios ]; then
     [ "$island" -lt $((bg - 6)) ]
   }
   mean_gray() {
-    ffmpeg -v error -i "$1" -vf "crop=$2,scale=1:1" -f rawvideo -pix_fmt gray - |
+    # -nostdin: capture runs inside the loop reading flutter's output, which
+    # ffmpeg would otherwise swallow.
+    ffmpeg -nostdin -v error -i "$1" -vf "crop=$2,scale=1:1" -f rawvideo -pix_fmt gray - |
       od -An -tu1 | tr -d ' '
   }
 else

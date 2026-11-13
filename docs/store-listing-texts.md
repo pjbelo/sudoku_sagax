@@ -107,6 +107,9 @@ Sudoku Sagax is for anyone who enjoys sudoku, number puzzles, logic games and br
 
 A Sagax Games title. Developed by Tekinsight — Information Technologies.
 
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Made for iPhone Duo: the grid on one side of the fold, the controls on the other
+
 **What's new (release notes)**
 Welcome to Sudoku Sagax! Nine levels of pure logic, from Beginner to Expert. Thank you for playing.
 
@@ -158,6 +161,9 @@ O sudoku é dedução pura: não há contas, só lógica. Grandes estudos associ
 O Sudoku Sagax é para quem gosta de sudoku, puzzles de números, jogos de lógica e quebra-cabeças; joga dois minutos ou vinte, ao teu ritmo.
 
 Um título Sagax Games. Desenvolvido pela Tekinsight — Tecnologias de Informação.
+
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Pensado para o iPhone Duo: a grelha de um lado da dobra e os controlos do outro
 
 **Novidades (notas de versão)**
 Bem-vindo ao Sudoku Sagax! Nove níveis de lógica pura, de Iniciante a Especialista. Obrigado por jogares.
@@ -211,6 +217,9 @@ Sudoku Sagax ist für alle, die Sudoku, Zahlenrätsel, Logikrätsel und Knobelsp
 
 Ein Titel von Sagax Games. Entwickelt von Tekinsight — Informationstechnologien.
 
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Für das iPhone Duo gestaltet: das Gitter auf der einen Seite der Faltkante, die Steuerung auf der anderen
+
 **Neuigkeiten (Versionshinweise)**
 Willkommen bei Sudoku Sagax! Neun Level reiner Logik, vom Anfänger bis zum Experten. Danke fürs Spielen.
 
@@ -262,6 +271,9 @@ El sudoku es deducción pura: sin cálculos, solo lógica. Grandes estudios rela
 Sudoku Sagax es para quien disfruta del sudoku, los puzles de números, los juegos de lógica y los rompecabezas; juega dos minutos o veinte, a tu ritmo.
 
 Un título de Sagax Games. Desarrollado por Tekinsight — Tecnologías de la Información.
+
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Diseñado para el iPhone Duo: la cuadrícula a un lado del pliegue y los controles al otro
 
 **Novedades (notas de la versión)**
 ¡Bienvenido a Sudoku Sagax! Nueve niveles de lógica pura, de Principiante a Experto. Gracias por jugar.
@@ -315,6 +327,9 @@ Sudoku Sagax s'adresse à tous ceux qui aiment le sudoku, les casse-têtes de ch
 
 Un titre Sagax Games. Développé par Tekinsight — Technologies de l'Information.
 
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Conçu pour l'iPhone Duo : la grille d'un côté du pli, les commandes de l'autre
+
 **Nouveautés (notes de version)**
 Bienvenue dans Sudoku Sagax ! Neuf niveaux de logique pure, de Débutant à Expert. Merci de jouer.
 
@@ -366,6 +381,9 @@ Sudoku is pure deduction: no arithmetic, just logic. Large studies link regular 
 Sudoku Sagax is for anyone who enjoys sudoku, number puzzles, logic games and brain teasers; play for two minutes or twenty, at your own pace.
 
 A Sagax Games title. Developed by Tekinsight — Information Technologies.
+
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Made for iPhone Duo: the grid on one side of the fold, the controls on the other
 
 **What's new (release notes)**
 Welcome to Sudoku Sagax! Nine levels of pure logic, from Beginner to Expert. Thank you for playing.
@@ -419,6 +437,9 @@ O Sudoku Sagax é para quem gosta de sudoku, jogos de números, jogos de lógica
 
 Um título Sagax Games. Desenvolvido pela Tekinsight — Tecnologias da Informação.
 
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Feito para o iPhone Duo: a grade de um lado da dobra e os controles do outro
+
 **Novidades (notas da versão)**
 Bem-vindo ao Sudoku Sagax! Nove níveis de lógica pura, do Iniciante ao Especialista. Obrigado por jogar.
 
@@ -470,6 +491,9 @@ El sudoku es deducción pura: sin cálculos, solo lógica. Grandes estudios rela
 Sudoku Sagax es para quien disfruta del sudoku, los rompecabezas de números, los juegos de lógica y los acertijos; juega dos minutos o veinte, a tu ritmo.
 
 Un título de Sagax Games. Desarrollado por Tekinsight — Tecnologías de la Información.
+
+**App Store only: add at the end of the FEATURES list** (iPhone Duo is an iOS feature)
+• Diseñado para el iPhone Duo: la cuadrícula a un lado del pliegue y los controles al otro
 
 **Novedades (notas de la versión)**
 ¡Bienvenido a Sudoku Sagax! Nueve niveles de lógica pura, de Principiante a Experto. Gracias por jugar.
@@ -551,7 +575,7 @@ Attached: a recording made on a physical iPhone running iOS [XX.X]. It starts wi
 The app has no account registration or login, no user-generated content, and no paid content or in-app purchases.
 
 2. Purpose and target audience
-Sudoku Sagax is a classic 9x9 sudoku game for casual and experienced puzzle players of all ages (rated 4+). It generates a new puzzle every game, each with a single solution that can be reached by logic alone, across 9 difficulty levels from Beginner (46 givens) to Expert (24 givens). It gives players a calm, ad-free way to exercise attention and reasoning. Features: pencil notes, undo/erase, optional hints, optional error highlighting, a timer with pause, and a local scoreboard of the 10 best times per level. The Info screen summarises published research on number puzzles and cognition, with references.
+Sudoku Sagax is a classic 9x9 sudoku game for casual and experienced puzzle players of all ages (rated 4+). It generates a new puzzle every game, each with a single solution that can be reached by logic alone, across 9 difficulty levels from Beginner (46 givens) to Expert (24 givens). It gives players a calm, ad-free way to exercise attention and reasoning. Features: pencil notes, undo/erase, optional hints, optional error highlighting, a timer with pause, and a local scoreboard of the 10 best times per level. The Info screen summarises published research on number puzzles and cognition, with references. The layouts are made for each screen: on iPad the grid fills the height and the screens use two panes in landscape, and on iPhone Duo the controls move to the side strip of the outer display, while partly folded the grid and the controls sit on either side of the fold.
 
 3. Setup and access
 No login, account or setup is needed. Launch the app, tap PLAY, choose a level and start playing. Tap a cell, then a number to fill it; use the Notes toggle to pencil in candidates, and the Hint button to fill a correct cell (+30 s). Options (sound, timer, show errors, hints, language) and the Scoreboard are on the home screen. The app works fully offline.
