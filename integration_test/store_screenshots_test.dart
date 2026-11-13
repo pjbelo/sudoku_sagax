@@ -9,6 +9,12 @@
 // 3_info, 4_home, 5_scoreboard, 6_options. Each scene name needs a caption
 // in tool/store/screenshot_captions_test.dart.
 //
+// Landscape mode (--dart-define=LANDSCAPE=game,home, used by the
+// ipad-landscape and duo-inner-landscape targets) plays the same run but
+// captures only the listed scenes, as 7_landscape_game and 8_landscape_home,
+// after the store pages' portrait screenshots. Before each language it waits
+// until the device is turned to landscape (by hand, in DeviceHub).
+//
 // Firebase and audio are never initialised here, so nothing is logged to
 // Analytics and the run is silent.
 
@@ -27,6 +33,12 @@ import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
 
 const _langs = String.fromEnvironment('LANGS', defaultValue: 'en,pt,es,fr,de');
+
+/// Scenes to capture in landscape mode; empty for the usual portrait run.
+const _landscape = String.fromEnvironment('LANDSCAPE');
+
+/// File number of each landscape scene, after the six portrait ones.
+const _landscapeNumbers = {'game': 7, 'home': 8};
 
 /// Level shown in the screenshots ("Easy · 38 clues").
 const _level = 3;
@@ -51,6 +63,7 @@ void main() {
       await _resetState(lang);
       await tester.pumpWidget(const SudokuSagaxApp());
       await tester.pumpAndSettle();
+      if (_landscape.isNotEmpty) await _waitForLandscape(tester);
 
       // 1. Home, with a mid level selected.
       await tester.tap(
@@ -184,13 +197,44 @@ List<int> _candidates(SudokuGame game, int i) {
   return [game.solution[i], ...others.take(2)]..sort();
 }
 
-/// Settles the UI, announces the scene and holds still for the capture.
+/// Settles the UI, announces the scene and holds still for the capture. In
+/// landscape mode, scenes that aren't listed are only settled.
 Future<void> _shot(WidgetTester tester, String lang, String name) async {
   await tester.pumpAndSettle();
+  final scene = name.substring(name.indexOf('_') + 1); // '1_game' -> 'game'
+  if (_landscape.isNotEmpty) {
+    if (!_landscape.split(',').contains(scene)) return;
+    name = '${_landscapeNumbers[scene]}_landscape_$scene';
+  }
   // Let tap indicators fade and the last animations finish.
   await Future<void>.delayed(const Duration(milliseconds: 1500));
   await tester.pumpAndSettle();
   // ignore: avoid_print
   print('SHOT:${lang}_$name');
   await Future<void>.delayed(const Duration(seconds: 3));
+}
+
+/// Waits until the device is in landscape, which is set by hand: simctl
+/// can't rotate a simulator. Prints WAITING_FOR_LANDSCAPE once, which the
+/// script relays.
+Future<void> _waitForLandscape(WidgetTester tester) async {
+  bool isLandscape() {
+    final size = tester.view.physicalSize;
+    return size.width > size.height;
+  }
+
+  if (isLandscape()) return;
+  // ignore: avoid_print
+  print('WAITING_FOR_LANDSCAPE');
+  for (int second = 0; second < 600; second++) {
+    await Future<void>.delayed(const Duration(seconds: 1));
+    await tester.pump();
+    if (isLandscape()) {
+      // Let the rotation animation and the new layout settle.
+      await Future<void>.delayed(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
+      return;
+    }
+  }
+  fail('The device was not turned to landscape within 10 minutes');
 }

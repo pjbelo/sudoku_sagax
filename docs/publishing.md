@@ -279,6 +279,8 @@ tool/store/screenshots.sh iphone-6.3     # iPhone 17 Pro (6.3", required) → do
 tool/store/screenshots.sh ipad           # iPad Pro 13-inch (M5)     → docs/app-store/…
 tool/store/screenshots.sh duo-outer      # iPhone Duo, closed        → docs/app-store/…
 tool/store/screenshots.sh duo-inner      # iPhone Duo, open          → docs/app-store/…
+tool/store/screenshots.sh ipad-landscape        # adds 7_landscape_game, 8_landscape_home to the iPad shots
+tool/store/screenshots.sh duo-inner-landscape   # adds 7_landscape_game to the iPhone Duo inner shots
 tool/store/screenshots.sh pixel          # Pixel 9 Pro (AVD SudokuSagax_Pixel_9_Pro)  → docs/google-play/…
 tool/store/screenshots.sh pixel-tablet   # Pixel Tablet (AVD SudokuSagax_Pixel_Tablet, landscape) → docs/google-play/…
 tool/store/screenshots.sh iphone en,pt   # only some languages
@@ -306,9 +308,23 @@ caption there, or the run fails.
 
 The iPhone Duo can't be folded from the command line. Put it in the pose
 yourself in DeviceHub (Xcode's simulator app): closed for `duo-outer`, open
-for `duo-inner`. The script uses the iPhone Duo that is already running, waits
-for you again after each language's reboot, and captures only the display it
-was asked for.
+and flat, upright, for `duo-inner`. The script uses the iPhone Duo that is
+already running, waits until the display it was asked for is on, and
+captures only that display. A reboot closes the Duo again, so the Duo runs
+all languages without switching the system language (its status bar shows
+only the time); don't touch the pose until it ends.
+
+The two `-landscape` targets add the large-screen layouts after the six
+portrait shots: on iPad the grid beside the number pad and the two-column
+home; on iPhone Duo the grid beside the pad with the controls in the side
+strip. Run them after the portrait targets, which replace only portrait
+files (and the other way round). simctl can't rotate a simulator, so turn it
+to landscape in DeviceHub when the script says `>>> Turn … to landscape`:
+after each language's reboot on iPad (a reboot turns it back to portrait),
+once on iPhone Duo (open it first). The app waits up to 10 minutes per
+language. Keep the landscape shots last on the store page: the first
+screenshots' orientation decides how many show in App Store search results
+(three portrait, or one landscape).
 
 Some details of the run:
 

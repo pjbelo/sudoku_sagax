@@ -6,6 +6,8 @@
 #   tool/store/screenshots.sh ipad           # App Store, iPad 13"
 #   tool/store/screenshots.sh duo-outer      # App Store, iPhone Duo outer display
 #   tool/store/screenshots.sh duo-inner      # App Store, iPhone Duo inner display
+#   tool/store/screenshots.sh ipad-landscape        # adds 2 landscape iPad shots
+#   tool/store/screenshots.sh duo-inner-landscape   # adds 1 landscape Duo shot
 #   tool/store/screenshots.sh pixel          # Google Play, phone
 #   tool/store/screenshots.sh pixel-tablet   # Google Play, tablet
 #   tool/store/screenshots.sh iphone en,pt   # only some languages
@@ -19,13 +21,20 @@
 #
 # iPhone Duo: the simulator can't be folded from the command line, so put it
 # in the pose you want in DeviceHub (closed for duo-outer, open for
-# duo-inner); after each language's reboot the script waits for you to do it
-# again. Each display is captured on its own, at the size App Store Connect
-# expects (outer 1398×2034, inner 2007×2853, or rotated).
+# duo-inner); the script waits until that display is on. A reboot closes the
+# Duo again, so it runs every language without one: its status bar shows only
+# the time, so the system language doesn't show. Each display is captured on
+# its own, at the size App Store Connect expects (outer 1398×2034, inner
+# 2007×2853, or rotated).
+#
+# The -landscape targets add the large-screen layouts after the six portrait
+# shots (7_landscape_game, and 8_landscape_home on iPad). simctl can't rotate
+# a simulator: turn it to landscape in DeviceHub when the script asks (after
+# each language's reboot on iPad, once on iPhone Duo).
 set -eo pipefail
 cd "$(dirname "$0")/../.."
 
-target=${1:?usage: $0 <iphone|iphone-6.3|ipad|duo-outer|duo-inner|pixel|pixel-tablet> [langs]}
+target=${1:?usage: $0 <iphone|iphone-6.3|ipad|duo-outer|duo-inner|ipad-landscape|duo-inner-landscape|pixel|pixel-tablet> [langs]}
 langs=${2:-en,pt,es,fr,de}
 
 case $target in
@@ -34,6 +43,8 @@ case $target in
   ipad)         platform=ios;     sim="iPad Pro 13-inch (M5)"; out="docs/app-store/screenshots/iPad Pro 13-inch" ;;
   duo-outer)    platform=ios;     sim="iPhone Duo"; display_width=1398; out="docs/app-store/screenshots/iPhone Duo outer" ;;
   duo-inner)    platform=ios;     sim="iPhone Duo"; display_width=2007; out="docs/app-store/screenshots/iPhone Duo inner" ;;
+  ipad-landscape)      platform=ios; sim="iPad Pro 13-inch (M5)"; landscape=game,home; out="docs/app-store/screenshots/iPad Pro 13-inch" ;;
+  duo-inner-landscape) platform=ios; sim="iPhone Duo"; display_width=2007; landscape=game; out="docs/app-store/screenshots/iPhone Duo inner" ;;
   pixel)        platform=android; avd=SudokuSagax_Pixel_9_Pro;   out="docs/google-play/screenshots/pixel-9-pro" ;;
   pixel-tablet) platform=android; avd=SudokuSagax_Pixel_Tablet;  out="docs/google-play/screenshots/pixel-tablet" ;;
   *) echo "unknown target: $target" >&2; exit 1 ;;
@@ -73,12 +84,30 @@ if [ $platform = ios ]; then
     xcrun simctl shutdown "$device"
     xcrun simctl boot "$device"
     xcrun simctl bootstatus "$device" -b >/dev/null
+    set_status_bar
+    # A reboot turns the simulator back to portrait.
+    if [ -n "$landscape" ]; then
+      echo ">>> Turn the $sim to landscape in DeviceHub now; the run waits for it."
+    fi
+  }
+  set_status_bar() {
     xcrun simctl status_bar "$device" override --time 9:41 \
       --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active \
       --cellularBars 4 --batteryState discharging --batteryLevel 100
-    if [ -n "$display_width" ]; then
-      read -r -p "Put the iPhone Duo in the pose for $target in DeviceHub, then press Enter. " </dev/tty
-    fi
+  }
+  # iPhone Duo: boots it if needed and waits until the display to capture is
+  # on, which tells the pose (the other display is black).
+  prepare_duo() {
+    local tmp="${TMPDIR:-/tmp}/sudoku-sagax-pose.png"
+    xcrun simctl boot "$device" 2>/dev/null || true
+    xcrun simctl bootstatus "$device" -b >/dev/null
+    set_status_bar
+    echo "Put the iPhone Duo in DeviceHub $([ $target = duo-outer ] && echo closed || echo open)$([ -n "$landscape" ] && echo ", turned to landscape,") and keep it so until the end."
+    until shoot "$tmp" && [ "$(mean_gray "$tmp" "iw:ih:0:0")" -gt 0 ]; do
+      sleep 2
+    done
+    rm -f "$tmp"
+    echo "The $target display is on, capturing."
   }
   # iPhone Duo: the display whose framebuffer is $display_width pixels wide.
   duo_display() {
@@ -102,6 +131,9 @@ if [ $platform = ios ]; then
       echo "  (Dynamic Island or camera in the shot, capturing again)"
       sleep 0.4
     done
+    if [ -n "$display_width" ] && [ "$(mean_gray "$tmp" "iw:ih:0:0")" -eq 0 ]; then
+      echo "  WARNING: the $target display is off; was the iPhone Duo's pose changed?"
+    fi
     save_rgb "$tmp" "$1"
     rm "$tmp"
   }
@@ -111,7 +143,7 @@ if [ $platform = ios ]; then
   # beside it.
   sensors_visible() {
     case $target in
-      ipad|duo-inner) return 1 ;;
+      ipad|duo-inner|ipad-landscape|duo-inner-landscape) return 1 ;;
       duo-outer) camera_visible "$1" ;;
       *) island_visible "$1" ;;
     esac
@@ -174,10 +206,14 @@ run() {
     --driver=test_driver/integration_test.dart \
     --target=integration_test/store_screenshots_test.dart \
     --dart-define=LANGS="$1" \
+    --dart-define=LANDSCAPE="$landscape" \
     -d "$device" 2>&1 |
   while IFS= read -r line; do
     echo "$line"
     case "$line" in
+      *WAITING_FOR_LANDSCAPE*)
+        echo ">>> Turn the $sim to landscape in DeviceHub; the run goes on by itself."
+        ;;
       *SHOT:*)
         shot=${line##*SHOT:}
         lang=${shot%%_*}
@@ -190,15 +226,22 @@ run() {
 }
 
 # Captions every raw capture of $langs and copies the framed images, without
-# an alpha channel, to $out. Earlier screenshots of those languages are
-# removed first, so files of renamed scenes don't linger.
+# an alpha channel, to $out. Earlier screenshots of the same kind (portrait,
+# or landscape) in those languages are removed first, so files of renamed
+# scenes don't linger; the other kind is kept.
 add_captions() {
+  local f
   echo "Adding captions"
   flutter test tool/store/screenshot_captions_test.dart --update-goldens \
     --dart-define=TARGET="$target" --dart-define=LANGS="$langs"
   for lang in ${langs//,/ }; do
     mkdir -p "$out/$lang"
-    rm -f "${out:?}/${lang:?}"/*.png
+    for f in "${out:?}/${lang:?}"/*.png; do
+      case $f in
+        *_landscape_*) [ -z "$landscape" ] || rm -f "$f" ;;
+        *) [ -n "$landscape" ] || rm -f "$f" ;;
+      esac
+    done
     for f in "$framed/$lang"/*.png; do
       save_rgb "$f" "$out/$lang/$(basename "$f")"
     done
@@ -210,7 +253,10 @@ echo "Capturing $langs on $target ($device) into $out"
 for lang in ${langs//,/ }; do
   rm -rf "${raw:?}/${lang:?}" "${framed:?}/${lang:?}"
 done
-if [ $platform = ios ]; then
+if [ -n "$display_width" ]; then
+  prepare_duo
+  run "$langs"
+elif [ $platform = ios ]; then
   for lang in ${langs//,/ }; do
     set_language "$lang"
     run "$lang"

@@ -81,6 +81,45 @@ const _captions = {
   },
 };
 
+/// Captions of the landscape scenes (`7_landscape_game`, `8_landscape_home`),
+/// which show the large-screen layouts, keyed by device and scene.
+const _landscapeCaptions = {
+  'en': {
+    'ipad_game': ('Made for iPad', 'Grid and keys side by side'),
+    'ipad_home': ('Portrait or landscape', 'the layout adapts'),
+    'duo_game': ('Made for iPhone Duo', 'Grid and keys side by side'),
+  },
+  'pt': {
+    'ipad_game': ('Feito para iPad', 'Grelha e teclado lado a lado'),
+    'ipad_home': ('Vertical ou horizontal', 'o ecrã adapta-se'),
+    'duo_game': ('Feito para iPhone Duo', 'Grelha e teclado lado a lado'),
+  },
+  'es': {
+    'ipad_game': ('Hecho para iPad', 'Cuadrícula y teclado lado a lado'),
+    'ipad_home': ('Vertical u horizontal', 'la pantalla se adapta'),
+    'duo_game': ('Hecho para iPhone Duo', 'Cuadrícula y teclado lado a lado'),
+  },
+  'fr': {
+    'ipad_game': ('Conçu pour iPad', 'Grille et clavier côte à côte'),
+    'ipad_home': ('Portrait ou paysage', "l'écran s'adapte"),
+    'duo_game': ('Conçu pour iPhone Duo', 'Grille et clavier côte à côte'),
+  },
+  'de': {
+    'ipad_game': ('Gemacht für iPad', 'Gitter und Ziffern nebeneinander'),
+    'ipad_home': ('Hoch- oder Querformat', 'das Layout passt sich an'),
+    'duo_game': ('Gemacht für iPhone Duo', 'Gitter und Ziffern nebeneinander'),
+  },
+};
+
+/// The caption of [scene] in [lang]: landscape scenes have their own, per
+/// device.
+(String, String)? _captionFor(String lang, String scene) {
+  const prefix = 'landscape_';
+  if (!scene.startsWith(prefix)) return _captions[lang]?[scene];
+  final device = _target.startsWith('duo') ? 'duo' : 'ipad';
+  return _landscapeCaptions[lang]?['${device}_${scene.substring(prefix.length)}'];
+}
+
 /// The raw capture with its caption above it, at the capture's own size.
 class FramedScreenshot extends StatelessWidget {
   const FramedScreenshot({
@@ -198,10 +237,10 @@ void main() {
     final rawDir = Directory('build/store_screenshots/raw/$_target/$lang');
     final shots = rawDir.existsSync()
         ? (rawDir
-                .listSync()
-                .whereType<File>()
-                .where((f) => f.path.endsWith('.png'))
-                .toList()
+              .listSync()
+              .whereType<File>()
+              .where((f) => f.path.endsWith('.png'))
+              .toList()
             ..sort((a, b) => a.path.compareTo(b.path)))
         : <File>[];
 
@@ -215,7 +254,7 @@ void main() {
       testWidgets('screenshot caption $_target $lang $fileName', (
         tester,
       ) async {
-        final lines = _captions[lang]?[scene];
+        final lines = _captionFor(lang, scene);
         if (lines == null) {
           fail('No caption for scene "$scene" in language "$lang"');
         }
