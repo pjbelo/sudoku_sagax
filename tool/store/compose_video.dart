@@ -1,11 +1,12 @@
 // Turns a raw simulator recording of integration_test/store_video_test.dart
 // into a store preview video:
 //
-//   dart run tool/store/compose_video.dart <iphone|ipad> <lang>
+//   dart run tool/store/compose_video.dart <iphone|ipad|pixel|pixel-tablet> <lang>
 //
 // Normally run by tool/store/video.sh. Reads build/store_video/raw/<device>/
-// <lang>.{mp4,cues} and the captions from tool/store/video_captions_test.dart,
-// and writes build/store_video/<device>/<lang>.mp4:
+// <lang>.{mp4,cues} and the captions from
+// tool/store/video_captions_test.dart, and writes
+// docs/<app-store|google-play>/videos/<device>/<lang>.mp4 (gitignored):
 //
 // - the footage, status bar cropped off, on the app's own navy background,
 //   under a violet caption band whose captions fade in and out per scene;
@@ -13,21 +14,56 @@
 // - the app's music and the sounds the app plays at each cue, at the app's
 //   volumes, normalised to -16 LUFS;
 // - App Store app preview spec: 15–30 s, 30 fps, H.264 High ≤ L4.0 at about
-//   11 Mbps, stereo 256 kbps AAC at 48 kHz. Google Play takes the same file
-//   via YouTube.
+//   11 Mbps, stereo 256 kbps AAC at 48 kHz. The Google Play videos use the
+//   same settings but may run up to 60 s (they go to YouTube).
 
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-/// Output canvas, caption band height (keep in sync with `_bands` in
-/// tool/store/video_captions_test.dart) and how much of the recording to
-/// crop off at the top (status bar) and bottom (home indicator), in
-/// recording pixels.
+/// Store folder, output canvas, caption band height (keep in sync with
+/// `_bands` in tool/store/video_captions_test.dart) and how much of the
+/// recording to crop off at the top (status bar) and bottom (home indicator
+/// or gesture bar), in recording pixels.
 const _devices = {
-  'iphone': (width: 886, height: 1920, band: 290, cropTop: 170, cropBottom: 40),
-  'ipad': (width: 1200, height: 1600, band: 210, cropTop: 80, cropBottom: 60),
+  'iphone': (
+    store: 'app-store',
+    width: 886,
+    height: 1920,
+    band: 290,
+    cropTop: 170,
+    cropBottom: 40,
+  ),
+  'ipad': (
+    store: 'app-store',
+    width: 1200,
+    height: 1600,
+    band: 210,
+    cropTop: 80,
+    cropBottom: 60,
+  ),
+  'pixel': (
+    store: 'google-play',
+    width: 1080,
+    height: 1920,
+    band: 350,
+    cropTop: 88,
+    cropBottom: 40,
+  ),
+  'pixel-tablet': (
+    store: 'google-play',
+    width: 1920,
+    height: 1080,
+    band: 170,
+    cropTop: 24,
+    cropBottom: 24,
+  ),
 };
+
+/// Longest video per store, in seconds. App Store app previews must be
+/// 15–30 s. Google Play shows a YouTube video, with no such limit, so its
+/// videos keep the whole session (the Android run is a few seconds longer).
+const _maxSeconds = {'app-store': 29.9, 'google-play': 60.0};
 
 const _navy = '0x0F172A';
 const _crossFade = 0.4;
@@ -37,7 +73,9 @@ const _targetLufs = -16.0;
 
 Future<void> main(List<String> args) async {
   if (args.length != 2 || !_devices.containsKey(args[0])) {
-    stderr.writeln('usage: compose_video.dart <iphone|ipad> <lang>');
+    stderr.writeln(
+      'usage: compose_video.dart <iphone|ipad|pixel|pixel-tablet> <lang>',
+    );
     exit(64);
   }
   final device = args[0];
@@ -45,8 +83,9 @@ Future<void> main(List<String> args) async {
   final spec = _devices[device]!;
   final raw = 'build/store_video/raw/$device/$lang.mp4';
   final captions = 'build/store_video/captions/$device/$lang';
-  final out = 'build/store_video/$device/$lang.mp4';
-  Directory('build/store_video/$device').createSync(recursive: true);
+  final outDir = 'docs/${spec.store}/videos/$device';
+  final out = '$outDir/$lang.mp4';
+  Directory(outDir).createSync(recursive: true);
 
   // Cues, in ms from the test's clock.
   final cues = <(int, String)>[
@@ -58,13 +97,21 @@ Future<void> main(List<String> args) async {
   ];
   int at(String event) => cues.firstWhere((c) => c.$2 == event).$1;
 
-  // The simulator only writes a frame when the screen changes, and the test
-  // keeps it still until `sync`. The sync tap starts an animation, so it is
-  // the first frame of a burst (the recorder can write a lone stray frame).
+  // The test keeps the screen still until `sync`. The sync tap starts an
+  // animation, so it is the first frame of a burst of changing frames (a
+  // lone changed frame is a stray one). The recorders mostly write a frame
+  // only when the screen changes, but they also write identical frames now
+  // and then (often on Android, sometimes on a busy Mac), so frames that
+  // look the same as the one before are dropped first (ffmpeg's mpdecimate).
+  // The status bar is cropped off, so its clock can't count as a change.
+  final changedFrames =
+      'movie=$raw,'
+      'crop=iw:ih-${spec.cropTop}-${spec.cropBottom}:0:${spec.cropTop},'
+      'mpdecimate';
   final frames = LineSplitter.split(
     await _run('ffprobe', [
-      '-v', 'error', '-select_streams', 'v', //
-      '-show_entries', 'frame=pts_time', '-of', 'csv=p=0', raw,
+      '-v', 'error', '-f', 'lavfi', '-i', changedFrames, //
+      '-show_entries', 'frame=pts_time', '-of', 'csv=p=0',
     ]),
   ).map((l) => double.parse(l.replaceAll(',', ''))).toList();
   final dims = (await _run('ffprobe', [
@@ -89,13 +136,14 @@ Future<void> main(List<String> args) async {
   final b0 = t(at('cut_in'));
   var b1 = t(at('end'));
   var duration = (a1 - a0) + (b1 - b0) - _crossFade;
-  if (duration > 29.9) {
+  final maxSeconds = _maxSeconds[spec.store]!;
+  if (duration > maxSeconds) {
     stdout.writeln(
-      'Trimming ${(duration - 29.9).toStringAsFixed(2)}s off '
-      'the end to fit the 30 s App Store limit.',
+      'Trimming ${(duration - maxSeconds).toStringAsFixed(2)}s off '
+      'the end to fit the ${spec.store} limit of $maxSeconds s.',
     );
-    b1 -= duration - 29.9;
-    duration = 29.9;
+    b1 -= duration - maxSeconds;
+    duration = maxSeconds;
   }
   if (duration < 15) throw StateError('video is only ${duration}s (min 15)');
   final bOffset = (a1 - a0) - _crossFade;
@@ -137,14 +185,17 @@ Future<void> main(List<String> args) async {
   f.add('[v0][$bandInput:v]overlay=0:0:eof_action=pass[vband]');
 
   // Captions: each scene's caption from its cue to the next scene (or end).
+  // A scene that starts after a trimmed end is left out.
   final scenes = [
     for (final c in cues)
-      if (c.$2.startsWith('scene:')) (c.$1, int.parse(c.$2.substring(6))),
+      if (c.$2.startsWith('scene:'))
+        if (outTime(c.$1) case final start?)
+          (start, int.parse(c.$2.substring(6))),
   ];
   var v = 'vband';
   for (int k = 0; k < scenes.length; k++) {
-    final start = outTime(scenes[k].$1)!;
-    final end = k + 1 < scenes.length ? outTime(scenes[k + 1].$1)! : duration;
+    final start = scenes[k].$1;
+    final end = k + 1 < scenes.length ? scenes[k + 1].$1 : duration;
     final input = inputCount++;
     final len = end - start;
     inputs.addAll([

@@ -235,7 +235,7 @@ captured from the real app, so it stays in sync with the game.
 | Play feature graphic, 1024×500, per language | `docs/google-play/feature-graphic-<lang>.png` | `tool/store/feature_graphic.sh` |
 | App Store header (3840×1646) and search results (3840×2560), per language | `docs/app-store/creative-assets/<lang>/` | `tool/store/app_store_assets.sh [en,pt,…]` |
 | Screenshots, 6 per device and language | `docs/app-store/screenshots/`, `docs/google-play/screenshots/` | `tool/store/screenshots.sh <device> [langs]` |
-| Preview video, ~28 s per language | `build/store_video/` (not committed) | `tool/store/video.sh <iphone\|ipad> [langs]` |
+| Preview video, ~28 s per device and language | `docs/app-store/videos/`, `docs/google-play/videos/` (gitignored) | `tool/store/video.sh <iphone\|ipad\|pixel\|pixel-tablet> [langs]` |
 
 The listing texts keep the brain-benefit wording within
 [docs/research.md](research.md), like the Info screen, follow the Google Play
@@ -345,12 +345,17 @@ language from real footage of the app:
 ```bash
 tool/store/video.sh iphone         # App Store iPhone app preview (886×1920)
 tool/store/video.sh ipad           # App Store iPad 13" app preview (1200×1600)
+tool/store/video.sh pixel          # Google Play, Pixel 9 Pro, portrait (1080×1920)
+tool/store/video.sh pixel-tablet   # Google Play, Pixel Tablet, landscape (1920×1080)
 tool/store/video.sh iphone en,pt   # only some languages
 ```
 
-Output goes to `build/store_video/<iphone|ipad>/<lang>.mp4` (not committed:
-the videos are ~10 MB each). Each language takes about 3 minutes. Needs
-`ffmpeg` (`brew install ffmpeg`).
+Output goes to `docs/app-store/videos/<iphone|ipad>/<lang>.mp4` and
+`docs/google-play/videos/<pixel|pixel-tablet>/<lang>.mp4` (gitignored: the
+videos are ~10 MB each). Each language takes about 3 minutes. Needs `ffmpeg`
+(`brew install ffmpeg`). The Android targets use the first emulator whose AVD
+name contains `Pixel_9_Pro` or `Pixel_Tablet` (or `AVD=<name>`), and boot it
+if needed.
 
 How it is made:
 
@@ -359,7 +364,11 @@ How it is made:
    the last moves and the win, the new best time and the scoreboard. It
    prints timed cues for scenes, sounds and a jump cut. The cut skips most of
    the grid and lets the clock run, so the final time looks like a person's.
-2. The script records the simulator screen with `simctl io recordVideo`.
+2. The script records the simulator screen with `simctl io recordVideo`, or
+   the emulator's own `screenrecord`, at a reduced size (the emulator's
+   encoder can't take the full screen, and smaller is smoother). Both write
+   a frame mostly only when the screen changes, which is how the cues are
+   lined up with the footage.
 3. [tool/store/video_captions_test.dart](../tool/store/video_captions_test.dart)
    renders one caption per scene in the app's fonts and colours. The captions
    are store copy in 5 languages; keep them within
@@ -380,8 +389,13 @@ the iPhone video (886×1920) into the iPhone 6.1"/6.3" slot, the iPad video
 886×1920, so the iPhone video can go there too until there is footage from
 the Duo itself. Pick a poster frame, for example the game in progress.
 
-**Google Play:** upload the iPhone video to the Sagax Games YouTube channel
-as public or unlisted, with ads off and embedding allowed. Paste the
+**Google Play:** the listing takes one video per language, as a YouTube
+link, shown on phones and tablets alike; portrait and landscape both work.
+Upload the Pixel phone video (`docs/google-play/videos/pixel/<lang>.mp4`;
+most installs are on phones), or the landscape tablet one if it suits the
+listing better, to the Sagax Games YouTube channel as public or unlisted,
+with ads off and embedding allowed. The video only shows on the listing when
+there is a feature graphic. Paste the
 `https://www.youtube.com/watch?v=…` URL into the store listing's *Video*
 field, one per language. A vertical video under 3 minutes may be shown as a
 YouTube Short; use the `watch?v=` form of the URL, not `/shorts/`.

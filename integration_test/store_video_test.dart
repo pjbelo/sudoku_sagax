@@ -1,9 +1,9 @@
 // Plays the scripted session for the store preview video (App Store app
 // preview / Google Play promo video), in one language.
 //
-//   tool/store/video.sh <iphone|ipad> [en,pt,...]
+//   tool/store/video.sh <iphone|ipad|pixel|pixel-tablet> [en,pt,...]
 //
-// The script records the simulator screen while this test runs. The test
+// The script records the simulator/emulator screen while this test runs. The test
 // prints timed cues, `CUE:<ms>:<event>`, where <ms> is measured from the
 // first cue:
 //

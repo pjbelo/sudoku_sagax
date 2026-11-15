@@ -77,6 +77,8 @@ const _captions = {
 const _bands = {
   'iphone': (size: Size(886, 290), fontSize: 54.0, radius: 40.0),
   'ipad': (size: Size(1200, 210), fontSize: 58.0, radius: 36.0),
+  'pixel': (size: Size(1080, 350), fontSize: 66.0, radius: 48.0),
+  'pixel-tablet': (size: Size(1920, 170), fontSize: 54.0, radius: 36.0),
 };
 
 /// Room below the band for its shadow, which falls onto the footage.
