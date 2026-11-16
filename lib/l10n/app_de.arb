@@ -54,6 +54,8 @@
   "optShowErrorsDesc": "Markiert eine falsche Zahl rot, sobald du sie eingibst.",
   "optHints": "Tipp-Taste",
   "optHintsDesc": "Zeigt eine Taste, die eine richtige Zahl einträgt (+{seconds} s).",
+  "optLeftHanded": "Linkshänder",
+  "optLeftHandedDesc": "Im Querformat liegen die Zahlentasten links vom Gitter.",
   "restoreDefaults": "Standardwerte wiederherstellen",
   "scoreboardTitle": "Bestenliste",
   "noScores": "In diesem Level wurde noch kein Rätsel gelöst.",

@@ -44,6 +44,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// iPhone Duo side strip for the controls (set in build); null elsewhere.
   SideRail? _rail;
 
+  /// Whether the window is wide enough for the keys beside the board (set
+  /// in build). The app bar is then left out to give the board its height,
+  /// and Back and Pause go to the top of the panel.
+  bool _sideBySide = false;
+
   late int _level;
   late SudokuGame _game;
   int? _selected;
@@ -144,6 +149,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       'clues': _game.puzzle.clueCount,
       'timer_shown': _settings.timer ? 1 : 0,
       'show_errors': _settings.showErrors ? 1 : 0,
+      'left_handed': _settings.leftHanded ? 1 : 0,
     });
   }
 
@@ -356,10 +362,13 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final l10n = AppLocalizations.of(context)!;
     // iPhone Duo with a side strip: Back, the stats and Pause go there. Folded
     // like a laptop they go below the fold, which leaves the whole upper half
-    // to the board.
+    // to the board. In a wide window they go to the top of the panel beside
+    // the board, which then gets the full height.
     _rail = sideRailOf(context);
     final rail = _rail;
-    final showAppBar = rail == null && !isLaptopPose(context);
+    final window = MediaQuery.sizeOf(context);
+    _sideBySide = window.width > window.height * 1.1;
+    final showAppBar = rail == null && !isLaptopPose(context) && !_sideBySide;
 
     return PopScope(
       canPop: !_hasProgress,
@@ -397,9 +406,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                     if (foldRect != null) {
                       return _buildFolded(l10n, foldRect, constraints.biggest);
                     }
-                    final landscape =
-                        constraints.maxWidth > constraints.maxHeight * 1.1;
-                    return landscape
+                    // Decided from the window, as the app bar is, so that
+                    // the layout without the app bar always has Back.
+                    return _sideBySide
                         ? _buildLandscape(l10n, constraints)
                         : _buildPortrait(l10n, constraints);
                   },
@@ -487,37 +496,53 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       constraints.maxWidth - boardSize - margin * 2,
       520.0,
     );
+    final board = Padding(
+      padding: const EdgeInsets.all(margin),
+      child: SizedBox.square(
+        dimension: boardSize,
+        child: _buildBoardArea(l10n),
+      ),
+    );
+    final panel = SizedBox(
+      width: panelWidth,
+      child: _buildPanel(l10n, Size(panelWidth, constraints.maxHeight)),
+    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(margin),
-          child: SizedBox.square(
-            dimension: boardSize,
-            child: _buildBoardArea(l10n),
-          ),
-        ),
-        SizedBox(
-          width: panelWidth,
-          child: _buildPanel(l10n, Size(panelWidth, constraints.maxHeight)),
-        ),
-      ],
+      // The Left-handed option puts the keys on the left.
+      children: _settings.leftHanded ? [panel, board] : [board, panel],
     );
   }
 
   /// Partly folded iPhone Duo: the board on one side of the fold, the rest
   /// on the other. [area] is the space around the fold.
   Widget _buildFolded(AppLocalizations l10n, Rect fold, Size area) {
+    final board = Padding(
+      padding: const EdgeInsets.all(12),
+      child: Center(child: _buildBoardArea(l10n)),
+    );
+    // Folded like a laptop: the board above the fold, the rest below.
     final sideBySide = fold.height >= fold.width;
+    if (!sideBySide) {
+      return FoldPanes(
+        fold: fold,
+        first: board,
+        second: _buildLowerHalf(l10n, area.height - fold.bottom),
+      );
+    }
+    // Folded like a book: the keys on the right of the fold, or on the left
+    // with the Left-handed option.
+    if (_settings.leftHanded) {
+      return FoldPanes(
+        fold: fold,
+        first: _buildPanel(l10n, Size(fold.left, area.height)),
+        second: board,
+      );
+    }
     return FoldPanes(
       fold: fold,
-      first: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Center(child: _buildBoardArea(l10n)),
-      ),
-      second: sideBySide
-          ? _buildPanel(l10n, Size(area.width - fold.right, area.height))
-          : _buildLowerHalf(l10n, area.height - fold.bottom),
+      first: board,
+      second: _buildPanel(l10n, Size(area.width - fold.right, area.height)),
     );
   }
 
@@ -527,22 +552,36 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   Widget _buildPanel(AppLocalizations l10n, Size size) {
     final scale = uiScaleOf(context);
     final narrow = size.width < 320;
+    // Back and Pause, unless the app bar or the side rail holds them.
+    final showNavigation = _rail == null && _sideBySide;
     // Rough heights of the rows above the keys. The status counts at its
     // tallest: its longest message takes 2 lines, or 3 in a narrow pane.
+    final navigationHeight = showNavigation ? 48 : 0;
     final statsHeight = _rail == null ? 80 : 0;
     final statusHeight = narrow ? 98 : 74;
     final controlsHeight = narrow ? 130 : 70;
-    final otherRows = statsHeight + statusHeight + controlsHeight;
+    final otherRows =
+        navigationHeight + statsHeight + statusHeight + controlsHeight;
     final freeHeight = (size.height - otherRows * scale - 24) / 3 - 8;
     final keyWidth = (size.width - 20) / 3 - 8;
     // A narrow pane has height to spare, so its keys can be taller than wide.
     final maxKeyHeight = narrow ? keyWidth * 1.3 : keyWidth;
     final keyHeight = max(52.0, min(freeHeight, maxKeyHeight));
+    // A small gap on the board's side, a wider one at the edge.
+    final onLeft = _settings.leftHanded;
     return Center(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(4, 12, 16, 12),
+        padding: EdgeInsets.fromLTRB(onLeft ? 16 : 4, 12, onLeft ? 4 : 16, 12),
         child: Column(
           children: [
+            if (showNavigation)
+              Row(
+                children: [
+                  const BackButton(color: AppColors.electricCyan),
+                  const Spacer(),
+                  if (_canPause) _buildPauseButton(l10n),
+                ],
+              ),
             if (_rail == null) _buildStats(l10n),
             _buildStatus(l10n, keepHeight: true),
             const SizedBox(height: 8),

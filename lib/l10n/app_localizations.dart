@@ -428,6 +428,18 @@ abstract class AppLocalizations {
   /// **'Show a button that fills in a correct number (+{seconds} s).'**
   String optHintsDesc(int seconds);
 
+  /// No description provided for @optLeftHanded.
+  ///
+  /// In en, this message translates to:
+  /// **'Left-handed'**
+  String get optLeftHanded;
+
+  /// No description provided for @optLeftHandedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'With the device sideways, put the number keys to the left of the grid.'**
+  String get optLeftHandedDesc;
+
   /// No description provided for @restoreDefaults.
   ///
   /// In en, this message translates to:

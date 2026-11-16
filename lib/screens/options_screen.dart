@@ -11,7 +11,7 @@ import '../services/audio_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
 
-/// Sound, Timer, Show errors and Hint button switches.
+/// Sound, Timer, Show errors, Hint button and Left-handed switches.
 /// Changes are saved immediately.
 class OptionsScreen extends StatelessWidget {
   const OptionsScreen({super.key});
@@ -80,6 +80,17 @@ class OptionsScreen extends StatelessWidget {
                   _click();
                   settings.hints = v;
                   _logChange('hints', v);
+                },
+              ),
+              _OptionCard(
+                icon: Icons.swap_horiz,
+                title: l10n.optLeftHanded,
+                description: l10n.optLeftHandedDesc,
+                value: settings.leftHanded,
+                onChanged: (v) {
+                  _click();
+                  settings.leftHanded = v;
+                  _logChange('left_handed', v);
                 },
               ),
             ];

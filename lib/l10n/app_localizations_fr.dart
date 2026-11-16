@@ -192,6 +192,13 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get optLeftHanded => 'Gaucher';
+
+  @override
+  String get optLeftHandedDesc =>
+      'Appareil à l\'horizontale, les chiffres passent à gauche de la grille.';
+
+  @override
   String get restoreDefaults => 'Rétablir les valeurs par défaut';
 
   @override

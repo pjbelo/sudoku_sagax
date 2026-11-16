@@ -188,6 +188,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get optLeftHanded => 'Left-handed';
+
+  @override
+  String get optLeftHandedDesc =>
+      'With the device sideways, put the number keys to the left of the grid.';
+
+  @override
   String get restoreDefaults => 'Restore defaults';
 
   @override

@@ -54,6 +54,8 @@
   "optShowErrorsDesc": "Marca a vermelho um número errado assim que o introduzes.",
   "optHints": "Botão de ajuda",
   "optHintsDesc": "Mostra um botão que preenche um número correto (+{seconds} s).",
+  "optLeftHanded": "Canhoto",
+  "optLeftHandedDesc": "Com o aparelho na horizontal, os números ficam à esquerda da grelha.",
   "restoreDefaults": "Repor predefinições",
   "scoreboardTitle": "Recordes",
   "noScores": "Ainda não resolveste nenhum puzzle neste nível.",

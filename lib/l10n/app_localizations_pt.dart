@@ -189,6 +189,13 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get optLeftHanded => 'Canhoto';
+
+  @override
+  String get optLeftHandedDesc =>
+      'Com o aparelho na horizontal, os números ficam à esquerda da grelha.';
+
+  @override
   String get restoreDefaults => 'Repor predefinições';
 
   @override

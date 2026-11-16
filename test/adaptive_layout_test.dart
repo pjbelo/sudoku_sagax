@@ -169,6 +169,73 @@ void main() {
       );
     });
 
+    testWidgets('tablet in landscape: no app bar, the board gains its height', (
+      tester,
+    ) async {
+      await pumpScreen(tester, const GameScreen(), ipad13Landscape);
+      expect(find.byType(AppBar), findsNothing);
+      final board = tester.getRect(find.byType(SudokuBoard));
+      // The whole safe height (1032 - 24 - 20) minus the margins.
+      expect(board.height, closeTo(1032 - 24 - 20 - 24, 1));
+      // Back and Pause at the top of the panel, beside the board.
+      final back = tester.getRect(find.byType(BackButton));
+      final pause = tester.getRect(find.byIcon(Icons.pause_rounded));
+      expect(back.left, greaterThan(board.right));
+      expect(pause.left, greaterThan(back.right));
+      expect(back.bottom, lessThan(tester.getRect(find.text('Level')).top));
+    });
+
+    testWidgets('tablet in portrait keeps the app bar', (tester) async {
+      await pumpScreen(tester, const GameScreen(), ipad13Portrait);
+      expect(find.byType(AppBar), findsOneWidget);
+    });
+
+    testWidgets('tablet in landscape: Back asks before leaving', (
+      tester,
+    ) async {
+      await pumpScreen(tester, const GameScreen(), ipad13Landscape);
+      await tester.tap(find.text('Hint +30s'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
+      expect(find.text('Keep playing'), findsOneWidget);
+    });
+
+    testWidgets('left-handed: the keys on the left in landscape', (
+      tester,
+    ) async {
+      SettingsService.instance.leftHanded = true;
+      for (final window in [
+        ipadMiniLandscape,
+        ipad13Landscape,
+        androidTabletLandscape,
+        phoneLandscape,
+      ]) {
+        await pumpScreen(tester, const GameScreen(), window);
+        final board = tester.getRect(find.byType(SudokuBoard));
+        final pad = tester.getRect(find.byType(NumberPad));
+        expect(pad.right, lessThan(board.left), reason: '${window.size}');
+        expect(
+          tester.getRect(find.byType(BackButton)).right,
+          lessThan(board.left),
+          reason: '${window.size}',
+        );
+        await tester.pumpWidget(const SizedBox());
+      }
+    });
+
+    testWidgets('left-handed: portrait keeps the keys below the board', (
+      tester,
+    ) async {
+      SettingsService.instance.leftHanded = true;
+      await pumpScreen(tester, const GameScreen(), ipad13Portrait);
+      final board = tester.getRect(find.byType(SudokuBoard));
+      expect(
+        tester.getRect(find.byType(NumberPad)).top,
+        greaterThan(board.bottom),
+      );
+    });
+
     testWidgets('tablet in landscape: the keys are close to square', (
       tester,
     ) async {
@@ -317,6 +384,17 @@ void main() {
       final timer = tester.getRect(find.text('Timer'));
       expect(timer.left, greaterThan(sound.right));
       expect(timer.top, sound.top);
+    });
+
+    testWidgets('the Left-handed switch saves the option', (tester) async {
+      await pumpScreen(tester, const OptionsScreen(), ipad13Landscape);
+      expect(SettingsService.instance.leftHanded, isFalse);
+      await tester.tap(find.text('Left-handed'));
+      await tester.pumpAndSettle();
+      expect(SettingsService.instance.leftHanded, isTrue);
+      await tester.tap(find.text('Restore defaults'));
+      await tester.pumpAndSettle();
+      expect(SettingsService.instance.leftHanded, isFalse);
     });
 
     testWidgets('one under the other on a phone', (tester) async {

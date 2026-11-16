@@ -166,6 +166,16 @@ void main() {
       expect(tester.getRect(find.text('Undo')).left, greaterThan(496));
     });
 
+    testWidgets('game, left-handed: the keys before the fold', (tester) async {
+      SettingsService.instance.leftHanded = true;
+      await pumpScreen(tester, const GameScreen(), duoBook);
+      expect(tester.getRect(find.byType(NumberPad)).right, lessThan(455));
+      expect(tester.getRect(find.text('Undo')).right, lessThan(455));
+      final board = tester.getRect(find.byType(SudokuBoard));
+      expect(board.left, greaterThan(496));
+      expect(board.right, lessThan(951 - 84)); // clear of the side rail
+    });
+
     testWidgets('home: brand and menu on either side of the fold', (
       tester,
     ) async {
@@ -182,7 +192,7 @@ void main() {
       expect(tester.getRect(find.byType(LevelSelector)).right, lessThan(455));
     });
 
-    testWidgets('options: two cards on each side of the fold', (tester) async {
+    testWidgets('options: cards on either side of the fold', (tester) async {
       await pumpScreen(tester, const OptionsScreen(), duoBook);
       expect(tester.getRect(find.text('Timer')).right, lessThan(455));
       expect(tester.getRect(find.text('Show errors')).left, greaterThan(496));

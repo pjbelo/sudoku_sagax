@@ -54,6 +54,8 @@
   "optShowErrorsDesc": "Marca en rojo un número incorrecto en cuanto lo introduces.",
   "optHints": "Botón de pista",
   "optHintsDesc": "Muestra un botón que rellena un número correcto (+{seconds} s).",
+  "optLeftHanded": "Zurdo",
+  "optLeftHandedDesc": "Con el dispositivo en horizontal, los números quedan a la izquierda de la cuadrícula.",
   "restoreDefaults": "Restablecer valores predeterminados",
   "scoreboardTitle": "Récords",
   "noScores": "Aún no has resuelto ningún puzle en este nivel.",

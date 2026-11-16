@@ -94,6 +94,8 @@
       "seconds": { "type": "int" }
     }
   },
+  "optLeftHanded": "Left-handed",
+  "optLeftHandedDesc": "With the device sideways, put the number keys to the left of the grid.",
   "restoreDefaults": "Restore defaults",
   "scoreboardTitle": "Scoreboard",
   "noScores": "No puzzles solved at this level yet.",

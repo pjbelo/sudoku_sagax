@@ -190,6 +190,13 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get optLeftHanded => 'Linkshänder';
+
+  @override
+  String get optLeftHandedDesc =>
+      'Im Querformat liegen die Zahlentasten links vom Gitter.';
+
+  @override
   String get restoreDefaults => 'Standardwerte wiederherstellen';
 
   @override

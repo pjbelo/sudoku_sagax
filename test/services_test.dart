@@ -15,7 +15,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('SettingsService', () {
-    test('defaults: sound ON, timer ON, show errors OFF, hints ON', () async {
+    test('defaults: sound ON, timer ON, show errors OFF, hints ON, '
+        'left-handed OFF', () async {
       SharedPreferences.setMockInitialValues({});
       final s = SettingsService.instance;
       await s.load();
@@ -23,6 +24,7 @@ void main() {
       expect(s.timer, isTrue);
       expect(s.showErrors, isFalse);
       expect(s.hints, isTrue);
+      expect(s.leftHanded, isFalse);
       expect(s.isDefault, isTrue);
       expect(s.locale, isNull);
     });
@@ -33,17 +35,20 @@ void main() {
       await s.load();
       s.sound = false;
       s.showErrors = true;
+      s.leftHanded = true;
       s.locale = const Locale('pt');
 
       await s.load(); // read back from storage
       expect(s.sound, isFalse);
       expect(s.showErrors, isTrue);
+      expect(s.leftHanded, isTrue);
       expect(s.locale, const Locale('pt'));
       expect(s.isDefault, isFalse);
 
       s.restoreDefaults();
       await s.load();
       expect(s.isDefault, isTrue);
+      expect(s.leftHanded, isFalse);
     });
   });
 

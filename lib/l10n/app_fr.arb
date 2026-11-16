@@ -54,6 +54,8 @@
   "optShowErrorsDesc": "Marque en rouge un chiffre erroné dès que vous le saisissez.",
   "optHints": "Bouton d'indice",
   "optHintsDesc": "Affiche un bouton qui remplit un chiffre correct (+{seconds} s).",
+  "optLeftHanded": "Gaucher",
+  "optLeftHandedDesc": "Appareil à l'horizontale, les chiffres passent à gauche de la grille.",
   "restoreDefaults": "Rétablir les valeurs par défaut",
   "scoreboardTitle": "Records",
   "noScores": "Aucune grille résolue à ce niveau pour l'instant.",

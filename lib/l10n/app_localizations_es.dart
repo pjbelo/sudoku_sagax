@@ -189,6 +189,13 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get optLeftHanded => 'Zurdo';
+
+  @override
+  String get optLeftHandedDesc =>
+      'Con el dispositivo en horizontal, los números quedan a la izquierda de la cuadrícula.';
+
+  @override
   String get restoreDefaults => 'Restablecer valores predeterminados';
 
   @override
