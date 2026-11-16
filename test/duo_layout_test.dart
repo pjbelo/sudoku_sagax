@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/l10n/app_localizations.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/screens/home_screen.dart';
 import 'package:sudoku_sagax/screens/options_screen.dart';
@@ -92,6 +93,55 @@ void main() {
       final board = tester.getRect(find.byType(SudokuBoard));
       expect(board.right, greaterThan(496));
       expect(board.height, greaterThan(600));
+    });
+
+    testWidgets('landscape: the narrow pane has keys taller than wide', (
+      tester,
+    ) async {
+      await pumpScreen(tester, const GameScreen(), duoInnerLandscape);
+      final key = tester.getSize(
+        find
+            .ancestor(
+              of: find.descendant(
+                of: find.byType(NumberPad),
+                matching: find.text('5'),
+              ),
+              matching: find.byType(InkWell),
+            )
+            .first,
+      );
+      expect(key.height, greaterThan(key.width * 1.2));
+      // All the keys stay above the home indicator.
+      final pad = tester.getRect(find.byType(NumberPad));
+      expect(pad.bottom, lessThanOrEqualTo(669 - 21));
+    });
+
+    testWidgets('landscape: the win title stays on one line', (tester) async {
+      for (final locale in AppLocalizations.supportedLocales) {
+        await pumpScreen(
+          tester,
+          const GameScreen(),
+          duoInnerLandscape,
+          locale: locale,
+        );
+        // Level 1 has 81 - 46 = 35 empty cells.
+        for (int i = 0; i < 35; i++) {
+          await tester.tap(find.byIcon(Icons.lightbulb_outline));
+          await tester.pump();
+        }
+        await tester.pumpAndSettle();
+
+        final title = find.text(lookupAppLocalizations(locale).congratulations);
+        // The title is about 46 points high on one line and 92 on two.
+        expect(tester.getSize(title).height, lessThan(60), reason: '$locale');
+        // Shrunk to fit between the board and the side rail.
+        final shown = tester.getRect(title);
+        final board = tester.getRect(find.byType(SudokuBoard));
+        expect(shown.left, greaterThan(board.right), reason: '$locale');
+        expect(shown.right, lessThan(951 - 84), reason: '$locale');
+
+        await tester.pumpWidget(const SizedBox());
+      }
     });
 
     testWidgets(

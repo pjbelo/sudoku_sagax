@@ -522,26 +522,34 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   /// Everything but the board, in one column, for a pane of [size]. The keys
-  /// form a 3×3 block that grows into the free height, up to square keys.
+  /// form a 3×3 block that grows into the free height, up to square keys
+  /// (a little taller in a narrow pane).
   Widget _buildPanel(AppLocalizations l10n, Size size) {
     final scale = uiScaleOf(context);
-    final twoRows = size.width < 320;
-    final otherRows = (_rail == null ? 130 : 50) + (twoRows ? 130 : 70);
+    final narrow = size.width < 320;
+    // Rough heights of the rows above the keys. The status counts at its
+    // tallest: its longest message takes 2 lines, or 3 in a narrow pane.
+    final statsHeight = _rail == null ? 80 : 0;
+    final statusHeight = narrow ? 98 : 74;
+    final controlsHeight = narrow ? 130 : 70;
+    final otherRows = statsHeight + statusHeight + controlsHeight;
     final freeHeight = (size.height - otherRows * scale - 24) / 3 - 8;
     final keyWidth = (size.width - 20) / 3 - 8;
-    final keyHeight = max(52.0, min(freeHeight, keyWidth));
+    // A narrow pane has height to spare, so its keys can be taller than wide.
+    final maxKeyHeight = narrow ? keyWidth * 1.3 : keyWidth;
+    final keyHeight = max(52.0, min(freeHeight, maxKeyHeight));
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(4, 12, 16, 12),
         child: Column(
           children: [
             if (_rail == null) _buildStats(l10n),
-            _buildStatus(l10n),
+            _buildStatus(l10n, keepHeight: true),
             const SizedBox(height: 8),
             if (_showWinBar)
               _buildWinBar(l10n)
             else if (!_solved) ...[
-              _buildControls(l10n, twoRows: twoRows),
+              _buildControls(l10n, twoRows: narrow),
               const SizedBox(height: 12),
               _buildNumberPad(height: keyHeight, grid: true),
             ],
@@ -636,20 +644,34 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildStatus(AppLocalizations l10n) {
+  /// The message for the state of the game. With [keepHeight] it is always
+  /// as tall as the longest message, so the rows below it (the keys beside
+  /// the board) don't move when the message changes.
+  Widget _buildStatus(AppLocalizations l10n, {bool keepHeight = false}) {
     final primary = Theme.of(context).primaryColor;
-    final (String text, Color color) = _solved
-        ? (l10n.solved, primary)
-        : _userPaused
-        ? (l10n.paused, AppColors.softSlate)
-        : _game.isFull
-        ? (l10n.statusFullWrong, AppColors.hintAmber)
-        : _notesMode
-        ? (l10n.statusNotes, primary)
-        : (l10n.statusPlay, AppColors.softSlate);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Text(
+    final messages = [
+      (l10n.solved, primary),
+      (l10n.paused, AppColors.softSlate),
+      (l10n.statusFullWrong, AppColors.hintAmber),
+      (l10n.statusNotes, primary),
+      (l10n.statusPlay, AppColors.softSlate),
+    ];
+    final int current;
+    if (_solved) {
+      current = 0;
+    } else if (_userPaused) {
+      current = 1;
+    } else if (_game.isFull) {
+      current = 2;
+    } else if (_notesMode) {
+      current = 3;
+    } else {
+      current = 4;
+    }
+
+    Widget message(int index) {
+      final (text, color) = messages[index];
+      return Text(
         text,
         textAlign: TextAlign.center,
         style: GoogleFonts.exo2(
@@ -657,7 +679,19 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           fontWeight: FontWeight.w600,
           color: color,
         ),
-      ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      // IndexedStack shows one child but is as large as its largest one.
+      child: keepHeight
+          ? IndexedStack(
+              index: current,
+              alignment: Alignment.center,
+              children: [for (int i = 0; i < messages.length; i++) message(i)],
+            )
+          : message(current),
     );
   }
 
@@ -739,10 +773,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
       child: Column(
         children: [
-          Text(
-            l10n.congratulations,
-            style: Theme.of(context).textTheme.headlineMedium,
-            textAlign: TextAlign.center,
+          // Kept on one line and shrunk to fit: a narrow pane would
+          // otherwise break the word in two.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              l10n.congratulations,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ),
           const SizedBox(height: 10),
           SizedBox(

@@ -156,6 +156,17 @@ final duoJustLaidFlat = TestWindow(
   ]),
 );
 
+/// Waits for the bundled fonts to load, so that text gets its real size.
+/// Until then (the first screens of a test file) text is laid out with the
+/// wider test font and wraps sooner. Call it after [pumpScreen] in tests
+/// that depend on how many lines a text takes.
+Future<void> waitForFonts(WidgetTester tester) async {
+  await tester.runAsync(
+    () => Future<void>.delayed(const Duration(milliseconds: 500)),
+  );
+  await tester.pumpAndSettle();
+}
+
 /// Shows [screen] in [window], set up like `SudokuSagaxApp` but with the fold
 /// state of the window in place of the platform's.
 Future<void> pumpScreen(

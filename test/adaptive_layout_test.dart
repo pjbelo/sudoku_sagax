@@ -222,6 +222,62 @@ void main() {
       final notes = tester.getRect(find.text('Notes'));
       expect(notes.top, greaterThan(undo.bottom));
     });
+
+    // The windows that show the keys beside the board, below the status.
+    final sideBySide = {
+      'iPad mini landscape': ipadMiniLandscape,
+      'iPad 13 landscape': ipad13Landscape,
+      'Android tablet landscape': androidTabletLandscape,
+      'iPhone Duo inner landscape': duoInnerLandscape,
+      'iPhone Duo book': duoBook,
+    };
+    for (final MapEntry(key: windowName, value: window) in sideBySide.entries) {
+      testWidgets('$windowName: the keys stay put when the status changes', (
+        tester,
+      ) async {
+        for (final locale in AppLocalizations.supportedLocales) {
+          await pumpScreen(tester, const GameScreen(), window, locale: locale);
+          final pad = find.byType(NumberPad);
+          final before = tester.getRect(pad);
+
+          await tester.tap(find.byIcon(Icons.edit_outlined)); // notes on
+          await tester.pumpAndSettle();
+          expect(tester.getRect(pad), before, reason: 'notes, $locale');
+
+          await tester.tap(find.byIcon(Icons.pause_rounded));
+          await tester.pumpAndSettle();
+          expect(tester.getRect(pad), before, reason: 'paused, $locale');
+
+          await tester.pumpWidget(const SizedBox());
+        }
+      });
+    }
+
+    testWidgets('tablet in landscape: the panel fits without scrolling', (
+      tester,
+    ) async {
+      final tablets = [
+        ipadMiniLandscape,
+        ipad13Landscape,
+        androidTabletLandscape,
+      ];
+      for (final window in tablets) {
+        for (final locale in AppLocalizations.supportedLocales) {
+          await pumpScreen(tester, const GameScreen(), window, locale: locale);
+          await waitForFonts(tester);
+          // The longest status message, which takes two lines.
+          await tester.tap(find.byIcon(Icons.edit_outlined));
+          await tester.pumpAndSettle();
+          final panel = tester.state<ScrollableState>(find.byType(Scrollable));
+          expect(
+            panel.position.maxScrollExtent,
+            0,
+            reason: '${window.size}, $locale',
+          );
+          await tester.pumpWidget(const SizedBox());
+        }
+      }
+    });
   });
 
   group('scoreboard', () {
