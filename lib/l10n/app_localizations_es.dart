@@ -200,6 +200,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'Marca en rojo un número incorrecto en cuanto lo introduces.';
 
   @override
+  String get optMarkConflicts => 'Marcar conflictos';
+
+  @override
+  String get optMarkConflictsDesc =>
+      'Rodea dos números iguales en la misma fila, columna o caja. No usa la solución, así que no revela nada.';
+
+  @override
   String get optHints => 'Botón de pista';
 
   @override

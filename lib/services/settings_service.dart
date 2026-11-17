@@ -4,7 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Player options, persisted with shared_preferences.
 ///
 /// Defaults: sound ON, timer ON, show errors OFF, hint button ON,
-/// left-handed OFF, fill notes on easy levels OFF, vibration ON.
+/// left-handed OFF, fill notes on easy levels OFF, vibration ON,
+/// mark conflicts ON.
 /// The chosen language is stored here too (null = follow the device).
 class SettingsService extends ChangeNotifier {
   SettingsService._();
@@ -17,6 +18,7 @@ class SettingsService extends ChangeNotifier {
   static const defaultLeftHanded = false;
   static const defaultFillNotesEasy = false;
   static const defaultHaptics = true;
+  static const defaultMarkConflicts = true;
 
   /// Levels from here on always offer Fill notes; below it, only with the
   /// "Fill notes on easy levels" option.
@@ -29,6 +31,7 @@ class SettingsService extends ChangeNotifier {
   static const _leftHandedKey = 'left_handed';
   static const _fillNotesEasyKey = 'fill_notes_easy';
   static const _hapticsKey = 'haptics';
+  static const _markConflictsKey = 'mark_conflicts';
   static const _localeKey = 'locale';
 
   SharedPreferences? _prefs;
@@ -40,6 +43,7 @@ class SettingsService extends ChangeNotifier {
   bool _leftHanded = defaultLeftHanded;
   bool _fillNotesEasy = defaultFillNotesEasy;
   bool _haptics = defaultHaptics;
+  bool _markConflicts = defaultMarkConflicts;
   Locale? _locale;
 
   bool get sound => _sound;
@@ -56,6 +60,9 @@ class SettingsService extends ChangeNotifier {
   /// Vibration on entries, errors and the win.
   bool get haptics => _haptics;
 
+  /// Outline equal digits that share a row, column or box.
+  bool get markConflicts => _markConflicts;
+
   /// Whether the game offers Fill notes at [level].
   bool fillNotesAt(int level) => level >= fillNotesFromLevel || _fillNotesEasy;
   Locale? get locale => _locale;
@@ -67,7 +74,8 @@ class SettingsService extends ChangeNotifier {
       _hints == defaultHints &&
       _leftHanded == defaultLeftHanded &&
       _fillNotesEasy == defaultFillNotesEasy &&
-      _haptics == defaultHaptics;
+      _haptics == defaultHaptics &&
+      _markConflicts == defaultMarkConflicts;
 
   /// Reads the stored options. Call once in `main()` before `runApp`.
   Future<void> load() async {
@@ -80,6 +88,7 @@ class SettingsService extends ChangeNotifier {
     _leftHanded = prefs.getBool(_leftHandedKey) ?? defaultLeftHanded;
     _fillNotesEasy = prefs.getBool(_fillNotesEasyKey) ?? defaultFillNotesEasy;
     _haptics = prefs.getBool(_hapticsKey) ?? defaultHaptics;
+    _markConflicts = prefs.getBool(_markConflictsKey) ?? defaultMarkConflicts;
     final code = prefs.getString(_localeKey);
     _locale = code == null ? null : Locale(code);
   }
@@ -95,6 +104,8 @@ class SettingsService extends ChangeNotifier {
       _update(_fillNotesEasyKey, value, () => _fillNotesEasy = value);
   set haptics(bool value) =>
       _update(_hapticsKey, value, () => _haptics = value);
+  set markConflicts(bool value) =>
+      _update(_markConflictsKey, value, () => _markConflicts = value);
 
   set locale(Locale? value) {
     _locale = value;
@@ -117,6 +128,7 @@ class SettingsService extends ChangeNotifier {
     leftHanded = defaultLeftHanded;
     fillNotesEasy = defaultFillNotesEasy;
     haptics = defaultHaptics;
+    markConflicts = defaultMarkConflicts;
   }
 
   void _update(String key, bool value, VoidCallback apply) {

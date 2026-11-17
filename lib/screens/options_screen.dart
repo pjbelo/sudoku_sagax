@@ -11,7 +11,7 @@ import '../services/audio_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
 
-/// Sound, Timer, Show errors, Hint button, Fill notes on easy levels,
+/// Sound, Timer, Show errors, Mark conflicts, Hint button, Fill notes on easy levels,
 /// Vibration and Left-handed switches.
 /// Changes are saved immediately.
 class OptionsScreen extends StatelessWidget {
@@ -70,6 +70,17 @@ class OptionsScreen extends StatelessWidget {
                   _click();
                   settings.showErrors = v;
                   _logChange('show_errors', v);
+                },
+              ),
+              _OptionCard(
+                icon: Icons.border_outer,
+                title: l10n.optMarkConflicts,
+                description: l10n.optMarkConflictsDesc,
+                value: settings.markConflicts,
+                onChanged: (v) {
+                  _click();
+                  settings.markConflicts = v;
+                  _logChange('mark_conflicts', v);
                 },
               ),
               _OptionCard(

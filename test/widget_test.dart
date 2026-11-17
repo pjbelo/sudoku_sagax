@@ -379,4 +379,30 @@ void main() {
       expect(vibrations, 1);
     });
   });
+
+  group('mark conflicts', () {
+    Finder outlinedCells() => find.byWidgetPredicate(
+      (w) => w is AnimatedContainer && w.foregroundDecoration != null,
+    );
+
+    testWidgets('outlines both digits of a clash, by default', (tester) async {
+      final game = SudokuGame(generatePuzzle(1, seed: 4));
+      final empty = game.values.indexOf(0);
+      final digit =
+          game.values[peers[empty].firstWhere((p) => game.values[p] != 0)];
+      // Every given with that digit in the row, column or box clashes.
+      final clashes = peers[empty].where((p) => game.values[p] == digit);
+
+      await continueGame(tester, game);
+      expect(outlinedCells(), findsNothing);
+      await tapCell(tester, empty);
+      await tapDigit(tester, digit);
+      expect(outlinedCells(), findsNWidgets(1 + clashes.length));
+
+      // Switched off, the outlines go.
+      SettingsService.instance.markConflicts = false;
+      await tapCell(tester, empty); // any rebuild
+      expect(outlinedCells(), findsNothing);
+    });
+  });
 }

@@ -198,6 +198,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Mark a wrong number in red as soon as you enter it.';
 
   @override
+  String get optMarkConflicts => 'Mark conflicts';
+
+  @override
+  String get optMarkConflictsDesc =>
+      'Outline two equal digits in the same row, column or box. It doesn\'t use the solution, so it gives nothing away.';
+
+  @override
   String get optHints => 'Hint button';
 
   @override

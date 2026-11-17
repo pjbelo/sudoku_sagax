@@ -19,24 +19,23 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('SettingsService', () {
-    test(
-      'defaults: sound ON, timer ON, show errors OFF, hints ON, '
-      'left-handed OFF, fill notes on easy levels OFF, vibration ON',
-      () async {
-        SharedPreferences.setMockInitialValues({});
-        final s = SettingsService.instance;
-        await s.load();
-        expect(s.sound, isTrue);
-        expect(s.timer, isTrue);
-        expect(s.showErrors, isFalse);
-        expect(s.hints, isTrue);
-        expect(s.leftHanded, isFalse);
-        expect(s.fillNotesEasy, isFalse);
-        expect(s.haptics, isTrue);
-        expect(s.isDefault, isTrue);
-        expect(s.locale, isNull);
-      },
-    );
+    test('defaults: sound ON, timer ON, show errors OFF, hints ON, '
+        'left-handed OFF, fill notes on easy levels OFF, vibration ON, '
+        'mark conflicts ON', () async {
+      SharedPreferences.setMockInitialValues({});
+      final s = SettingsService.instance;
+      await s.load();
+      expect(s.sound, isTrue);
+      expect(s.timer, isTrue);
+      expect(s.showErrors, isFalse);
+      expect(s.hints, isTrue);
+      expect(s.leftHanded, isFalse);
+      expect(s.fillNotesEasy, isFalse);
+      expect(s.haptics, isTrue);
+      expect(s.markConflicts, isTrue);
+      expect(s.isDefault, isTrue);
+      expect(s.locale, isNull);
+    });
 
     test('fill notes: from level 6, or every level with the option', () async {
       SharedPreferences.setMockInitialValues({});
@@ -58,6 +57,7 @@ void main() {
       s.showErrors = true;
       s.leftHanded = true;
       s.haptics = false;
+      s.markConflicts = false;
       s.locale = const Locale('pt');
 
       await s.load(); // read back from storage
@@ -65,6 +65,7 @@ void main() {
       expect(s.showErrors, isTrue);
       expect(s.leftHanded, isTrue);
       expect(s.haptics, isFalse);
+      expect(s.markConflicts, isFalse);
       expect(s.locale, const Locale('pt'));
       expect(s.isDefault, isFalse);
 

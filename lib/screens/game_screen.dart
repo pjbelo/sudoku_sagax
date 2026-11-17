@@ -172,6 +172,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       'clues': _game.puzzle.clueCount,
       'timer_shown': _settings.timer ? 1 : 0,
       'show_errors': _settings.showErrors ? 1 : 0,
+      'mark_conflicts': _settings.markConflicts ? 1 : 0,
       'left_handed': _settings.leftHanded ? 1 : 0,
     });
   }
@@ -899,6 +900,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           selected: _selected,
           activeDigit: _activeDigit,
           showErrors: _settings.showErrors,
+          markConflicts: _settings.markConflicts,
           onCellTap: _onCellTap,
           hidden: _userPaused,
         ),

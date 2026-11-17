@@ -440,6 +440,18 @@ abstract class AppLocalizations {
   /// **'Mark a wrong number in red as soon as you enter it.'**
   String get optShowErrorsDesc;
 
+  /// No description provided for @optMarkConflicts.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark conflicts'**
+  String get optMarkConflicts;
+
+  /// No description provided for @optMarkConflictsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Outline two equal digits in the same row, column or box. It doesn\'t use the solution, so it gives nothing away.'**
+  String get optMarkConflictsDesc;
+
   /// No description provided for @optHints.
   ///
   /// In en, this message translates to:

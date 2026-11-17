@@ -201,6 +201,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Markiert eine falsche Zahl rot, sobald du sie eingibst.';
 
   @override
+  String get optMarkConflicts => 'Konflikte markieren';
+
+  @override
+  String get optMarkConflictsDesc =>
+      'Umrandet zwei gleiche Zahlen in derselben Zeile, Spalte oder im selben Block. Nutzt nicht die Lösung und verrät daher nichts.';
+
+  @override
   String get optHints => 'Tipp-Taste';
 
   @override

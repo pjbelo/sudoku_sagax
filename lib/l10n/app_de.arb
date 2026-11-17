@@ -56,6 +56,8 @@
   "optTimerDesc": "Zeigt die Uhr während des Spiels. Deine Zeit wird für die Bestenliste immer erfasst.",
   "optShowErrors": "Fehler anzeigen",
   "optShowErrorsDesc": "Markiert eine falsche Zahl rot, sobald du sie eingibst.",
+  "optMarkConflicts": "Konflikte markieren",
+  "optMarkConflictsDesc": "Umrandet zwei gleiche Zahlen in derselben Zeile, Spalte oder im selben Block. Nutzt nicht die Lösung und verrät daher nichts.",
   "optHints": "Tipp-Taste",
   "optHintsDesc": "Zeigt eine Taste, die eine richtige Zahl einträgt (+{seconds} s).",
   "optLeftHanded": "Linkshänder",

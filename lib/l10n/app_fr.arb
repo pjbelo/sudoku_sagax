@@ -56,6 +56,8 @@
   "optTimerDesc": "Affiche l'horloge pendant la partie. Votre temps est toujours enregistré pour les records.",
   "optShowErrors": "Afficher les erreurs",
   "optShowErrorsDesc": "Marque en rouge un chiffre erroné dès que vous le saisissez.",
+  "optMarkConflicts": "Signaler les conflits",
+  "optMarkConflictsDesc": "Entoure deux chiffres identiques dans la même ligne, colonne ou carré. La solution n'est pas utilisée : rien n'est dévoilé.",
   "optHints": "Bouton d'indice",
   "optHintsDesc": "Affiche un bouton qui remplit un chiffre correct (+{seconds} s).",
   "optLeftHanded": "Gaucher",

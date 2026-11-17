@@ -95,6 +95,17 @@ class SudokuGame {
 
   bool hasNote(int i, int digit) => notes[i] & (1 << (digit - 1)) != 0;
 
+  /// Whether the digit in cell [i] also appears in its row, column or box.
+  /// Unlike [isWrong], it doesn't look at the solution.
+  bool hasConflict(int i) {
+    final digit = values[i];
+    if (digit == 0) return false;
+    for (final p in peers[i]) {
+      if (values[p] == digit) return true;
+    }
+    return false;
+  }
+
   bool get isFull => !values.contains(0);
 
   bool get isSolved {

@@ -203,6 +203,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Marque en rouge un chiffre erroné dès que vous le saisissez.';
 
   @override
+  String get optMarkConflicts => 'Signaler les conflits';
+
+  @override
+  String get optMarkConflictsDesc =>
+      'Entoure deux chiffres identiques dans la même ligne, colonne ou carré. La solution n\'est pas utilisée : rien n\'est dévoilé.';
+
+  @override
   String get optHints => 'Bouton d\'indice';
 
   @override

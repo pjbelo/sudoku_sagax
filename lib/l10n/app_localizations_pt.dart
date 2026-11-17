@@ -200,6 +200,13 @@ class AppLocalizationsPt extends AppLocalizations {
       'Marca a vermelho um número errado assim que o introduzes.';
 
   @override
+  String get optMarkConflicts => 'Marcar conflitos';
+
+  @override
+  String get optMarkConflictsDesc =>
+      'Contorna dois números iguais na mesma linha, coluna ou quadrado. Não usa a solução, por isso não revela nada.';
+
+  @override
   String get optHints => 'Botão de ajuda';
 
   @override

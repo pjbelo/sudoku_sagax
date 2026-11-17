@@ -6,7 +6,8 @@ import '../game/sudoku_generator.dart';
 import '../sagax_theme.dart';
 
 /// The 9×9 grid. Highlights the selected cell, its row/column/box and every
-/// cell holding the same digit; shows pencil notes as a 3×3 mini-grid.
+/// cell holding the same digit; outlines conflicts; shows pencil notes as a
+/// 3×3 mini-grid.
 class SudokuBoard extends StatelessWidget {
   const SudokuBoard({
     super.key,
@@ -14,6 +15,7 @@ class SudokuBoard extends StatelessWidget {
     required this.selected,
     this.activeDigit,
     required this.showErrors,
+    this.markConflicts = false,
     required this.onCellTap,
     this.hidden = false,
   });
@@ -27,6 +29,11 @@ class SudokuBoard extends StatelessWidget {
 
   /// Paint wrong digits red (the "Show errors" option).
   final bool showErrors;
+
+  /// Outline equal digits that share a row, column or box (the "Mark
+  /// conflicts" option). An outline, not a fill, so it can't be mistaken for
+  /// Show errors, which may be on at the same time.
+  final bool markConflicts;
   final ValueChanged<int> onCellTap;
 
   /// Draws an empty grid, used while the game is paused.
@@ -103,6 +110,7 @@ class SudokuBoard extends StatelessWidget {
             colOf(i) == colOf(sel) ||
             boxOf(i) == boxOf(sel));
     final showWrong = showErrors && game.isWrong(i);
+    final showConflict = markConflicts && game.hasConflict(i);
 
     final Color background;
     if (isSelected) {
@@ -145,6 +153,12 @@ class SudokuBoard extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 120),
       color: background,
+      foregroundDecoration: showConflict
+          ? BoxDecoration(
+              border: Border.all(color: AppColors.errorRed, width: 2),
+              borderRadius: BorderRadius.circular(cell * 0.12),
+            )
+          : null,
       alignment: Alignment.center,
       child: content,
     );

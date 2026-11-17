@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1, A2, A3.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -37,13 +37,9 @@ their absence is felt.
   status line becomes the button), always from level 6 and on levels 1–5
   with an option (off by default); vibration on entries, errors (only with
   Show errors) and the win, with an option (on by default).
-- **A4. Mark conflicts (S).** A new option, "Mark conflicts", **on by
-  default**, which the player can switch off in Options. When on, two equal
-  digits in the same row, column or box are marked. Unlike "Show errors", it
-  doesn't use the solution, so it gives nothing away. Both options can be on
-  at once, so the conflict mark must not be confused with Show errors' red.
-  The new default goes in `SettingsService` (and "Restore defaults" turns it
-  back on), its test and the defaults listed in CLAUDE.md.
+- ~~**A4. Mark conflicts (S).**~~ Done on 2026-11-17: the "Mark conflicts"
+  option (on by default) outlines in red every cell of a clash, givens
+  included; Show errors fills, so the two can be told apart when both are on.
 
 ### B. Set the app apart
 

@@ -56,6 +56,8 @@
   "optTimerDesc": "Mostra o relógio enquanto jogas. O teu tempo é sempre registado nos recordes.",
   "optShowErrors": "Mostrar erros",
   "optShowErrorsDesc": "Marca a vermelho um número errado assim que o introduzes.",
+  "optMarkConflicts": "Marcar conflitos",
+  "optMarkConflictsDesc": "Contorna dois números iguais na mesma linha, coluna ou quadrado. Não usa a solução, por isso não revela nada.",
   "optHints": "Botão de ajuda",
   "optHintsDesc": "Mostra um botão que preenche um número correto (+{seconds} s).",
   "optLeftHanded": "Canhoto",

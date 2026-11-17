@@ -218,6 +218,31 @@ void main() {
     expect(game.notes.where((n) => n != 0), [1]); // only the note before
   });
 
+  test('conflicts: an equal digit in the row, column or box', () {
+    final peer = peers[empty].firstWhere((p) => game.values[p] != 0);
+    final digit = game.values[peer];
+    expect(game.hasConflict(peer), isFalse);
+    game.enterDigit(empty, digit);
+    expect(game.hasConflict(empty), isTrue);
+    expect(game.hasConflict(peer), isTrue, reason: 'the given clashes too');
+    game.erase(empty);
+    expect(game.hasConflict(peer), isFalse);
+    expect(game.hasConflict(empty), isFalse, reason: 'an empty cell');
+  });
+
+  test('a wrong digit without a clash is no conflict', () {
+    final digit = [
+      for (int d = 1; d <= 9; d++)
+        if (game.candidates(empty) & (1 << (d - 1)) != 0 &&
+            d != game.solution[empty])
+          d,
+    ].firstOrNull;
+    if (digit == null) return; // the cell has a single candidate
+    game.enterDigit(empty, digit);
+    expect(game.isWrong(empty), isTrue);
+    expect(game.hasConflict(empty), isFalse);
+  });
+
   test('a full grid with a mistake is not solved', () {
     for (int i = 0; i < 81; i++) {
       if (!game.isLocked(i)) game.enterDigit(i, game.solution[i]);
