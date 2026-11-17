@@ -2,16 +2,24 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/game_review.dart';
 import '../game/sudoku_game.dart';
 
 /// A game left unfinished, with its clock.
 class SavedGame {
-  const SavedGame({required this.game, required this.seconds});
+  const SavedGame({
+    required this.game,
+    required this.seconds,
+    this.events = const [],
+  });
 
   final SudokuGame game;
 
   /// Elapsed play time, hint penalties included.
   final int seconds;
+
+  /// The hints and mistakes so far, for the review after the win.
+  final List<ReviewEvent> events;
 
   int get level => game.puzzle.level;
 }
@@ -59,18 +67,29 @@ class SavedGameService {
       return SavedGame(
         game: SudokuGame.fromJson(data['game'] as Map<String, dynamic>),
         seconds: data['seconds'] as int,
+        // Saves from before the review have no events.
+        events: [
+          for (final e in data['events'] as List? ?? const [])
+            ReviewEvent.fromJson(e as Map<String, dynamic>),
+        ],
       );
     } catch (_) {
       return null;
     }
   }
 
-  /// Replaces the saved game with [game] and its clock.
-  Future<void> save(SudokuGame game, int seconds) async {
+  /// Replaces the saved game with [game], its clock and its review
+  /// [events].
+  Future<void> save(
+    SudokuGame game,
+    int seconds, {
+    List<ReviewEvent> events = const [],
+  }) async {
     final json = jsonEncode({
       'version': _version,
       'game': game.toJson(),
       'seconds': seconds,
+      'events': [for (final e in events) e.toJson()],
     });
     _json = json;
     await _prefs?.setString(_key, json);

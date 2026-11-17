@@ -247,6 +247,58 @@
   "playAgain": "Play Again",
   "backToMenu": "Back to Menu",
   "okButton": "OK",
+  "review": "Review",
+  "reviewTitle": "Game review",
+  "reviewNeeded": "What this puzzle needed",
+  "reviewNeededNote": "Each step of the logic coach, one digit at a time, counted under its hardest technique.",
+  "reviewYourGame": "Your hints and mistakes",
+  "reviewClean": "No hints and no mistakes: a clean solve!",
+  "reviewHint": "{time} · Hint: {technique}, the {digit} in {cell}.",
+  "@reviewHint": {
+    "placeholders": {
+      "time": { "type": "String" },
+      "technique": { "type": "String" },
+      "digit": { "type": "int" },
+      "cell": { "type": "String" }
+    }
+  },
+  "reviewHintFix": "{time} · Hint: corrected to {digit} in {cell}.",
+  "@reviewHintFix": {
+    "placeholders": {
+      "time": { "type": "String" },
+      "digit": { "type": "int" },
+      "cell": { "type": "String" }
+    }
+  },
+  "reviewMistake": "{time} · Mistake: a {digit} in {cell}.",
+  "@reviewMistake": {
+    "placeholders": {
+      "time": { "type": "String" },
+      "digit": { "type": "int" },
+      "cell": { "type": "String" }
+    }
+  },
+  "reviewAvailable": "Available then: {technique}, the {digit} in {cell}.",
+  "@reviewAvailable": {
+    "placeholders": {
+      "technique": { "type": "String" },
+      "digit": { "type": "int" },
+      "cell": { "type": "String" }
+    }
+  },
+  "reviewAvailableFix": "Available then: fixing an earlier mistake in {cell}.",
+  "@reviewAvailableFix": {
+    "placeholders": {
+      "cell": { "type": "String" }
+    }
+  },
+  "cellName": "row {row}, column {column}",
+  "@cellName": {
+    "placeholders": {
+      "row": { "type": "int" },
+      "column": { "type": "int" }
+    }
+  },
   "optionsTitle": "Options",
   "optSound": "Sound",
   "optSoundDesc": "Music and sound effects.",

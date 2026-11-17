@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:foldable/foldable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../game/game_review.dart';
 import '../game/logic_coach.dart';
 import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
@@ -24,6 +25,7 @@ import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
 import '../widgets/number_pad.dart';
 import '../widgets/sudoku_board.dart';
+import 'review_screen.dart';
 
 // ============================================================
 // Sudoku Sagax — Game Screen
@@ -70,6 +72,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// how far it has got: 1 where to look, 2 why, 3 done.
   CoachStep? _coachStep;
   int _coachStage = 1;
+
+  /// The hints and mistakes of this game, for the review after the win.
+  final List<ReviewEvent> _events = [];
 
   /// Elapsed play time, hint penalties included. Counted even when the
   /// Timer option hides the clock, so every win can go on the scoreboard.
@@ -167,6 +172,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _notesMode = false;
     _activeDigit = null;
     _coachStep = null;
+    _events.clear();
     _seconds = 0;
     _userPaused = false;
     _solved = false;
@@ -190,6 +196,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _level = saved.level;
     _game = saved.game;
     _seconds = saved.seconds;
+    _events.addAll(saved.events);
     _countedAsStarted = true; // counted when it was first played
     _analytics.log('game_resumed', {'level': _level, 'seconds': _seconds});
   }
@@ -203,7 +210,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     if (_solved) return;
     if (_game.hasProgress) {
       _countStart();
-      unawaited(_savedGames.save(_game, _seconds));
+      unawaited(_savedGames.save(_game, _seconds, events: _events));
     } else {
       unawaited(_savedGames.clear());
     }
@@ -275,8 +282,15 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       return;
     }
 
+    // For the review: what logic offered before a wrong digit went in.
+    final available = digit != _game.solution[i] && !_game.isLocked(i)
+        ? findCoachStep(_game, preferred: i)
+        : null;
     final result = _game.enterDigit(i, digit);
     if (result == EntryResult.ignored) return;
+    if (result == EntryResult.wrong && available != null) {
+      _events.add(ReviewEvent.mistake(i, digit, _seconds, available));
+    }
     // A wrong digit only sounds and feels different with Show errors on;
     // otherwise it would give the answer away.
     if (result == EntryResult.wrong && _settings.showErrors) {
@@ -385,6 +399,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Places the step's digit, as a hint: it is locked and costs time.
   void _applyCoachStep(CoachStep step) {
     _game.applyHint(step.cell, noteRemovals: step.removals);
+    _events.add(ReviewEvent.hint(step, _seconds));
     unawaited(_audio.playSfx(AudioService.hintSfx, volume: 0.85));
     _vibrate(HapticFeedback.selectionClick);
     _analytics.log('hint_used', {
@@ -430,8 +445,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   }
 
   /// The controls and the number keys, or the coach card in their place.
-  /// The card covers them at their size, so nothing around it moves.
-  Widget _buildEntryArea(AppLocalizations l10n, Widget entry) {
+  /// The card covers them at their size, so nothing around it moves. Where
+  /// the keys run past the bottom of a scrolling pane, [maxCardHeight] keeps
+  /// the card, and its buttons, in view.
+  Widget _buildEntryArea(
+    AppLocalizations l10n,
+    Widget entry, {
+    double maxCardHeight = double.infinity,
+  }) {
     final step = _coachStep;
     if (step == null) return entry;
     final String text;
@@ -457,13 +478,19 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           child: entry,
         ),
         Positioned.fill(
-          child: CoachCard(
-            title: techniqueName(l10n, step.technique),
-            text: text,
-            buttonLabel: button,
-            onButton: _onCoachButton,
-            onClose: _closeCoach,
-            closeLabel: l10n.close,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxCardHeight),
+              child: CoachCard(
+                title: techniqueName(l10n, step.technique),
+                text: text,
+                buttonLabel: button,
+                onButton: _onCoachButton,
+                onClose: _closeCoach,
+                closeLabel: l10n.close,
+              ),
+            ),
           ),
         ),
       ],
@@ -580,6 +607,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           rank: _rank,
           onButtonSfx: () =>
               unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85)),
+          onReview: _openReview,
         ),
         milliseconds: 250,
       ),
@@ -609,6 +637,21 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         _analytics.log('play_again', {'completed_level': _level});
         _startLevel(1);
     }
+  }
+
+  /// From the win summary: what the puzzle needed and how the game went.
+  void _openReview() {
+    unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85));
+    _analytics.log('review_opened', {
+      'level': _level,
+      'hints': _game.hintsUsed,
+      'mistakes': _game.mistakes,
+    });
+    Navigator.of(context).push(
+      fadeRoute<void>(
+        ReviewScreen(puzzle: _game.puzzle, events: List.of(_events)),
+      ),
+    );
   }
 
   // --- UI ---
@@ -819,6 +862,13 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final otherRows =
         navigationHeight + statsHeight + statusHeight + controlsHeight;
     final freeHeight = (size.height - otherRows * scale - 24) / 3 - 8;
+    // What is left in view below the rows above the keys: the coach card
+    // stays within it.
+    final entryInView =
+        size.height -
+        (navigationHeight + statsHeight + statusHeight) * scale -
+        24 -
+        8;
     final keyWidth = (size.width - 20) / 3 - 8;
     // A narrow pane has height to spare, so its keys can be taller than wide.
     final maxKeyHeight = narrow ? keyWidth * 1.3 : keyWidth;
@@ -853,6 +903,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                     _buildNumberPad(height: keyHeight, grid: true),
                   ],
                 ),
+                maxCardHeight: max(140, entryInView),
               ),
           ],
         ),
@@ -1280,6 +1331,7 @@ class _WinSummaryScreen extends StatelessWidget {
     required this.mistakes,
     required this.rank,
     required this.onButtonSfx,
+    required this.onReview,
   });
 
   final int level;
@@ -1288,6 +1340,9 @@ class _WinSummaryScreen extends StatelessWidget {
   final int mistakes;
   final int? rank;
   final VoidCallback onButtonSfx;
+
+  /// Opens the game review.
+  final VoidCallback onReview;
 
   void _close(BuildContext context, _WinAction action) {
     onButtonSfx();
@@ -1333,6 +1388,20 @@ class _WinSummaryScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ],
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: onReview,
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.hintAmber,
+            side: BorderSide(color: AppColors.hintAmber.withValues(alpha: 0.6)),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          ),
+          icon: const Icon(Icons.insights),
+          label: Text(
+            l10n.review,
+            style: GoogleFonts.exo2(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
       ],
     );
 

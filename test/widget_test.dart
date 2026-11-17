@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/game_review.dart';
 import 'package:sudoku_sagax/game/logic_coach.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
@@ -130,6 +131,16 @@ void main() {
       ScoreboardService.instance.scoresFor(1).single.seconds,
       greaterThanOrEqualTo(35 * 30),
     );
+
+    // The review: what the puzzle needed, then the 35 hints.
+    await tester.tap(find.text('Review'));
+    await tester.pumpAndSettle();
+    expect(find.text('Game review'), findsOneWidget);
+    expect(find.text('What this puzzle needed'), findsOneWidget);
+    expect(find.textContaining(' · Hint: '), findsWidgets);
+    expect(find.text('No hints and no mistakes: a clean solve!'), findsNothing);
+    await tester.tap(find.byType(BackButton));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Back to Menu'));
     await tester.pumpAndSettle();
@@ -480,5 +491,24 @@ void main() {
       await tester.pumpAndSettle();
       expect(savedGame().values[cell], game.solution[cell]);
     });
+  });
+
+  testWidgets('a mistake is kept with the logic available then', (
+    tester,
+  ) async {
+    final game = SudokuGame(generatePuzzle(1, seed: 4));
+    final cell = game.values.indexOf(0);
+    final available = findCoachStep(game, preferred: cell)!;
+    final wrong = game.solution[cell] % 9 + 1;
+
+    await continueGame(tester, game);
+    await tapCell(tester, cell);
+    await tapDigit(tester, wrong);
+    final event = SavedGameService.instance.savedGame!.events.single;
+    expect(event.kind, ReviewEventKind.mistake);
+    expect(event.cell, cell);
+    expect(event.digit, wrong);
+    expect(event.technique, available.technique);
+    expect(event.stepCell, available.cell);
   });
 }

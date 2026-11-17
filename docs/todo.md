@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1, B2.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B3.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -60,10 +60,11 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   logic, with steps the coach explains. Levels 6–9 come from a graded bank
   (`tool/generate_puzzle_bank.dart`, 100 puzzles a level), shuffled in the
   app. The level summary shows what each level trains ("Hard · pairs").
-- **B3. Game review (M, needs B1).** After a win, a "Review" button on the
-  summary screen: the techniques the puzzle needed, how many times each,
-  where the hints and mistakes happened and the logic that was available at
-  that point. None of the competitors reviewed lists anything like it.
+- ~~**B3. Game review (M, needs B1).**~~ Done on 2026-11-17: a Review
+  button on the win summary opens a screen with the techniques the puzzle
+  needed (the coach's steps, counted by technique), then each hint and
+  mistake with its time and cell; a mistake shows the logical step that was
+  available just before it. The events are saved with the game.
 - **B4. Guided lessons (M–L, needs B1).** One short lesson per technique,
   played on a prepared board: the app explains, the player makes the move.
   Finished lessons are kept, and a level suggests its lesson the first time

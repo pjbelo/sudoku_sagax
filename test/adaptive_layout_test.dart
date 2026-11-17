@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/game_review.dart';
+import 'package:sudoku_sagax/game/logic_coach.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/l10n/app_localizations.dart';
@@ -11,6 +13,7 @@ import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/screens/home_screen.dart';
 import 'package:sudoku_sagax/screens/info_screen.dart';
 import 'package:sudoku_sagax/screens/options_screen.dart';
+import 'package:sudoku_sagax/screens/review_screen.dart';
 import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
@@ -39,6 +42,28 @@ Map<String, Object> _fullScoreboard() {
 Future<void> _saveUnfinishedGame() async {
   final game = SudokuGame(generatePuzzle(8, seed: 1))..hint();
   await SavedGameService.instance.save(game, 4567);
+}
+
+/// A review with long lines: a level 9 puzzle, a hint and a mistake whose
+/// available step is an X-Wing (the longest technique texts).
+ReviewScreen _reviewScreen() {
+  final puzzle = generatePuzzle(9, seed: 2);
+  final step = findCoachStep(SudokuGame(puzzle))!;
+  return ReviewScreen(
+    puzzle: puzzle,
+    events: [
+      ReviewEvent.hint(step, 3725),
+      ReviewEvent(
+        kind: ReviewEventKind.mistake,
+        seconds: 3790,
+        cell: 80,
+        digit: 9,
+        technique: CoachTechnique.boxLineReduction,
+        stepCell: 72,
+        stepDigit: 8,
+      ),
+    ],
+  );
 }
 
 void main() {
@@ -91,6 +116,7 @@ void main() {
       'statistics': const ScoreboardScreen(showStatistics: true),
       'options': const OptionsScreen(),
       'info': const InfoScreen(),
+      'review': _reviewScreen(),
     };
 
     for (final MapEntry(key: windowName, value: window) in windows.entries) {
@@ -480,6 +506,39 @@ void main() {
       final firstRow = tester.getTopLeft(find.text('#4'));
       expect(list.left, 0); // it fills the width, so its margins scroll too
       expect(firstChip.left, closeTo(firstRow.dx, 30));
+    });
+  });
+
+  group('coach card', () {
+    testWidgets('its buttons stay in view in every game layout', (
+      tester,
+    ) async {
+      for (final window in [
+        smallPhone,
+        phonePortrait,
+        phoneLandscape,
+        ipadMiniLandscape,
+        ipad13Portrait,
+        duoOuter,
+        duoInnerLandscape,
+        duoBook,
+        duoLaptop,
+      ]) {
+        await pumpScreen(tester, const GameScreen(), window);
+        await tester.tap(find.byIcon(Icons.lightbulb_outline));
+        await tester.pumpAndSettle();
+        final button = find.descendant(
+          of: find.byType(CoachCard),
+          matching: find.byType(ElevatedButton),
+        );
+        final bottom = window.size.height - window.padding.bottom;
+        expect(
+          tester.getRect(button).bottom,
+          lessThanOrEqualTo(bottom),
+          reason: '${window.size}',
+        );
+        await tester.pumpWidget(const SizedBox());
+      }
     });
   });
 

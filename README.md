@@ -73,6 +73,7 @@ lib/
     sudoku_generator.dart      Pure Dart: solver, singles solver, generator, the 9 `sudokuLevels`
     puzzle_bank.dart           GENERATED graded puzzles for levels 6–9 (tool/generate_puzzle_bank.dart)
     logic_coach.dart           Pure Dart: the logic coach (next step, named technique, eliminations)
+    game_review.dart           Pure Dart: hints and mistakes of a game, techniques a puzzle needs
     sudoku_game.dart           Game state: entries, notes, hints, mistakes, undo/redo, fill notes, JSON; formatTime
   services/
     analytics_service.dart     Firebase Analytics wrapper (no-op until initialised)
@@ -87,6 +88,7 @@ lib/
     options_screen.dart        The option switches + Restore defaults
     scoreboard_screen.dart     Per-level best times and statistics
     info_screen.dart           How to play, Brain Benefits, scientific references, credits
+    review_screen.dart         After a win: techniques needed, hints and mistakes with the logic available
   widgets/                     SudokuBoard, NumberPad, CoachCard, LevelSelector, SudokuLogo, confirm dialog, fade route
   l10n/                        .arb sources + generated AppLocalizations
 assets/                        images (app logo sudoku-sagax-transp.png, Sagax logo), musics, sounds
@@ -174,7 +176,7 @@ Firebase. Event names follow Slidox:
 `hint_used` (both with the `technique`) ·
 `notes_filled` ·
 `level_completed` · `next_level` · `same_level` · `play_again` ·
-`back_to_menu` · `game_left` · `continue_selected` · `game_resumed` ·
+`back_to_menu` · `review_opened` · `game_left` · `continue_selected` · `game_resumed` ·
 `saved_game_replaced` · `option_changed` · `options_restored` ·
 `scoreboard_opened` · `scoreboard_cleared` · `statistics_viewed` ·
 `statistics_cleared` · `options_opened` · `info_opened` ·

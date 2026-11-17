@@ -327,6 +327,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get okButton => 'OK';
 
   @override
+  String get review => 'Review';
+
+  @override
+  String get reviewTitle => 'Game review';
+
+  @override
+  String get reviewNeeded => 'What this puzzle needed';
+
+  @override
+  String get reviewNeededNote =>
+      'Each step of the logic coach, one digit at a time, counted under its hardest technique.';
+
+  @override
+  String get reviewYourGame => 'Your hints and mistakes';
+
+  @override
+  String get reviewClean => 'No hints and no mistakes: a clean solve!';
+
+  @override
+  String reviewHint(String time, String technique, int digit, String cell) {
+    return '$time · Hint: $technique, the $digit in $cell.';
+  }
+
+  @override
+  String reviewHintFix(String time, int digit, String cell) {
+    return '$time · Hint: corrected to $digit in $cell.';
+  }
+
+  @override
+  String reviewMistake(String time, int digit, String cell) {
+    return '$time · Mistake: a $digit in $cell.';
+  }
+
+  @override
+  String reviewAvailable(String technique, int digit, String cell) {
+    return 'Available then: $technique, the $digit in $cell.';
+  }
+
+  @override
+  String reviewAvailableFix(String cell) {
+    return 'Available then: fixing an earlier mistake in $cell.';
+  }
+
+  @override
+  String cellName(int row, int column) {
+    return 'row $row, column $column';
+  }
+
+  @override
   String get optionsTitle => 'Options';
 
   @override

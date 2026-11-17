@@ -329,6 +329,55 @@ class AppLocalizationsDe extends AppLocalizations {
   String get okButton => 'OK';
 
   @override
+  String get review => 'Rückblick';
+
+  @override
+  String get reviewTitle => 'Spielrückblick';
+
+  @override
+  String get reviewNeeded => 'Was dieses Rätsel brauchte';
+
+  @override
+  String get reviewNeededNote =>
+      'Jeder Schritt des Logik-Trainers, eine Zahl nach der anderen, gezählt nach seiner schwierigsten Technik.';
+
+  @override
+  String get reviewYourGame => 'Deine Tipps und Fehler';
+
+  @override
+  String get reviewClean => 'Keine Tipps und keine Fehler: sauber gelöst!';
+
+  @override
+  String reviewHint(String time, String technique, int digit, String cell) {
+    return '$time · Tipp: $technique, die $digit in $cell.';
+  }
+
+  @override
+  String reviewHintFix(String time, int digit, String cell) {
+    return '$time · Tipp: korrigiert zu $digit in $cell.';
+  }
+
+  @override
+  String reviewMistake(String time, int digit, String cell) {
+    return '$time · Fehler: eine $digit in $cell.';
+  }
+
+  @override
+  String reviewAvailable(String technique, int digit, String cell) {
+    return 'Damals möglich: $technique, die $digit in $cell.';
+  }
+
+  @override
+  String reviewAvailableFix(String cell) {
+    return 'Damals möglich: einen früheren Fehler in $cell korrigieren.';
+  }
+
+  @override
+  String cellName(int row, int column) {
+    return 'Zeile $row, Spalte $column';
+  }
+
+  @override
   String get optionsTitle => 'Optionen';
 
   @override

@@ -620,6 +620,78 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get okButton;
 
+  /// No description provided for @review.
+  ///
+  /// In en, this message translates to:
+  /// **'Review'**
+  String get review;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Game review'**
+  String get reviewTitle;
+
+  /// No description provided for @reviewNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'What this puzzle needed'**
+  String get reviewNeeded;
+
+  /// No description provided for @reviewNeededNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Each step of the logic coach, one digit at a time, counted under its hardest technique.'**
+  String get reviewNeededNote;
+
+  /// No description provided for @reviewYourGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hints and mistakes'**
+  String get reviewYourGame;
+
+  /// No description provided for @reviewClean.
+  ///
+  /// In en, this message translates to:
+  /// **'No hints and no mistakes: a clean solve!'**
+  String get reviewClean;
+
+  /// No description provided for @reviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} · Hint: {technique}, the {digit} in {cell}.'**
+  String reviewHint(String time, String technique, int digit, String cell);
+
+  /// No description provided for @reviewHintFix.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} · Hint: corrected to {digit} in {cell}.'**
+  String reviewHintFix(String time, int digit, String cell);
+
+  /// No description provided for @reviewMistake.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} · Mistake: a {digit} in {cell}.'**
+  String reviewMistake(String time, int digit, String cell);
+
+  /// No description provided for @reviewAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available then: {technique}, the {digit} in {cell}.'**
+  String reviewAvailable(String technique, int digit, String cell);
+
+  /// No description provided for @reviewAvailableFix.
+  ///
+  /// In en, this message translates to:
+  /// **'Available then: fixing an earlier mistake in {cell}.'**
+  String reviewAvailableFix(String cell);
+
+  /// No description provided for @cellName.
+  ///
+  /// In en, this message translates to:
+  /// **'row {row}, column {column}'**
+  String cellName(int row, int column);
+
   /// No description provided for @optionsTitle.
   ///
   /// In en, this message translates to:

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/game_review.dart';
+import 'package:sudoku_sagax/game/logic_coach.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
@@ -153,6 +157,24 @@ void main() {
       await service.clear();
       await service.load();
       expect(service.hasSavedGame, isFalse);
+    });
+
+    test('the review events go with the saved game', () async {
+      final service = SavedGameService.instance;
+      final game = SudokuGame(generatePuzzle(2, seed: 3));
+      final event = ReviewEvent.hint(findCoachStep(game)!, 40);
+      await service.save(game, 40, events: [event]);
+      await service.load();
+      expect(service.savedGame!.events.single.toJson(), event.toJson());
+
+      // A save from before the review has no events.
+      await service.save(game, 40);
+      final prefs = await SharedPreferences.getInstance();
+      final old = jsonDecode(prefs.getString('saved_game')!) as Map;
+      old.remove('events');
+      SharedPreferences.setMockInitialValues({'saved_game': jsonEncode(old)});
+      await service.load();
+      expect(service.savedGame!.events, isEmpty);
     });
 
     test('damaged or old-format data is dropped instead of crashing', () async {
