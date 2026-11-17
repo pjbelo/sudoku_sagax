@@ -21,7 +21,7 @@ void main() {
   group('whole games', () {
     test('every step places the right digit, at every level', () {
       for (int level = 1; level <= 9; level++) {
-        for (int seed = 0; seed < 6; seed++) {
+        for (int seed = 0; seed < 25; seed++) {
           final game = SudokuGame(generatePuzzle(level, seed: seed));
           var steps = 0;
           while (true) {
@@ -29,6 +29,15 @@ void main() {
             if (step == null) break;
             expect(step.digit, game.solution[step.cell]);
             expect(game.values[step.cell], 0);
+            // Nothing harder than the level needs, never a guess.
+            final (_, hardest) = techniqueRange(
+              sudokuLevels[level - 1].technique,
+            );
+            expect(
+              step.technique.index,
+              lessThanOrEqualTo(hardest.index),
+              reason: 'level $level, seed $seed: ${step.technique.name}',
+            );
             game.applyHint(step.cell, noteRemovals: step.removals);
             steps++;
           }

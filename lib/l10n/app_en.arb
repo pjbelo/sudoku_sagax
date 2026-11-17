@@ -5,11 +5,11 @@
   "sagaxGames": "Sagax Games",
   "tagline": "Fill the grid, sharpen your mind",
   "selectLevel": "Select level:",
-  "levelSummary": "{band} · {clues} clues",
+  "levelSummary": "{band} · {technique}",
   "@levelSummary": {
     "placeholders": {
       "band": { "type": "String" },
-      "clues": { "type": "int" }
+      "technique": { "type": "String" }
     }
   },
   "bandBeginner": "Beginner",
@@ -17,6 +17,11 @@
   "bandMedium": "Medium",
   "bandHard": "Hard",
   "bandExpert": "Expert",
+  "trainsSingles": "singles",
+  "trainsLockedCandidates": "pointing pairs",
+  "trainsPairs": "pairs",
+  "trainsTriples": "triples",
+  "trainsXWing": "X-Wing",
   "play": "PLAY",
   "info": "Info",
   "options": "Options",
@@ -229,11 +234,11 @@
       "level": { "type": "int" }
     }
   },
-  "nextLevelInfo": "Next level: {band} · {clues} clues",
+  "nextLevelInfo": "Next level: {band} · {technique}",
   "@nextLevelInfo": {
     "placeholders": {
       "band": { "type": "String" },
-      "clues": { "type": "int" }
+      "technique": { "type": "String" }
     }
   },
   "allLevelsComplete": "You conquered the hardest level!",

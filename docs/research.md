@@ -157,7 +157,7 @@ Sudoku: Solving the Sudoku minimum number of clues problem via hitting set
 enumeration. *Experimental Mathematics, 23*(2), 190–217.
 doi:10.1080/10586458.2013.870056
 - A puzzle with a unique solution needs at least 17 givens. Level 9 uses 24,
-  safely above that, and still generates in a few milliseconds.
+  safely above that.
 
 **Pelánek, R. (2014).** Difficulty rating of Sudoku puzzles: An overview and
 evaluation. arXiv:1403.7373.
@@ -166,16 +166,29 @@ evaluation. arXiv:1403.7373.
   much better (r ≈ 0.95).
 - That is why each level in
   [sudoku_generator.dart](../lib/game/sudoku_generator.dart) sets both a clue
-  target and a required technique:
+  target and a technique, checked with the logic coach's solver
+  ([logic_coach.dart](../lib/game/logic_coach.dart), `hardestTechnique`):
+  solving by always taking the simplest step, the hardest technique used must
+  be the level's. So every level is solvable by logic alone, with no guessing,
+  and needs nothing the coach doesn't explain:
 
-| Level | Givens | Band | Technique requirement |
+| Level | Givens | Band | Hardest technique needed |
 |---|---|---|---|
-| 1–2 | 46, 42 | Beginner | Solvable with naked + hidden singles only |
+| 1–2 | 46, 42 | Beginner | Naked and hidden singles only |
 | 3–4 | 38, 35 | Easy | Singles only |
 | 5 | 32 | Medium | Singles only |
-| 6 | 30 | Medium | Unique solution, any technique |
-| 7–8 | 28, 26 | Hard | Unique, and singles alone get stuck (needs candidate elimination, so notes matter) |
-| 9 | 24 | Expert | Same as 7–8, with fewer givens |
+| 6 | 30 | Medium | A pointing pair or a box-line reduction |
+| 7 | 28 | Hard | A naked or hidden pair |
+| 8 | 26 | Hard | A naked triple |
+| 9 | 24 | Expert | An X-Wing |
+
+- Puzzles that need a given technique are rare among random ones (fewer than
+  one in ten need anything beyond singles, and an X-Wing well under one in a
+  hundred), so finding one takes from a fraction of a second to about ten
+  seconds. Levels 6–9 therefore come from a bank graded in advance
+  (`tool/generate_puzzle_bank.dart`). The app shuffles each one (digits
+  renamed, rows, columns and bands reordered, maybe transposed): this changes
+  how it looks, not the logic it needs.
 
 ## Not used
 

@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sudoku_sagax/game/logic_coach.dart';
+import 'package:sudoku_sagax/game/puzzle_bank.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 
 /// True when [grid] is a complete, valid sudoku solution.
@@ -69,7 +73,7 @@ void main() {
 
     for (final spec in sudokuLevels) {
       test('level ${spec.level}: unique, ${spec.clues} clues, '
-          '${spec.technique.name}', () {
+          '${spec.technique.name} and nothing harder', () {
         for (int seed = 0; seed < 5; seed++) {
           final p = generatePuzzle(spec.level, seed: seed);
           expect(p.level, spec.level);
@@ -79,17 +83,48 @@ void main() {
           for (int i = 0; i < 81; i++) {
             if (p.givens[i] != 0) expect(p.givens[i], p.solution[i]);
           }
-          switch (spec.technique) {
-            case SudokuTechnique.singles:
-              expect(solvableWithSingles(p.givens), isTrue);
-            case SudokuTechnique.advanced:
-              expect(solvableWithSingles(p.givens), isFalse);
-            case SudokuTechnique.unique:
-              break;
-          }
+          expect(
+            meetsLevel(spec.technique, hardestTechnique(p.givens)),
+            isTrue,
+            reason: 'seed $seed: ${hardestTechnique(p.givens)?.name}',
+          );
         }
       });
     }
+
+    test('the bank: every puzzle fits its level', () {
+      for (final MapEntry(key: level, value: puzzles) in puzzleBank.entries) {
+        final spec = sudokuLevels[level - 1];
+        expect(spec.technique, isNot(SudokuTechnique.singles));
+        expect(puzzles.toSet(), hasLength(puzzles.length)); // no repeats
+        for (final text in puzzles) {
+          final givens = [for (final ch in text.split('')) int.parse(ch)];
+          expect(givens, hasLength(81));
+          expect(givens.where((v) => v != 0), hasLength(spec.clues));
+          expect(
+            meetsLevel(spec.technique, hardestTechnique(givens)),
+            isTrue,
+            reason: 'level $level: $text',
+          );
+        }
+      }
+      expect(puzzleBank.keys.toSet(), {6, 7, 8, 9});
+    });
+
+    test('shuffling keeps a puzzle valid, unique and as hard', () {
+      final rng = Random(5);
+      for (int level = 6; level <= 9; level++) {
+        final p = generatePuzzle(level, seed: 1);
+        final hardest = hardestTechnique(p.givens);
+        final q = shufflePuzzle(p, rng);
+        expect(isValidSolution(q.solution), isTrue);
+        expect(q.clueCount, p.clueCount);
+        expect(countSolutions(q.givens), 1);
+        expect(solve(q.givens), q.solution);
+        expect(hardestTechnique(q.givens), hardest);
+        expect(q.givens, isNot(p.givens));
+      }
+    });
 
     test('same seed gives the same puzzle', () {
       final a = generatePuzzle(5, seed: 42);

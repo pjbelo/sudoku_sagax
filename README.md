@@ -19,10 +19,12 @@ Targets **iOS** and **Android**.
 ## Gameplay
 
 - **9 levels** in 5 bands (Beginner → Expert), from 46 givens down to 24.
-  Every puzzle is generated on the fly and has exactly **one solution**.
-  Levels 1–5 can be solved with "singles" alone; levels 7–9 always need
-  candidate elimination. See [docs/research.md](docs/research.md) for the
-  rationale.
+  Every puzzle has exactly **one solution** and is solvable by logic alone.
+  Each level trains one technique and needs nothing harder: singles (1–5),
+  pointing pairs (6), pairs (7), triples (8), X-Wing (9). Levels 1–5 are
+  generated on the fly; levels 6–9 shuffle a puzzle from a graded bank
+  (`tool/generate_puzzle_bank.dart`). See [docs/research.md](docs/research.md)
+  for the rationale.
 - Pick a cell, then a number. Entering the same number again clears the cell.
   Placing a number removes it from the notes in its row, column and box.
 - **Notes** mode pencils in candidates as a 3×3 mini-grid in the cell.
@@ -69,6 +71,7 @@ lib/
   sagax_theme.dart             AppColors palette + global dark sagaxTheme (shared with Slidox/Memorex)
   game/
     sudoku_generator.dart      Pure Dart: solver, singles solver, generator, the 9 `sudokuLevels`
+    puzzle_bank.dart           GENERATED graded puzzles for levels 6–9 (tool/generate_puzzle_bank.dart)
     logic_coach.dart           Pure Dart: the logic coach (next step, named technique, eliminations)
     sudoku_game.dart           Game state: entries, notes, hints, mistakes, undo/redo, fill notes, JSON; formatTime
   services/

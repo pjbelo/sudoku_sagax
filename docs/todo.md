@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1, B2.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -53,14 +53,13 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   Hint button opens a card in place of the keys: where to look, why (cells
   highlighted, candidates shown), then Apply, the only step that costs
   time; it stays until closed. Every step places a digit (eliminations lead
-  up to it). On 80 puzzles of levels 6–9, about 2% of steps still fall back
-  to a digit from the solution: B2 will grade those levels by technique.
-- **B2. Levels graded by technique (M, needs B1).** The generator uses the
-  solver to make sure each level needs the techniques it names and nothing
-  harder. Today levels 6–9 are only checked for a unique solution, so a
-  puzzle may need a technique the app never teaches, or trial and error.
-  The level selector shows what each level trains (for example "Level 7 ·
-  Hard · pairs and pointing"). This makes "no guessing" true at every level.
+  up to it).
+- ~~**B2. Levels graded by technique (M, needs B1).**~~ Done on 2026-11-17:
+  each level needs its technique and nothing harder (singles 1–5, pointing
+  pairs 6, pairs 7, triples 8, X-Wing 9), so every level is solvable by
+  logic, with steps the coach explains. Levels 6–9 come from a graded bank
+  (`tool/generate_puzzle_bank.dart`, 100 puzzles a level), shuffled in the
+  app. The level summary shows what each level trains ("Hard · pairs").
 - **B3. Game review (M, needs B1).** After a win, a "Review" button on the
   summary screen: the techniques the puzzle needed, how many times each,
   where the hints and mistakes happened and the logic that was available at

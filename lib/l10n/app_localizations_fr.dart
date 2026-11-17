@@ -25,8 +25,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectLevel => 'Choisissez le niveau :';
 
   @override
-  String levelSummary(String band, int clues) {
-    return '$band · $clues indices';
+  String levelSummary(String band, String technique) {
+    return '$band · $technique';
   }
 
   @override
@@ -43,6 +43,21 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bandExpert => 'Expert';
+
+  @override
+  String get trainsSingles => 'singletons';
+
+  @override
+  String get trainsLockedCandidates => 'paires pointantes';
+
+  @override
+  String get trainsPairs => 'paires';
+
+  @override
+  String get trainsTriples => 'triplets';
+
+  @override
+  String get trainsXWing => 'X-Wing';
 
   @override
   String get play => 'JOUER';
@@ -293,8 +308,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String nextLevelInfo(String band, int clues) {
-    return 'Niveau suivant : $band · $clues indices';
+  String nextLevelInfo(String band, String technique) {
+    return 'Niveau suivant : $band · $technique';
   }
 
   @override

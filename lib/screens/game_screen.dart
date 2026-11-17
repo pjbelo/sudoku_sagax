@@ -1343,7 +1343,7 @@ class _WinSummaryScreen extends StatelessWidget {
           hasNext
               ? l10n.nextLevelInfo(
                   bandName(l10n, sudokuLevels[level].band),
-                  sudokuLevels[level].clues,
+                  techniqueLabel(l10n, sudokuLevels[level].technique),
                 )
               : l10n.allLevelsComplete,
           style: Theme.of(context).textTheme.bodyMedium,

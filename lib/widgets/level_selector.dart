@@ -16,10 +16,24 @@ String bandName(AppLocalizations l10n, SudokuBand band) => switch (band) {
   SudokuBand.expert => l10n.bandExpert,
 };
 
-/// "Medium · 32 clues" for [level].
+/// Localised name of what a level trains: its hardest technique.
+String techniqueLabel(AppLocalizations l10n, SudokuTechnique technique) =>
+    switch (technique) {
+      SudokuTechnique.singles => l10n.trainsSingles,
+      SudokuTechnique.lockedCandidates => l10n.trainsLockedCandidates,
+      SudokuTechnique.pairs => l10n.trainsPairs,
+      SudokuTechnique.triples => l10n.trainsTriples,
+      SudokuTechnique.xWing => l10n.trainsXWing,
+    };
+
+/// "Hard · pairs" for [level]: its band and what it trains. The chips show
+/// the clue counts.
 String levelSummary(AppLocalizations l10n, int level) {
   final spec = sudokuLevels[level - 1];
-  return l10n.levelSummary(bandName(l10n, spec.band), spec.clues);
+  return l10n.levelSummary(
+    bandName(l10n, spec.band),
+    techniqueLabel(l10n, spec.technique),
+  );
 }
 
 /// The 9 levels as chips laid out like a 3×3 sudoku box (or in one row when

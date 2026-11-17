@@ -137,8 +137,8 @@ abstract class AppLocalizations {
   /// No description provided for @levelSummary.
   ///
   /// In en, this message translates to:
-  /// **'{band} · {clues} clues'**
-  String levelSummary(String band, int clues);
+  /// **'{band} · {technique}'**
+  String levelSummary(String band, String technique);
 
   /// No description provided for @bandBeginner.
   ///
@@ -169,6 +169,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Expert'**
   String get bandExpert;
+
+  /// No description provided for @trainsSingles.
+  ///
+  /// In en, this message translates to:
+  /// **'singles'**
+  String get trainsSingles;
+
+  /// No description provided for @trainsLockedCandidates.
+  ///
+  /// In en, this message translates to:
+  /// **'pointing pairs'**
+  String get trainsLockedCandidates;
+
+  /// No description provided for @trainsPairs.
+  ///
+  /// In en, this message translates to:
+  /// **'pairs'**
+  String get trainsPairs;
+
+  /// No description provided for @trainsTriples.
+  ///
+  /// In en, this message translates to:
+  /// **'triples'**
+  String get trainsTriples;
+
+  /// No description provided for @trainsXWing.
+  ///
+  /// In en, this message translates to:
+  /// **'X-Wing'**
+  String get trainsXWing;
 
   /// No description provided for @play.
   ///
@@ -551,8 +581,8 @@ abstract class AppLocalizations {
   /// No description provided for @nextLevelInfo.
   ///
   /// In en, this message translates to:
-  /// **'Next level: {band} · {clues} clues'**
-  String nextLevelInfo(String band, int clues);
+  /// **'Next level: {band} · {technique}'**
+  String nextLevelInfo(String band, String technique);
 
   /// No description provided for @allLevelsComplete.
   ///

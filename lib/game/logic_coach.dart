@@ -369,13 +369,18 @@ List<Elimination> _nakedPairs(List<int> cand) {
 List<Elimination> _hiddenPairs(List<int> cand) {
   final found = <Elimination>[];
   for (final unit in _allUnits) {
-    List<int> cellsWith(int d) =>
-        unit.cells.where((c) => cand[c] & _bit(d) != 0).toList();
+    // For each digit, the cells of the unit where it fits (index 0 unused).
+    final cellsWith = [
+      for (int d = 0; d <= 9; d++)
+        d == 0
+            ? const <int>[]
+            : unit.cells.where((c) => cand[c] & _bit(d) != 0).toList(),
+    ];
     for (int a = 1; a <= 9; a++) {
-      final cellsA = cellsWith(a);
+      final cellsA = cellsWith[a];
       if (cellsA.length != 2) continue;
       for (int b = a + 1; b <= 9; b++) {
-        final cellsB = cellsWith(b);
+        final cellsB = cellsWith[b];
         if (cellsB.length != 2 ||
             cellsB[0] != cellsA[0] ||
             cellsB[1] != cellsA[1]) {
@@ -529,15 +534,51 @@ List<int> _apply(List<int> cand, Iterable<Elimination> eliminations) {
   return result;
 }
 
+/// Eliminations made one after another with [finders] (the first one found
+/// by the simplest finder each time) until a single opens; then cut down to
+/// the ones the single needs. Null when no single opens.
+List<Elimination>? _chainToSingle(
+  List<int> cand,
+  List<List<Elimination> Function(List<int>)> finders,
+  int? target,
+) {
+  final chain = <Elimination>[];
+  var work = cand;
+  for (int round = 0; round < 60; round++) {
+    Elimination? next;
+    for (final finder in finders) {
+      final found = finder(work);
+      if (found.isNotEmpty) {
+        next = found.first;
+        break;
+      }
+    }
+    if (next == null) return null;
+    chain.add(next);
+    work = _apply(work, [next]);
+    if (_findSingle(work, target) != null) {
+      // Leave out the links the single doesn't need.
+      for (final link in List.of(chain)) {
+        final without = chain.where((e) => e != link).toList();
+        if (_findSingle(_apply(cand, without), target) != null) {
+          chain.remove(link);
+        }
+      }
+      return chain;
+    }
+  }
+  return null;
+}
+
 // --- The next step ---
 
 /// The next step for [game], or null when the grid is solved. Prefers a
 /// step for the [preferred] cell (the one the player selected).
 ///
 /// A wrong digit comes first: logic from a wrong grid would mislead. Then
-/// a single; then the simplest elimination that leads to a single; then a
-/// chain of eliminations, cut down to the ones that matter. When nothing
-/// works, a digit from the solution.
+/// a single; then, technique by technique from the simplest, one
+/// elimination that leads to a single or a chain of them, cut down to the
+/// ones that matter. When nothing works, a digit from the solution.
 CoachStep? findCoachStep(SudokuGame game, {int? preferred}) {
   final values = game.values;
 
@@ -573,43 +614,25 @@ CoachStep? findCoachStep(SudokuGame game, {int? preferred}) {
   final single = _findSingle(cand, target);
   if (single != null) return stepFor(single, const []);
 
-  // 2. One elimination that opens a single.
-  for (final finder in _eliminationFinders) {
-    for (final e in finder(cand)) {
+  // 2. Technique by technique, simplest first: one elimination of it that
+  // opens a single, else a chain that uses nothing harder. So the hardest
+  // technique explained is never more than the grid needs.
+  for (int tier = 0; tier < _eliminationFinders.length; tier++) {
+    for (final e in _eliminationFinders[tier](cand)) {
       final s = _findSingle(_apply(cand, [e]), target);
       if (s != null) return stepFor(s, [e]);
     }
-  }
-
-  // 3. A chain: the first elimination of the simplest technique, again and
-  // again, until a single opens.
-  final chain = <Elimination>[];
-  var work = cand;
-  for (int round = 0; round < 30; round++) {
-    Elimination? next;
-    for (final finder in _eliminationFinders) {
-      final found = finder(work);
-      if (found.isNotEmpty) {
-        next = found.first;
-        break;
-      }
-    }
-    if (next == null) break;
-    chain.add(next);
-    work = _apply(work, [next]);
-    if (_findSingle(work, target) != null) {
-      // Leave out the links the single doesn't need.
-      for (final link in List.of(chain)) {
-        final without = chain.where((e) => e != link).toList();
-        if (_findSingle(_apply(cand, without), target) != null) {
-          chain.remove(link);
-        }
-      }
+    final chain = _chainToSingle(
+      cand,
+      _eliminationFinders.sublist(0, tier + 1),
+      target,
+    );
+    if (chain != null) {
       return stepFor(_findSingle(_apply(cand, chain), target)!, chain);
     }
   }
 
-  // 4. Nothing the coach knows: the open cell with the fewest candidates.
+  // 3. Nothing the coach knows: the open cell with the fewest candidates.
   var cell = target;
   if (cell == null) {
     for (int i = 0; i < 81; i++) {
@@ -623,4 +646,110 @@ CoachStep? findCoachStep(SudokuGame game, {int? preferred}) {
     singleTechnique: CoachTechnique.fromSolution,
     candidates: cand,
   );
+}
+
+// --- Grading ---
+
+/// The hardest technique needed to solve [givens] by logic, always using
+/// the simplest technique that makes progress; null when the coach's
+/// techniques can't finish it (or would need one harder than [limit]).
+///
+/// Any grid it finishes has a single solution, since every step is a sound
+/// deduction. Used by the generator to grade the levels.
+CoachTechnique? hardestTechnique(
+  List<int> givens, {
+  CoachTechnique limit = CoachTechnique.xWing,
+}) {
+  final values = List.of(givens);
+  final cand = candidateGrid(values);
+  var hardest = CoachTechnique.hiddenSingle;
+  final finders = [
+    for (final technique in _eliminationTechniques)
+      if (technique.index <= limit.index) technique,
+  ];
+
+  void place(int cell, int digit) {
+    values[cell] = digit;
+    cand[cell] = 0;
+    for (final p in peers[cell]) {
+      cand[p] &= ~_bit(digit);
+    }
+  }
+
+  var empty = values.where((v) => v == 0).length;
+  while (empty > 0) {
+    // A cell left without candidates: the grid has no solution.
+    for (int i = 0; i < 81; i++) {
+      if (values[i] == 0 && cand[i] == 0) return null;
+    }
+    final singles = _allSingles(cand);
+    if (singles.isNotEmpty) {
+      for (final single in singles) {
+        if (values[single.cell] != 0) continue;
+        if (cand[single.cell] & _bit(single.digit) == 0) return null;
+        place(single.cell, single.digit);
+        empty--;
+        if (single.technique.index > hardest.index) {
+          hardest = single.technique;
+        }
+      }
+      continue;
+    }
+    // No single: the simplest elimination that applies, everywhere.
+    var progress = false;
+    for (final technique in finders) {
+      final found = eliminationsFor(technique, cand);
+      if (found.isEmpty) continue;
+      for (final e in found) {
+        e.removals.forEach((c, mask) => cand[c] &= ~mask);
+      }
+      if (technique.index > hardest.index) hardest = technique;
+      progress = true;
+      break;
+    }
+    if (!progress) return null;
+  }
+  return hardest;
+}
+
+/// The elimination techniques, simplest first (as [_eliminationFinders]).
+const _eliminationTechniques = [
+  CoachTechnique.pointingPair,
+  CoachTechnique.boxLineReduction,
+  CoachTechnique.nakedPair,
+  CoachTechnique.hiddenPair,
+  CoachTechnique.nakedTriple,
+  CoachTechnique.xWing,
+];
+
+/// The hardest techniques a level of [technique] accepts, as (simplest,
+/// hardest): its puzzles need one of them and nothing harder.
+(CoachTechnique, CoachTechnique) techniqueRange(SudokuTechnique technique) =>
+    switch (technique) {
+      SudokuTechnique.singles => (
+        CoachTechnique.hiddenSingle,
+        CoachTechnique.nakedSingle,
+      ),
+      SudokuTechnique.lockedCandidates => (
+        CoachTechnique.pointingPair,
+        CoachTechnique.boxLineReduction,
+      ),
+      SudokuTechnique.pairs => (
+        CoachTechnique.nakedPair,
+        CoachTechnique.hiddenPair,
+      ),
+      SudokuTechnique.triples => (
+        CoachTechnique.nakedTriple,
+        CoachTechnique.nakedTriple,
+      ),
+      SudokuTechnique.xWing => (CoachTechnique.xWing, CoachTechnique.xWing),
+    };
+
+/// Whether a puzzle whose [hardest] technique is this (null: beyond the
+/// coach) fits a level of [technique].
+bool meetsLevel(SudokuTechnique technique, CoachTechnique? hardest) {
+  if (hardest == null) return false;
+  final (simplest, hardestAllowed) = techniqueRange(technique);
+  return hardest.index >= simplest.index &&
+      hardest.index <= hardestAllowed.index;
 }

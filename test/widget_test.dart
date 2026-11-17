@@ -88,13 +88,13 @@ void main() {
     expect(find.text('PLAY'), findsOneWidget);
     expect(find.text('Scoreboard'), findsOneWidget);
     expect(find.text('Options'), findsOneWidget);
-    expect(find.text('Beginner · 46 clues'), findsOneWidget);
+    expect(find.text('Beginner · singles'), findsOneWidget);
 
     await tester.tap(
       find.descendant(of: find.byType(LevelSelector), matching: find.text('9')),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Expert · 24 clues'), findsOneWidget);
+    expect(find.text('Expert · X-Wing'), findsOneWidget);
   });
 
   testWidgets('solving a game with hints records a score', (tester) async {

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'puzzle_bank.dart';
+
 // ============================================================
 // Sudoku Sagax — puzzle solver and generator (pure Dart, no Flutter)
 // ============================================================
@@ -27,18 +29,25 @@ class SudokuLevel {
   final SudokuTechnique technique;
 }
 
-/// What it takes to solve a level, from the player's point of view.
+/// What it takes to solve a level, from the player's point of view: the
+/// hardest technique the level trains. Every level is solvable by logic
+/// alone (no guessing), with nothing harder than its technique.
 enum SudokuTechnique {
-  /// Solvable with naked and hidden singles alone: every step is
-  /// "this cell can only be X" or "X can only go here".
+  /// Naked and hidden singles alone: every step is "this cell can only be
+  /// X" or "X can only go here".
   singles,
 
-  /// Any puzzle with a unique solution.
-  unique,
+  /// Needs a pointing pair or a box-line reduction (locked candidates).
+  lockedCandidates,
 
-  /// Unique, but singles alone get stuck: the player needs candidate
-  /// elimination (pairs, pointing, …) — notes become essential.
-  advanced,
+  /// Needs a naked or hidden pair.
+  pairs,
+
+  /// Needs a naked triple.
+  triples,
+
+  /// Needs an X-Wing.
+  xWing,
 }
 
 /// The 9 difficulty levels. The level→clues mapping is the source of truth
@@ -78,25 +87,25 @@ const sudokuLevels = <SudokuLevel>[
     level: 6,
     clues: 30,
     band: SudokuBand.medium,
-    technique: SudokuTechnique.unique,
+    technique: SudokuTechnique.lockedCandidates,
   ),
   SudokuLevel(
     level: 7,
     clues: 28,
     band: SudokuBand.hard,
-    technique: SudokuTechnique.advanced,
+    technique: SudokuTechnique.pairs,
   ),
   SudokuLevel(
     level: 8,
     clues: 26,
     band: SudokuBand.hard,
-    technique: SudokuTechnique.advanced,
+    technique: SudokuTechnique.triples,
   ),
   SudokuLevel(
     level: 9,
     clues: 24,
     band: SudokuBand.expert,
-    technique: SudokuTechnique.advanced,
+    technique: SudokuTechnique.xWing,
   ),
 ];
 
@@ -366,17 +375,35 @@ bool solvableWithSingles(List<int> board) {
 
 /// Generates a puzzle for [level] (1–9). Pass [seed] for reproducible output.
 ///
-/// Digs holes in a random solved grid, keeping each removal only if the
-/// puzzle stays solvable the way the level demands (see [SudokuTechnique]).
-/// If the clue target or technique isn't met, it retries with a new grid and
-/// finally falls back to the closest puzzle found, so it always returns.
+/// Levels of singles are dug from a random solved grid on the spot. The
+/// harder levels need a puzzle graded by the logic coach, which takes too
+/// long to find in the app: they take one from [puzzleBank] (made by
+/// tool/generate_puzzle_bank.dart) and shuffle it, see [shufflePuzzle].
 SudokuPuzzle generatePuzzle(int level, {int? seed}) {
   final spec = sudokuLevels[(level - 1).clamp(0, sudokuLevels.length - 1)];
   final rng = Random(seed);
-  const maxAttempts = 40;
+  final bank = puzzleBank[spec.level];
+  if (spec.technique != SudokuTechnique.singles && bank != null) {
+    final givens = [
+      for (final ch in bank[rng.nextInt(bank.length)].split('')) int.parse(ch),
+    ];
+    final puzzle = SudokuPuzzle(
+      level: spec.level,
+      givens: givens,
+      solution: solve(givens)!,
+    );
+    return shufflePuzzle(puzzle, rng);
+  }
+  return _digSingles(spec, rng);
+}
 
+/// Digs holes in a random solved grid, keeping each removal only if the
+/// puzzle stays solvable with singles. If the clue target isn't met, it
+/// retries with a new grid and finally returns the closest puzzle found.
+SudokuPuzzle _digSingles(SudokuLevel spec, Random rng) {
+  const maxAttempts = 40;
   SudokuPuzzle? best;
-  var bestScore = 1 << 30;
+  var bestClues = 82;
 
   for (int attempt = 0; attempt < maxAttempts; attempt++) {
     final solution = randomSolvedGrid(rng);
@@ -388,31 +415,62 @@ SudokuPuzzle generatePuzzle(int level, {int? seed}) {
       if (clues <= spec.clues) break;
       final kept = givens[i];
       givens[i] = 0;
-      final ok = spec.technique == SudokuTechnique.singles
-          ? solvableWithSingles(givens)
-          : countSolutions(givens) == 1;
-      if (ok) {
+      if (solvableWithSingles(givens)) {
         clues--;
       } else {
         givens[i] = kept;
       }
     }
 
-    final needsAdvanced = spec.technique == SudokuTechnique.advanced;
-    final techniqueMet = !needsAdvanced || !solvableWithSingles(givens);
     final puzzle = SudokuPuzzle(
       level: spec.level,
       givens: givens,
       solution: solution,
     );
-    if (clues <= spec.clues && techniqueMet) return puzzle;
-
-    // Missing the technique weighs more than a couple of extra clues.
-    final score = (clues - spec.clues) + (techniqueMet ? 0 : 10);
-    if (score < bestScore) {
+    if (clues <= spec.clues) return puzzle;
+    if (clues < bestClues) {
       best = puzzle;
-      bestScore = score;
+      bestClues = clues;
     }
   }
   return best!;
 }
+
+/// The same puzzle seen differently: the digits renamed, the bands of rows
+/// put in another order and the rows inside each band too, the same for
+/// the columns, and sometimes turned over its diagonal. None of this
+/// changes the logic a puzzle needs, so its level still holds; and a few
+/// puzzles give billions of different-looking ones.
+SudokuPuzzle shufflePuzzle(SudokuPuzzle puzzle, Random rng) {
+  final digits = List.generate(9, (i) => i + 1)..shuffle(rng);
+
+  /// A new order of the 9 rows (or columns) that keeps each band together.
+  List<int> lineOrder() => [
+    for (final band in [0, 1, 2]..shuffle(rng))
+      for (final line in [0, 1, 2]..shuffle(rng)) band * 3 + line,
+  ];
+
+  final rows = lineOrder();
+  final columns = lineOrder();
+  final turn = rng.nextBool();
+
+  List<int> move(List<int> grid) => [
+    for (int r = 0; r < 9; r++)
+      for (int c = 0; c < 9; c++)
+        _rename(
+          turn
+              ? grid[columns[c] * 9 + rows[r]]
+              : grid[rows[r] * 9 + columns[c]],
+          digits,
+        ),
+  ];
+
+  return SudokuPuzzle(
+    level: puzzle.level,
+    givens: move(puzzle.givens),
+    solution: move(puzzle.solution),
+  );
+}
+
+/// Digit [value] renamed to `digits[value - 1]`; 0 (empty) stays 0.
+int _rename(int value, List<int> digits) => value == 0 ? 0 : digits[value - 1];
