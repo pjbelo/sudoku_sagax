@@ -472,9 +472,7 @@ void main() {
   });
 
   group('statistics', () {
-    testWidgets('the switch shows the statistics of the level', (
-      tester,
-    ) async {
+    testWidgets('the switch shows the statistics of the level', (tester) async {
       await pumpScreen(tester, const ScoreboardScreen(), phonePortrait);
       expect(find.text('#4'), findsOneWidget);
       expect(find.text('Played'), findsNothing);

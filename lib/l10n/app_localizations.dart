@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @statusPlay.
   ///
   /// In en, this message translates to:
-  /// **'Pick a cell, then a number'**
+  /// **'Pick a cell and a number, in either order'**
   String get statusPlay;
 
   /// No description provided for @statusNotes.
@@ -223,6 +223,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notes: tap numbers to mark candidates'**
   String get statusNotes;
+
+  /// No description provided for @statusNotesFill.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes · tap here to fill in every candidate'**
+  String get statusNotesFill;
+
+  /// No description provided for @statusDigit.
+  ///
+  /// In en, this message translates to:
+  /// **'{digit}: tap the cells that take it'**
+  String statusDigit(int digit);
+
+  /// No description provided for @statusDigitNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'{digit}: tap cells to note it as a candidate'**
+  String statusDigitNotes(int digit);
 
   /// No description provided for @statusFullWrong.
   ///
@@ -259,6 +277,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Undo'**
   String get undo;
+
+  /// No description provided for @redo.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo'**
+  String get redo;
 
   /// No description provided for @erase.
   ///
@@ -439,6 +463,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'With the device sideways, put the number keys to the left of the grid.'**
   String get optLeftHandedDesc;
+
+  /// No description provided for @optFillNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill notes on easy levels'**
+  String get optFillNotes;
+
+  /// No description provided for @optFillNotesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'In Notes mode, offer to fill in every candidate on levels 1–5 too. Levels 6–9 always offer it.'**
+  String get optFillNotesDesc;
+
+  /// No description provided for @optHaptics.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get optHaptics;
+
+  /// No description provided for @optHapticsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'A light tap for each entry, and a stronger one for the win and for errors (with Show errors on).'**
+  String get optHapticsDesc;
 
   /// No description provided for @restoreDefaults.
   ///

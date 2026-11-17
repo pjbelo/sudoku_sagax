@@ -60,6 +60,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   int? _selected;
   bool _notesMode = false;
 
+  /// Digit-first entry: the digit picked before any cell, placed in each
+  /// cell the player then taps. Null in the usual cell-first entry.
+  int? _activeDigit;
+
   /// Elapsed play time, hint penalties included. Counted even when the
   /// Timer option hides the clock, so every win can go on the scoreboard.
   int _seconds = 0;
@@ -154,6 +158,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _game = SudokuGame(generatePuzzle(level));
     _selected = null;
     _notesMode = false;
+    _activeDigit = null;
     _seconds = 0;
     _userPaused = false;
     _solved = false;
@@ -220,16 +225,40 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   void _onCellTap(int i) {
     if (!_canPlay) return;
-    setState(() => _selected = i);
+    final digit = _activeDigit;
+    if (digit != null) {
+      _enter(i, digit); // digit-first: the picked digit goes here
+    } else if (i == _selected) {
+      // A second tap lets go of the cell, so a digit can be picked first.
+      setState(() => _selected = null);
+    } else {
+      setState(() => _selected = i);
+    }
   }
 
+  /// A number key. With an editable cell selected, the digit goes in it.
+  /// Otherwise the digit is picked for digit-first entry; picking it again
+  /// lets go of it.
   void _onDigit(int digit) {
+    if (!_canPlay) return;
     final i = _selected;
-    if (i == null || !_canPlay) return;
+    if (_activeDigit == null && i != null && !_game.isLocked(i)) {
+      _enter(i, digit);
+      return;
+    }
+    unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.6));
+    setState(() {
+      _activeDigit = digit == _activeDigit ? null : digit;
+      _selected = null;
+    });
+  }
 
+  /// Writes [digit] into cell [i]: as a note in notes mode, else as a value.
+  void _enter(int i, int digit) {
     if (_notesMode) {
       if (_game.toggleNote(i, digit)) {
         unawaited(_audio.playSfx(AudioService.digitSfx, volume: 0.5));
+        _vibrate(HapticFeedback.selectionClick);
         setState(() {});
         _saveProgress();
       }
@@ -238,10 +267,14 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
     final result = _game.enterDigit(i, digit);
     if (result == EntryResult.ignored) return;
+    // A wrong digit only sounds and feels different with Show errors on;
+    // otherwise it would give the answer away.
     if (result == EntryResult.wrong && _settings.showErrors) {
       unawaited(_audio.playSfx(AudioService.wrongSfx, volume: 0.8));
+      _vibrate(HapticFeedback.heavyImpact);
     } else {
       unawaited(_audio.playSfx(AudioService.digitSfx, volume: 0.8));
+      _vibrate(HapticFeedback.selectionClick);
     }
     setState(() {});
     if (_game.isSolved) {
@@ -270,6 +303,36 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     }
   }
 
+  void _onRedo() {
+    if (!_canPlay) return;
+    if (_game.redo()) {
+      unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.6));
+      setState(() {});
+      if (_game.isSolved) {
+        unawaited(_onSolved());
+      } else {
+        _saveProgress();
+      }
+    }
+  }
+
+  /// Notes mode: writes every candidate into every empty cell.
+  void _onFillNotes() {
+    if (!_canPlay) return;
+    if (_game.fillNotes()) {
+      unawaited(_audio.playSfx(AudioService.digitSfx, volume: 0.6));
+      _vibrate(HapticFeedback.selectionClick);
+      _analytics.log('notes_filled', {'level': _level});
+      setState(() {});
+      _saveProgress();
+    }
+  }
+
+  /// Plays a vibration [pattern], when the Vibration option is on.
+  void _vibrate(Future<void> Function() pattern) {
+    if (_settings.haptics) unawaited(pattern());
+  }
+
   void _onToggleNotes() {
     if (!_canPlay) return;
     unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.7));
@@ -281,6 +344,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final cell = _game.hint(preferred: _selected);
     if (cell == null) return;
     unawaited(_audio.playSfx(AudioService.hintSfx, volume: 0.85));
+    _vibrate(HapticFeedback.selectionClick);
     _analytics.log('hint_used', {
       'level': _level,
       'hints_used': _game.hintsUsed,
@@ -289,6 +353,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     setState(() {
       _seconds += hintPenaltySeconds;
       _selected = cell;
+      _activeDigit = null;
     });
     if (_game.isSolved) {
       unawaited(_onSolved());
@@ -308,7 +373,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final current = _selected ?? 40;
     final r = (rowOf(current) + dRow) % 9;
     final c = (colOf(current) + dCol) % 9;
-    setState(() => _selected = r * 9 + c);
+    // Moving around a cell goes back to cell-first entry.
+    setState(() {
+      _selected = r * 9 + c;
+      _activeDigit = null;
+    });
   }
 
   /// Keyboard play (desktop, web, tablets with keyboards).
@@ -341,8 +410,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     // Set before the await so the clock stops on this exact second.
     _solved = true;
     _selected = null;
+    _activeDigit = null;
     unawaited(_savedGames.clear()); // nothing left to continue
     unawaited(_audio.playSfx(AudioService.winSfx));
+    _vibrate(HapticFeedback.heavyImpact);
     _countStart(); // in case the winning move was the first one
     unawaited(
       StatisticsService.instance.recordWin(
@@ -694,6 +765,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     return NumberPad(
       game: _game,
       notesMode: _notesMode,
+      activeDigit: _activeDigit,
       onDigit: _onDigit,
       height: height,
       grid: grid,
@@ -746,13 +818,20 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// the board) don't move when the message changes.
   Widget _buildStatus(AppLocalizations l10n, {bool keepHeight = false}) {
     final primary = Theme.of(context).primaryColor;
+    // While no digit is picked, 9 stands in for it (for the height only).
+    final digit = _activeDigit ?? 9;
     final messages = [
       (l10n.solved, primary),
       (l10n.paused, AppColors.softSlate),
       (l10n.statusFullWrong, AppColors.hintAmber),
+      (l10n.statusDigitNotes(digit), primary),
+      (l10n.statusDigit(digit), primary),
+      (l10n.statusNotesFill, primary),
       (l10n.statusNotes, primary),
       (l10n.statusPlay, AppColors.softSlate),
     ];
+    const fillNotesIndex = 5;
+    final fillNotes = _settings.fillNotesAt(_level);
     final int current;
     if (_solved) {
       current = 0;
@@ -760,21 +839,40 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       current = 1;
     } else if (_game.isFull) {
       current = 2;
+    } else if (_activeDigit != null) {
+      current = _notesMode ? 3 : 4;
     } else if (_notesMode) {
-      current = 3;
+      current = fillNotes ? fillNotesIndex : 6;
     } else {
-      current = 4;
+      current = 7;
     }
 
     Widget message(int index) {
       final (text, color) = messages[index];
-      return Text(
+      final label = Text(
         text,
         textAlign: TextAlign.center,
         style: GoogleFonts.exo2(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: color,
+        ),
+      );
+      if (index != fillNotesIndex) return label;
+      // Fill notes: the whole message is the button.
+      return InkWell(
+        onTap: _onFillNotes,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.auto_awesome, color: color, size: 18),
+              const SizedBox(width: 6),
+              Flexible(child: label),
+            ],
+          ),
         ),
       );
     }
@@ -799,6 +897,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         SudokuBoard(
           game: _game,
           selected: _selected,
+          activeDigit: _activeDigit,
           showErrors: _settings.showErrors,
           onCellTap: _onCellTap,
           hidden: _userPaused,
@@ -823,13 +922,19 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
-  /// Undo, Erase, Notes and Hint, in [twoRows] when the pane is narrow.
+  /// Undo, Redo, Erase, Notes and Hint, in [twoRows] when the pane is
+  /// narrow.
   Widget _buildControls(AppLocalizations l10n, {bool twoRows = false}) {
     final buttons = <Widget>[
       _ControlButton(
         icon: Icons.undo_rounded,
         label: l10n.undo,
         onPressed: _game.canUndo ? _onUndo : null,
+      ),
+      _ControlButton(
+        icon: Icons.redo_rounded,
+        label: l10n.redo,
+        onPressed: _game.canRedo ? _onRedo : null,
       ),
       _ControlButton(
         icon: Icons.backspace_outlined,
@@ -856,11 +961,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     }
 
     if (!twoRows) return row(buttons);
+    final firstRow = (buttons.length + 1) ~/ 2;
     return Column(
       children: [
-        row(buttons.take(2)),
+        row(buttons.take(firstRow)),
         const SizedBox(height: 6),
-        row(buttons.skip(2)),
+        row(buttons.skip(firstRow)),
       ],
     );
   }
@@ -957,7 +1063,7 @@ class _StatBadge extends StatelessWidget {
   }
 }
 
-/// Icon + label button under the board (Undo, Erase, Notes, Hint).
+/// Icon + label button under the board (Undo, Redo, Erase, Notes, Hint).
 class _ControlButton extends StatelessWidget {
   const _ControlButton({
     required this.icon,
@@ -999,15 +1105,17 @@ class _ControlButton extends StatelessWidget {
             children: [
               Icon(icon, color: fg, size: 26 * scale),
               const SizedBox(height: 4),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.exo2(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: fg,
+              // Shrinks rather than being cut in a narrow window.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  style: GoogleFonts.exo2(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: fg,
+                  ),
                 ),
               ),
             ],

@@ -149,7 +149,10 @@ void main() {
   test('damaged saved data is refused', () {
     final json = game.toJson();
     expect(
-      () => SudokuGame.fromJson({...json, 'values': [1, 2, 3]}),
+      () => SudokuGame.fromJson({
+        ...json,
+        'values': [1, 2, 3],
+      }),
       throwsFormatException,
     );
     expect(() => SudokuGame.fromJson({...json, 'level': 12}), throwsException);
@@ -157,6 +160,62 @@ void main() {
       () => SudokuGame.fromJson({...json}..remove('notes')),
       throwsA(isA<TypeError>()),
     );
+  });
+
+  test('redo brings back undone changes, until a new change', () {
+    final d = game.solution[empty];
+    game.toggleNote(empty, 2);
+    game.enterDigit(empty, d);
+    expect(game.canRedo, isFalse);
+
+    game.undo();
+    game.undo();
+    expect(game.canRedo, isTrue);
+    expect(game.redo(), isTrue);
+    expect(game.hasNote(empty, 2), isTrue);
+    expect(game.redo(), isTrue);
+    expect(game.values[empty], d);
+    expect(game.redo(), isFalse);
+
+    game.undo();
+    game.toggleNote(empty, 7); // a new change ends redo
+    expect(game.canRedo, isFalse);
+  });
+
+  test('redo of a wrong entry counts no new mistake', () {
+    game.enterDigit(empty, wrongDigitFor(empty));
+    game.undo();
+    game.redo();
+    expect(game.values[empty], wrongDigitFor(empty));
+    expect(game.mistakes, 1);
+  });
+
+  test('a hint ends redo, and redo keeps hinted cells', () {
+    final other = game.values.indexWhere((v) => v == 0, empty + 1);
+    game.enterDigit(empty, wrongDigitFor(empty));
+    game.undo();
+    game.hint(preferred: other);
+    expect(game.canRedo, isFalse);
+  });
+
+  test('candidates: the digits not in the row, column and box', () {
+    final mask = game.candidates(empty);
+    for (int d = 1; d <= 9; d++) {
+      final seen = peers[empty].any((p) => game.values[p] == d);
+      expect(mask & (1 << (d - 1)) != 0, !seen, reason: 'digit $d');
+    }
+    expect(mask & (1 << (game.solution[empty] - 1)), isNonZero);
+  });
+
+  test('fill notes writes every candidate, in one undo step', () {
+    game.toggleNote(empty, 1);
+    expect(game.fillNotes(), isTrue);
+    for (int i = 0; i < 81; i++) {
+      expect(game.notes[i], game.values[i] == 0 ? game.candidates(i) : 0);
+    }
+    expect(game.fillNotes(), isFalse); // nothing left to change
+    game.undo();
+    expect(game.notes.where((n) => n != 0), [1]); // only the note before
   });
 
   test('a full grid with a mistake is not solved', () {

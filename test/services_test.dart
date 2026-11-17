@@ -19,18 +19,35 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('SettingsService', () {
-    test('defaults: sound ON, timer ON, show errors OFF, hints ON, '
-        'left-handed OFF', () async {
+    test(
+      'defaults: sound ON, timer ON, show errors OFF, hints ON, '
+      'left-handed OFF, fill notes on easy levels OFF, vibration ON',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final s = SettingsService.instance;
+        await s.load();
+        expect(s.sound, isTrue);
+        expect(s.timer, isTrue);
+        expect(s.showErrors, isFalse);
+        expect(s.hints, isTrue);
+        expect(s.leftHanded, isFalse);
+        expect(s.fillNotesEasy, isFalse);
+        expect(s.haptics, isTrue);
+        expect(s.isDefault, isTrue);
+        expect(s.locale, isNull);
+      },
+    );
+
+    test('fill notes: from level 6, or every level with the option', () async {
       SharedPreferences.setMockInitialValues({});
       final s = SettingsService.instance;
       await s.load();
-      expect(s.sound, isTrue);
-      expect(s.timer, isTrue);
-      expect(s.showErrors, isFalse);
-      expect(s.hints, isTrue);
-      expect(s.leftHanded, isFalse);
-      expect(s.isDefault, isTrue);
-      expect(s.locale, isNull);
+      expect(s.fillNotesAt(5), isFalse);
+      expect(s.fillNotesAt(6), isTrue);
+      s.fillNotesEasy = true;
+      expect(s.fillNotesAt(1), isTrue);
+      s.restoreDefaults();
+      expect(s.fillNotesAt(1), isFalse);
     });
 
     test('changes persist and restoreDefaults resets', () async {
@@ -40,12 +57,14 @@ void main() {
       s.sound = false;
       s.showErrors = true;
       s.leftHanded = true;
+      s.haptics = false;
       s.locale = const Locale('pt');
 
       await s.load(); // read back from storage
       expect(s.sound, isFalse);
       expect(s.showErrors, isTrue);
       expect(s.leftHanded, isTrue);
+      expect(s.haptics, isFalse);
       expect(s.locale, const Locale('pt'));
       expect(s.isDefault, isFalse);
 

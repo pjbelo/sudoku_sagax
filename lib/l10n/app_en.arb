@@ -24,14 +24,28 @@
   "levelLabel": "Level",
   "timeLabel": "Time",
   "mistakesLabel": "Mistakes",
-  "statusPlay": "Pick a cell, then a number",
+  "statusPlay": "Pick a cell and a number, in either order",
   "statusNotes": "Notes: tap numbers to mark candidates",
+  "statusNotesFill": "Notes · tap here to fill in every candidate",
+  "statusDigit": "{digit}: tap the cells that take it",
+  "@statusDigit": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
+  "statusDigitNotes": "{digit}: tap cells to note it as a candidate",
+  "@statusDigitNotes": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
   "statusFullWrong": "The grid is full, but something is not right",
   "solved": "Solved!",
   "paused": "Paused",
   "resume": "Resume",
   "pause": "Pause",
   "undo": "Undo",
+  "redo": "Redo",
   "erase": "Erase",
   "notes": "Notes",
   "hint": "Hint +{seconds}s",
@@ -101,6 +115,10 @@
   },
   "optLeftHanded": "Left-handed",
   "optLeftHandedDesc": "With the device sideways, put the number keys to the left of the grid.",
+  "optFillNotes": "Fill notes on easy levels",
+  "optFillNotesDesc": "In Notes mode, offer to fill in every candidate on levels 1–5 too. Levels 6–9 always offer it.",
+  "optHaptics": "Vibration",
+  "optHapticsDesc": "A light tap for each entry, and a stronger one for the win and for errors (with Show errors on).",
   "restoreDefaults": "Restore defaults",
   "scoreboardTitle": "Scoreboard",
   "noScores": "No puzzles solved at this level yet.",

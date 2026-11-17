@@ -66,11 +66,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String get mistakesLabel => 'Erreurs';
 
   @override
-  String get statusPlay => 'Choisissez une case, puis un chiffre';
+  String get statusPlay =>
+      'Choisissez une case et un chiffre, dans l\'ordre de votre choix';
 
   @override
   String get statusNotes =>
       'Notes : touchez les chiffres pour noter les candidats';
+
+  @override
+  String get statusNotesFill =>
+      'Notes · touchez ici pour remplir tous les candidats';
+
+  @override
+  String statusDigit(int digit) {
+    return '$digit : touchez les cases où il va';
+  }
+
+  @override
+  String statusDigitNotes(int digit) {
+    return '$digit : touchez des cases pour le noter comme candidat';
+  }
 
   @override
   String get statusFullWrong =>
@@ -90,6 +105,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get undo => 'Annuler';
+
+  @override
+  String get redo => 'Rétablir';
 
   @override
   String get erase => 'Effacer';
@@ -198,6 +216,20 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get optLeftHandedDesc =>
       'Appareil à l\'horizontale, les chiffres passent à gauche de la grille.';
+
+  @override
+  String get optFillNotes => 'Remplir les notes aux niveaux faciles';
+
+  @override
+  String get optFillNotesDesc =>
+      'En mode Notes, proposer aussi aux niveaux 1–5 de remplir tous les candidats. Les niveaux 6–9 le proposent toujours.';
+
+  @override
+  String get optHaptics => 'Vibration';
+
+  @override
+  String get optHapticsDesc =>
+      'Une légère vibration à chaque chiffre, une plus forte pour la victoire et pour les erreurs (avec Afficher les erreurs activé).';
 
   @override
   String get restoreDefaults => 'Rétablir les valeurs par défaut';

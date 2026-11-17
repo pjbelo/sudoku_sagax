@@ -69,7 +69,7 @@ lib/
   sagax_theme.dart             AppColors palette + global dark sagaxTheme (shared with Slidox/Memorex)
   game/
     sudoku_generator.dart      Pure Dart: solver, singles solver, generator, the 9 `sudokuLevels`
-    sudoku_game.dart           Game state: entries, notes, hints, mistakes, undo, JSON; formatTime
+    sudoku_game.dart           Game state: entries, notes, hints, mistakes, undo/redo, fill notes, JSON; formatTime
   services/
     analytics_service.dart     Firebase Analytics wrapper (no-op until initialised)
     audio_service.dart         Singleton: looping BGM + low-latency SFX, Sound option + silent mode
@@ -80,7 +80,7 @@ lib/
   screens/
     home_screen.dart           Logo, 3×3 level selector, Play, Continue, Scoreboard, Options, Info, language
     game_screen.dart           Board, stats, controls, number pad, pause, win bar + summary
-    options_screen.dart        The four switches + Restore defaults
+    options_screen.dart        The option switches + Restore defaults
     scoreboard_screen.dart     Per-level best times and statistics
     info_screen.dart           How to play, Brain Benefits, scientific references, credits
   widgets/                     SudokuBoard, NumberPad, LevelSelector, SudokuLogo, confirm dialog, fade route
@@ -167,6 +167,7 @@ which does nothing until Firebase is initialised. Tests therefore run without
 Firebase. Event names follow Slidox:
 
 `level_chip_tapped` · `level_selected` · `game_session_start` · `hint_used` ·
+`notes_filled` ·
 `level_completed` · `next_level` · `same_level` · `play_again` ·
 `back_to_menu` · `game_left` · `continue_selected` · `game_resumed` ·
 `saved_game_replaced` · `option_changed` · `options_restored` ·

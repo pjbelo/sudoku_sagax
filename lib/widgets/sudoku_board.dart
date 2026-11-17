@@ -12,6 +12,7 @@ class SudokuBoard extends StatelessWidget {
     super.key,
     required this.game,
     required this.selected,
+    this.activeDigit,
     required this.showErrors,
     required this.onCellTap,
     this.hidden = false,
@@ -19,6 +20,10 @@ class SudokuBoard extends StatelessWidget {
 
   final SudokuGame game;
   final int? selected;
+
+  /// The digit picked for digit-first entry: its cells and notes light up
+  /// as if a cell holding it were selected.
+  final int? activeDigit;
 
   /// Paint wrong digits red (the "Show errors" option).
   final bool showErrors;
@@ -88,7 +93,7 @@ class SudokuBoard extends StatelessWidget {
     if (hidden) return const SizedBox.expand();
 
     final sel = selected;
-    final selValue = sel == null ? 0 : game.values[sel];
+    final selValue = activeDigit ?? (sel == null ? 0 : game.values[sel]);
     final value = game.values[i];
     final isSelected = i == sel;
     final sameDigit = selValue != 0 && value == selValue;

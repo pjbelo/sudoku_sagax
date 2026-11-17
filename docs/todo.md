@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1, A2.
+B1–B9) were agreed on 2026-11-17. Done: A1, A2, A3.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -31,12 +31,12 @@ their absence is felt.
   beside Best times on the scoreboard screen: per level, games played (from
   the first move) and solved, best and average time, wins without hints or
   mistakes; and the current and best streak of days with a solved puzzle.
-- **A3. Easier entry (S each).**
-  - Digit-first entry: pick a number, then tap the cells that take it.
-  - Redo, next to Undo.
-  - "Fill notes": one tap writes every candidate, for players who don't
-    enjoy the bookkeeping. An option, off by default on levels 1–5.
-  - Haptic feedback on entries, errors and the win (follows a new option).
+- ~~**A3. Easier entry (S each).**~~ Done on 2026-11-17: digit-first entry
+  (a digit with no cell selected lights its key; tapping the selected cell
+  again lets go of it); Redo beside Undo; Fill notes in Notes mode (the
+  status line becomes the button), always from level 6 and on levels 1–5
+  with an option (off by default); vibration on entries, errors (only with
+  Show errors) and the win, with an option (on by default).
 - **A4. Mark conflicts (S).** A new option, "Mark conflicts", **on by
   default**, which the player can switch off in Options. When on, two equal
   digits in the same row, column or box are marked. Unlike "Show errors", it

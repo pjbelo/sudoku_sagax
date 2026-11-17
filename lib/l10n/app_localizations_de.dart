@@ -66,11 +66,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get mistakesLabel => 'Fehler';
 
   @override
-  String get statusPlay => 'Wähle ein Feld, dann eine Zahl';
+  String get statusPlay =>
+      'Wähle ein Feld und eine Zahl, in beliebiger Reihenfolge';
 
   @override
   String get statusNotes =>
       'Notizen: Tippe auf Zahlen, um Kandidaten zu markieren';
+
+  @override
+  String get statusNotesFill =>
+      'Notizen · hier tippen, um alle Kandidaten einzutragen';
+
+  @override
+  String statusDigit(int digit) {
+    return '$digit: Tippe auf die Felder, in die sie gehört';
+  }
+
+  @override
+  String statusDigitNotes(int digit) {
+    return '$digit: Tippe auf Felder, um sie als Kandidat zu notieren';
+  }
 
   @override
   String get statusFullWrong => 'Das Gitter ist voll, aber etwas stimmt nicht';
@@ -89,6 +104,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get undo => 'Rückgängig';
+
+  @override
+  String get redo => 'Wiederholen';
 
   @override
   String get erase => 'Löschen';
@@ -196,6 +214,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get optLeftHandedDesc =>
       'Im Querformat liegen die Zahlentasten links vom Gitter.';
+
+  @override
+  String get optFillNotes => 'Notizen füllen in leichten Leveln';
+
+  @override
+  String get optFillNotesDesc =>
+      'Im Notizmodus auch in den Leveln 1–5 anbieten, alle Kandidaten einzutragen. Die Level 6–9 bieten es immer an.';
+
+  @override
+  String get optHaptics => 'Vibration';
+
+  @override
+  String get optHapticsDesc =>
+      'Ein leichtes Tippen bei jeder Zahl, ein stärkeres beim Sieg und bei Fehlern (mit „Fehler anzeigen“).';
 
   @override
   String get restoreDefaults => 'Standardwerte wiederherstellen';

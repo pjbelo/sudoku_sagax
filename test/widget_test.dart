@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/sudoku_game.dart';
+import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/main.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
@@ -9,6 +12,7 @@ import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/services/statistics_service.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
+import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
 
 // AudioService.init() is never called here, so every sound is a no-op.
@@ -19,6 +23,45 @@ Future<void> pumpApp(WidgetTester tester) async {
   await tester.pumpWidget(const SudokuSagaxApp());
   await tester.pumpAndSettle();
 }
+
+/// Opens [game] through Continue, so the test knows the puzzle.
+Future<void> continueGame(WidgetTester tester, SudokuGame game) async {
+  await SavedGameService.instance.save(game, 0);
+  await tester.pumpWidget(const SizedBox()); // start the app afresh
+  await pumpApp(tester);
+  await tester.tap(find.textContaining('Continue'));
+  await tester.pumpAndSettle();
+}
+
+/// Taps cell [i] of the board.
+Future<void> tapCell(WidgetTester tester, int i) async {
+  final board = tester.getRect(find.byType(SudokuBoard));
+  final cell = (board.width - 4) / 9;
+  await tester.tapAt(
+    board.topLeft +
+        Offset(2 + cell * (colOf(i) + 0.5), 2 + cell * (rowOf(i) + 0.5)),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// Taps [digit] on the number pad (not the count of a key).
+Future<void> tapDigit(WidgetTester tester, int digit) async {
+  await tester.tap(
+    find.descendant(
+      of: find.byType(NumberPad),
+      matching: find.byWidgetPredicate(
+        (w) =>
+            w is Text &&
+            w.data == '$digit' &&
+            (w.style?.fontFamily ?? '').startsWith('Exo2'),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// The game as last saved: the screen saves after every move.
+SudokuGame savedGame() => SavedGameService.instance.savedGame!.game;
 
 void main() {
   setUpAll(() => GoogleFonts.config.allowRuntimeFetching = false);
@@ -109,6 +152,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(SettingsService.instance.showErrors, isTrue);
 
+    await tester.ensureVisible(find.text('Back')); // below the cards
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Back'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('PLAY'));
@@ -202,5 +247,136 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(GameScreen), findsOneWidget);
     expect(saves.hasSavedGame, isFalse);
+  });
+
+  group('easier entry', () {
+    late SudokuGame game;
+    late List<int> empty;
+
+    setUp(() {
+      game = SudokuGame(generatePuzzle(1, seed: 4));
+      empty = [
+        for (int i = 0; i < 81; i++)
+          if (game.values[i] == 0) i,
+      ];
+    });
+
+    testWidgets('a digit first, then the cells that take it', (tester) async {
+      await continueGame(tester, game);
+      final digit = game.solution[empty[0]];
+      final cells = empty.where((i) => game.solution[i] == digit).toList();
+
+      await tapDigit(tester, digit);
+      expect(find.text('$digit: tap the cells that take it'), findsOneWidget);
+      for (final i in cells) {
+        await tapCell(tester, i);
+      }
+      for (final i in cells) {
+        expect(savedGame().values[i], digit);
+      }
+      // Tapping a placed digit again takes it out, as in cell-first entry.
+      await tapCell(tester, cells.first);
+      expect(savedGame().values[cells.first], 0);
+
+      // The same key lets go of the digit.
+      await tapDigit(tester, digit);
+      expect(
+        find.text('Pick a cell and a number, in either order'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('cell first still works; a second tap lets go of the cell', (
+      tester,
+    ) async {
+      await continueGame(tester, game);
+      final i = empty[0];
+      await tapCell(tester, i);
+      await tapDigit(tester, game.solution[i]);
+      expect(savedGame().values[i], game.solution[i]);
+
+      // The cell is still selected: tap it again, then pick a digit.
+      await tapCell(tester, i);
+      await tapDigit(tester, 3);
+      expect(find.text('3: tap the cells that take it'), findsOneWidget);
+      expect(savedGame().values[i], game.solution[i]);
+    });
+
+    testWidgets('redo brings back what undo took away', (tester) async {
+      await continueGame(tester, game);
+      final i = empty[0];
+      await tapCell(tester, i);
+      await tapDigit(tester, game.solution[i]);
+
+      await tester.tap(find.text('Undo'));
+      await tester.pumpAndSettle();
+      // Back to the start: nothing worth saving.
+      expect(SavedGameService.instance.hasSavedGame, isFalse);
+      await tester.tap(find.text('Redo'));
+      await tester.pumpAndSettle();
+      expect(savedGame().values[i], game.solution[i]);
+    });
+
+    testWidgets('fill notes: from level 6, or with the option', (tester) async {
+      // Level 1: Notes mode, but no Fill notes.
+      await continueGame(tester, game);
+      await tester.tap(find.text('Notes'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Notes: tap numbers to mark candidates'),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.auto_awesome), findsNothing);
+
+      // Level 6 offers it; one tap writes every candidate.
+      final hard = SudokuGame(generatePuzzle(6, seed: 4));
+      await continueGame(tester, hard);
+      await tester.tap(find.text('Notes'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.text('Notes · tap here to fill in every candidate'),
+      );
+      await tester.pumpAndSettle();
+      for (int i = 0; i < 81; i++) {
+        expect(
+          savedGame().notes[i],
+          hard.values[i] == 0 ? hard.candidates(i) : 0,
+        );
+      }
+
+      // The option brings it to level 1 too.
+      SettingsService.instance.fillNotesEasy = true;
+      await continueGame(tester, game);
+      await tester.tap(find.text('Notes'));
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
+    });
+
+    testWidgets('vibration follows its option', (tester) async {
+      var vibrations = 0;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'HapticFeedback.vibrate') vibrations++;
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+
+      await continueGame(tester, game);
+      await tapCell(tester, empty[0]);
+      await tapDigit(tester, game.solution[empty[0]]);
+      expect(vibrations, 1);
+
+      SettingsService.instance.haptics = false;
+      await tapCell(tester, empty[1]);
+      await tapDigit(tester, game.solution[empty[1]]);
+      expect(vibrations, 1);
+    });
   });
 }

@@ -66,10 +66,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String get mistakesLabel => 'Erros';
 
   @override
-  String get statusPlay => 'Escolhe uma célula e depois um número';
+  String get statusPlay => 'Escolhe uma célula e um número, por qualquer ordem';
 
   @override
   String get statusNotes => 'Notas: toca nos números para marcar candidatos';
+
+  @override
+  String get statusNotesFill =>
+      'Notas · toca aqui para preencher todos os candidatos';
+
+  @override
+  String statusDigit(int digit) {
+    return '$digit: toca nas células onde vai';
+  }
+
+  @override
+  String statusDigitNotes(int digit) {
+    return '$digit: toca nas células para o marcar como candidato';
+  }
 
   @override
   String get statusFullWrong =>
@@ -89,6 +103,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get undo => 'Desfazer';
+
+  @override
+  String get redo => 'Refazer';
 
   @override
   String get erase => 'Apagar';
@@ -196,6 +213,20 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get optLeftHandedDesc =>
       'Com o aparelho na horizontal, os números ficam à esquerda da grelha.';
+
+  @override
+  String get optFillNotes => 'Preencher notas nos níveis fáceis';
+
+  @override
+  String get optFillNotesDesc =>
+      'No modo Notas, oferece também nos níveis 1–5 o preenchimento de todos os candidatos. Os níveis 6–9 oferecem-no sempre.';
+
+  @override
+  String get optHaptics => 'Vibração';
+
+  @override
+  String get optHapticsDesc =>
+      'Um toque leve a cada número e um mais forte na vitória e nos erros (com Mostrar erros ligado).';
 
   @override
   String get restoreDefaults => 'Repor predefinições';

@@ -81,6 +81,9 @@ class SudokuGame {
 
   final List<_Snapshot> _history = [];
 
+  /// States undone, newest last, for redo. Any new change empties it.
+  final List<_Snapshot> _redoHistory = [];
+
   List<int> get solution => puzzle.solution;
 
   bool isGiven(int i) => puzzle.givens[i] != 0;
@@ -103,6 +106,8 @@ class SudokuGame {
 
   bool get canUndo => _history.isNotEmpty;
 
+  bool get canRedo => _redoHistory.isNotEmpty;
+
   /// Whether the player has done anything yet: a digit, a note, a hint or a
   /// mistake. A game without progress isn't worth saving.
   bool get hasProgress {
@@ -116,7 +121,23 @@ class SudokuGame {
   /// How many times [digit] appears on the board.
   int placedCount(int digit) => values.where((v) => v == digit).length;
 
-  void _remember() => _history.add(_Snapshot(values, notes));
+  /// The digits not yet placed in the row, column and box of cell [i], as a
+  /// bitmask like [notes]. Wrong entries count too: it is what the player
+  /// sees on the board, not the solution.
+  int candidates(int i) {
+    var mask = 0x1FF; // all nine digits
+    for (final p in peers[i]) {
+      if (values[p] != 0) mask &= ~(1 << (values[p] - 1));
+    }
+    return mask;
+  }
+
+  /// Saves the state for undo, before a change. A new change also ends what
+  /// redo could bring back.
+  void _remember() {
+    _history.add(_Snapshot(values, notes));
+    _redoHistory.clear();
+  }
 
   /// Value mode: writes [digit] into cell [i]. Entering the digit already in
   /// the cell clears it. Placing a digit removes it from the notes of every
@@ -147,6 +168,24 @@ class SudokuGame {
     if (isLocked(i) || values[i] != 0) return false;
     _remember();
     notes[i] ^= 1 << (digit - 1);
+    return true;
+  }
+
+  /// Writes every candidate of every empty, editable cell into its notes,
+  /// replacing the notes that were there. One undo step. Returns whether
+  /// anything changed.
+  bool fillNotes() {
+    final filled = [
+      for (int i = 0; i < 81; i++)
+        isLocked(i) || values[i] != 0 ? notes[i] : candidates(i),
+    ];
+    bool changed = false;
+    for (int i = 0; i < 81; i++) {
+      if (filled[i] != notes[i]) changed = true;
+    }
+    if (!changed) return false;
+    _remember();
+    notes.setAll(0, filled);
     return true;
   }
 
@@ -181,6 +220,7 @@ class SudokuGame {
     }
     _fillCorrect(target);
     hintsUsed++;
+    _redoHistory.clear(); // a hint is a new change too
     return target;
   }
 
@@ -195,21 +235,35 @@ class SudokuGame {
     }
   }
 
-  /// Reverts the last entry, note or erase. Hints are not undone: their
-  /// time penalty is already paid, so hinted cells keep their digit.
+  /// Reverts the last entry, note, erase or note filling. Hints are not
+  /// undone: their time penalty is already paid, so hinted cells keep their
+  /// digit.
   bool undo() {
     if (_history.isEmpty) return false;
-    final snap = _history.removeLast();
+    _redoHistory.add(_Snapshot(values, notes));
+    _restore(_history.removeLast());
+    return true;
+  }
+
+  /// Brings back the last change that [undo] reverted. Mistakes aren't
+  /// counted again.
+  bool redo() {
+    if (_redoHistory.isEmpty) return false;
+    _history.add(_Snapshot(values, notes));
+    _restore(_redoHistory.removeLast());
+    return true;
+  }
+
+  void _restore(_Snapshot snap) {
     values.setAll(0, snap.values);
     notes.setAll(0, snap.notes);
     for (int i = 0; i < 81; i++) {
       if (hinted[i]) _fillCorrect(i);
     }
-    return true;
   }
 
-  /// The game as JSON-friendly data, to keep it on the device. The undo
-  /// history is left out, so a resumed game starts with an empty one.
+  /// The game as JSON-friendly data, to keep it on the device. The undo and
+  /// redo history is left out, so a resumed game starts with an empty one.
   Map<String, Object> toJson() => {
     'level': puzzle.level,
     'givens': puzzle.givens,

@@ -66,10 +66,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mistakesLabel => 'Mistakes';
 
   @override
-  String get statusPlay => 'Pick a cell, then a number';
+  String get statusPlay => 'Pick a cell and a number, in either order';
 
   @override
   String get statusNotes => 'Notes: tap numbers to mark candidates';
+
+  @override
+  String get statusNotesFill => 'Notes · tap here to fill in every candidate';
+
+  @override
+  String statusDigit(int digit) {
+    return '$digit: tap the cells that take it';
+  }
+
+  @override
+  String statusDigitNotes(int digit) {
+    return '$digit: tap cells to note it as a candidate';
+  }
 
   @override
   String get statusFullWrong => 'The grid is full, but something is not right';
@@ -88,6 +101,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get undo => 'Undo';
+
+  @override
+  String get redo => 'Redo';
 
   @override
   String get erase => 'Erase';
@@ -195,6 +211,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get optLeftHandedDesc =>
       'With the device sideways, put the number keys to the left of the grid.';
+
+  @override
+  String get optFillNotes => 'Fill notes on easy levels';
+
+  @override
+  String get optFillNotesDesc =>
+      'In Notes mode, offer to fill in every candidate on levels 1–5 too. Levels 6–9 always offer it.';
+
+  @override
+  String get optHaptics => 'Vibration';
+
+  @override
+  String get optHapticsDesc =>
+      'A light tap for each entry, and a stronger one for the win and for errors (with Show errors on).';
 
   @override
   String get restoreDefaults => 'Restore defaults';
