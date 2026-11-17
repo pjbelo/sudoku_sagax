@@ -26,6 +26,26 @@
   "info": "Info",
   "options": "Options",
   "scoreboard": "Scoreboard",
+  "daily": "Daily",
+  "dailyTitle": "Daily puzzle",
+  "dailyIntro": "One puzzle a day, the same for everyone. Easier early in the week, harder at the weekend.",
+  "dailyToday": "Today · {date}",
+  "@dailyToday": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "dailyPlay": "Play today's puzzle",
+  "dailyContinue": "Continue today's puzzle",
+  "dailySolved": "Solved today in {time}",
+  "@dailySolved": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "dailyStreak": "Daily streak",
+  "dailyBestStreak": "Best daily streak",
+  "dailyComeBack": "Come back tomorrow for a new puzzle.",
   "levelLabel": "Level",
   "timeLabel": "Time",
   "mistakesLabel": "Mistakes",

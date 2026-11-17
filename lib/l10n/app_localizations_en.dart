@@ -72,6 +72,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scoreboard => 'Scoreboard';
 
   @override
+  String get daily => 'Daily';
+
+  @override
+  String get dailyTitle => 'Daily puzzle';
+
+  @override
+  String get dailyIntro =>
+      'One puzzle a day, the same for everyone. Easier early in the week, harder at the weekend.';
+
+  @override
+  String dailyToday(String date) {
+    return 'Today · $date';
+  }
+
+  @override
+  String get dailyPlay => 'Play today\'s puzzle';
+
+  @override
+  String get dailyContinue => 'Continue today\'s puzzle';
+
+  @override
+  String dailySolved(String time) {
+    return 'Solved today in $time';
+  }
+
+  @override
+  String get dailyStreak => 'Daily streak';
+
+  @override
+  String get dailyBestStreak => 'Best daily streak';
+
+  @override
+  String get dailyComeBack => 'Come back tomorrow for a new puzzle.';
+
+  @override
   String get levelLabel => 'Level';
 
   @override

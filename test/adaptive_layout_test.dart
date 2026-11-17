@@ -9,6 +9,7 @@ import 'package:sudoku_sagax/game/logic_coach.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/l10n/app_localizations.dart';
+import 'package:sudoku_sagax/screens/daily_screen.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/screens/home_screen.dart';
 import 'package:sudoku_sagax/screens/info_screen.dart';
@@ -17,6 +18,7 @@ import 'package:sudoku_sagax/screens/lessons_screen.dart';
 import 'package:sudoku_sagax/screens/options_screen.dart';
 import 'package:sudoku_sagax/screens/review_screen.dart';
 import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
+import 'package:sudoku_sagax/services/daily_service.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
@@ -91,6 +93,8 @@ void main() {
     );
     await SavedGameService.instance.load();
     await StatisticsService.instance.load();
+    await SavedGameService.daily.load();
+    await DailyService.instance.load();
     await skipLessonSuggestions();
   });
 
@@ -121,6 +125,8 @@ void main() {
       'info': const InfoScreen(),
       'review': _reviewScreen(),
       'lessons': const LessonsScreen(),
+      // A Wednesday: the longest date names in some languages.
+      'daily': DailyScreen(today: DateTime(2026, 9, 30)),
       // The X-Wing lesson has the longest texts.
       'lesson': const LessonScreen(technique: CoachTechnique.xWing),
     };
@@ -220,6 +226,32 @@ void main() {
       expect(tagline.right, lessThan(688));
       expect(selector.left, greaterThan(688));
       expect(tester.getRect(find.text('PLAY')).left, greaterThan(688));
+    });
+
+    testWidgets('without a saved game, all of it fits on a phone', (
+      tester,
+    ) async {
+      // Spanish has the tallest home screen (its tagline takes two lines).
+      for (final locale in const [Locale('en'), Locale('es')]) {
+        await pumpScreen(
+          tester,
+          const HomeScreen(),
+          phonePortrait,
+          locale: locale,
+        );
+        await waitForFonts(tester);
+        final l10n = lookupAppLocalizations(locale);
+        expect(
+          tester.getRect(find.text(l10n.lessons)).bottom,
+          lessThanOrEqualTo(844 - 34),
+          reason: locale.languageCode,
+        );
+        // The four links share one row.
+        expect(
+          tester.getRect(find.text(l10n.info)).top,
+          tester.getRect(find.text(l10n.options)).top,
+        );
+      }
     });
 
     testWidgets('Continue fits without scrolling on phones', (tester) async {

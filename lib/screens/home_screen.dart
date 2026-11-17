@@ -9,6 +9,7 @@ import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
+import '../services/daily_service.dart';
 import '../services/saved_game_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
@@ -16,6 +17,7 @@ import '../widgets/confirm_dialog.dart';
 import '../widgets/duo_layout.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
+import 'daily_screen.dart';
 import 'game_screen.dart';
 import 'info_screen.dart';
 import 'lessons_screen.dart';
@@ -186,6 +188,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openLessons() =>
       unawaited(_open(const LessonsScreen(), 'lessons_opened'));
 
+  void _openOptions() =>
+      unawaited(_open(const OptionsScreen(), 'options_opened'));
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -249,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       continueButton: continueButton,
                     ),
                     if (links != null) ...[
-                      SizedBox(height: compact ? 10 : 24 * scale),
+                      SizedBox(height: compact ? 8 : 14 * scale),
                       links,
                     ],
                   ],
@@ -276,6 +281,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icons.school_outlined,
                     color: AppColors.electricCyan,
                   ),
+                ),
+                IconButton(
+                  tooltip: l10n.options,
+                  onPressed: _openOptions,
+                  icon: const Icon(Icons.tune, color: AppColors.electricCyan),
                 ),
                 IconButton(
                   tooltip: _languageLabel(
@@ -396,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: buttonGap),
         ],
 
-        // Recordes + Opções
+        // Recordes + Diário
         Row(
           children: [
             Expanded(
@@ -412,9 +422,12 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: _SecondaryButton(
-                icon: Icons.tune,
-                label: l10n.options,
-                onPressed: () => _open(const OptionsScreen(), 'options_opened'),
+                // A tick once today's puzzle is solved.
+                icon: DailyService.instance.isSolved(DateTime.now())
+                    ? Icons.event_available
+                    : Icons.calendar_today_outlined,
+                label: l10n.daily,
+                onPressed: () => _open(const DailyScreen(), 'daily_screen'),
               ),
             ),
           ],
@@ -423,46 +436,87 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Info, Lessons and language buttons.
+  /// Info, Lessons, Options and language: small buttons, an icon over its
+  /// label, so the four share one row on a phone.
   Widget _buildLinks(AppLocalizations l10n) {
-    final primary = Theme.of(context).primaryColor;
     final language = _languageLabel(
       Localizations.localeOf(context).languageCode,
     );
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 12,
+    return Row(
       children: [
-        TextButton.icon(
-          onPressed: _openInfo,
-          icon: Icon(Icons.info_outline, color: primary),
-          label: Text(
-            l10n.info,
-            style: GoogleFonts.exo2(fontSize: 16, color: primary),
+        Expanded(
+          child: _LinkButton(
+            icon: Icons.info_outline,
+            label: l10n.info,
+            onPressed: _openInfo,
           ),
         ),
-        TextButton.icon(
-          onPressed: _openLessons,
-          icon: Icon(Icons.school_outlined, color: primary),
-          label: Text(
-            l10n.lessons,
-            style: GoogleFonts.exo2(fontSize: 16, color: primary),
+        Expanded(
+          child: _LinkButton(
+            icon: Icons.school_outlined,
+            label: l10n.lessons,
+            onPressed: _openLessons,
           ),
         ),
-        // Only the flag, so the three links share one line on a phone; the
-        // tooltip and the picker name the language.
-        Tooltip(
-          message: language,
-          child: TextButton.icon(
-            onPressed: _showLanguagePicker,
-            icon: Icon(Icons.language, color: primary),
-            label: Text(
-              language.split(' ').first,
-              style: GoogleFonts.exo2(fontSize: 16, color: primary),
+        Expanded(
+          child: _LinkButton(
+            icon: Icons.tune,
+            label: l10n.options,
+            onPressed: _openOptions,
+          ),
+        ),
+        // The flag only; the tooltip and the picker name the language.
+        Expanded(
+          child: Tooltip(
+            message: language,
+            child: _LinkButton(
+              icon: Icons.language,
+              label: language.split(' ').first,
+              onPressed: _showLanguagePicker,
             ),
           ),
         ),
       ],
+    );
+  }
+}
+
+/// A small icon with its label under it, for the links row.
+class _LinkButton extends StatelessWidget {
+  const _LinkButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).primaryColor;
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: primary, size: 22 * uiScaleOf(context)),
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: GoogleFonts.exo2(fontSize: 14, color: primary),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

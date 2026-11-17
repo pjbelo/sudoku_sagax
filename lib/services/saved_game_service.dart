@@ -25,13 +25,16 @@ class SavedGame {
 }
 
 /// Keeps the game in progress on the device, so the player can leave the
-/// game screen, or have the app closed, and continue later. There is one
-/// saved game at most, stored as JSON in shared_preferences.
+/// game screen, or have the app closed, and continue later. Each instance
+/// keeps one saved game, stored as JSON in shared_preferences: [instance]
+/// for the levels (Continue on the home screen), [daily] for the daily
+/// puzzle, so one doesn't replace the other.
 class SavedGameService {
-  SavedGameService._();
-  static final instance = SavedGameService._();
+  SavedGameService._(this._key);
+  static final instance = SavedGameService._('saved_game');
+  static final daily = SavedGameService._('saved_daily');
 
-  static const _key = 'saved_game';
+  final String _key;
 
   /// Raised when the saved format changes; saves in an older format are
   /// then dropped instead of being read wrongly.

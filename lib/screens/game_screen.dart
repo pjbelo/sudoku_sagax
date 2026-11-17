@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:foldable/foldable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../game/daily_puzzle.dart';
 import '../game/game_review.dart';
 import '../game/lessons.dart';
 import '../game/logic_coach.dart';
@@ -15,6 +16,7 @@ import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
+import '../services/daily_service.dart';
 import '../services/lesson_service.dart';
 import '../services/saved_game_service.dart';
 import '../services/scoreboard_service.dart';
@@ -36,13 +38,23 @@ import 'review_screen.dart';
 // ============================================================
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key, this.initialLevel = 1, this.savedGame});
+  const GameScreen({
+    super.key,
+    this.initialLevel = 1,
+    this.savedGame,
+    this.dailyDay,
+  });
 
   /// The level of a new game.
   final int initialLevel;
 
   /// A game to continue; [initialLevel] is then ignored.
   final SavedGame? savedGame;
+
+  /// The day of a daily puzzle (null for the levels). Its level comes from
+  /// the puzzle, it is saved apart from the levels' game, and the win
+  /// counts for the daily streak.
+  final DateTime? dailyDay;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -52,7 +64,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   final _audio = AudioService.instance;
   final _analytics = AnalyticsService.instance;
   final _settings = SettingsService.instance;
-  final _savedGames = SavedGameService.instance;
+  late final _savedGames = widget.dailyDay == null
+      ? SavedGameService.instance
+      : SavedGameService.daily;
   final _focusNode = FocusNode();
 
   /// iPhone Duo side strip for the controls (set in build); null elsewhere.
@@ -170,8 +184,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   // --- Game flow ---
 
   void _resetFor(int level) {
-    _level = level;
-    _game = SudokuGame(generatePuzzle(level));
+    final day = widget.dailyDay;
+    _game = SudokuGame(day == null ? generatePuzzle(level) : dailyPuzzle(day));
+    _level = _game.puzzle.level;
     _selected = null;
     _notesMode = false;
     _activeDigit = null;
@@ -598,6 +613,15 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _selected = null;
     _activeDigit = null;
     unawaited(_savedGames.clear()); // nothing left to continue
+    final day = widget.dailyDay;
+    if (day != null) {
+      unawaited(DailyService.instance.recordSolved(day, _seconds));
+      _analytics.log('daily_completed', {
+        'level': _level,
+        'seconds': _seconds,
+        'hints': _game.hintsUsed,
+      });
+    }
     unawaited(_audio.playSfx(AudioService.winSfx));
     _vibrate(HapticFeedback.heavyImpact);
     _countStart(); // in case the winning move was the first one
@@ -649,6 +673,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           onButtonSfx: () =>
               unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85)),
           onReview: _openReview,
+          daily: widget.dailyDay != null,
         ),
         milliseconds: 250,
       ),
@@ -718,7 +743,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       child: Scaffold(
         appBar: showAppBar
             ? AppBar(
-                title: Text(l10n.appTitle),
+                title: Text(
+                  widget.dailyDay == null ? l10n.appTitle : l10n.dailyTitle,
+                ),
                 centerTitle: true,
                 actions: [if (_canPause) _buildPauseButton(l10n)],
               )
@@ -1373,6 +1400,7 @@ class _WinSummaryScreen extends StatelessWidget {
     required this.rank,
     required this.onButtonSfx,
     required this.onReview,
+    this.daily = false,
   });
 
   final int level;
@@ -1384,6 +1412,9 @@ class _WinSummaryScreen extends StatelessWidget {
 
   /// Opens the game review.
   final VoidCallback onReview;
+
+  /// A daily puzzle: no next or same level, just back to the menu.
+  final bool daily;
 
   void _close(BuildContext context, _WinAction action) {
     onButtonSfx();
@@ -1450,7 +1481,9 @@ class _WinSummaryScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          hasNext
+          daily
+              ? l10n.dailyComeBack
+              : hasNext
               ? l10n.nextLevelInfo(
                   bandName(l10n, sudokuLevels[level].band),
                   techniqueLabel(l10n, sudokuLevels[level].technique),
@@ -1460,37 +1493,39 @@ class _WinSummaryScreen extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 32),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => _close(
-              context,
-              hasNext ? _WinAction.nextLevel : _WinAction.playAgain,
+        if (!daily) ...[
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => _close(
+                context,
+                hasNext ? _WinAction.nextLevel : _WinAction.playAgain,
+              ),
+              child: Text(hasNext ? l10n.nextLevel : l10n.playAgain),
             ),
-            child: Text(hasNext ? l10n.nextLevel : l10n.playAgain),
           ),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: () => _close(context, _WinAction.sameLevel),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: primary,
-              side: BorderSide(color: primary.withValues(alpha: 0.6)),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-            ),
-            icon: const Icon(Icons.refresh),
-            label: Text(
-              l10n.sameLevel,
-              style: GoogleFonts.exo2(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _close(context, _WinAction.sameLevel),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: primary,
+                side: BorderSide(color: primary.withValues(alpha: 0.6)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              icon: const Icon(Icons.refresh),
+              label: Text(
+                l10n.sameLevel,
+                style: GoogleFonts.exo2(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
+        ],
         TextButton(
           onPressed: () => _close(context, _WinAction.menu),
           child: Text(

@@ -72,6 +72,41 @@ class AppLocalizationsEs extends AppLocalizations {
   String get scoreboard => 'Récords';
 
   @override
+  String get daily => 'Diario';
+
+  @override
+  String get dailyTitle => 'Puzle diario';
+
+  @override
+  String get dailyIntro =>
+      'Un puzle al día, el mismo para todos. Más fácil a principios de semana, más difícil el fin de semana.';
+
+  @override
+  String dailyToday(String date) {
+    return 'Hoy · $date';
+  }
+
+  @override
+  String get dailyPlay => 'Jugar el puzle de hoy';
+
+  @override
+  String get dailyContinue => 'Continuar el puzle de hoy';
+
+  @override
+  String dailySolved(String time) {
+    return 'Resuelto hoy en $time';
+  }
+
+  @override
+  String get dailyStreak => 'Racha diaria';
+
+  @override
+  String get dailyBestStreak => 'Mejor racha diaria';
+
+  @override
+  String get dailyComeBack => 'Vuelve mañana para un puzle nuevo.';
+
+  @override
   String get levelLabel => 'Nivel';
 
   @override

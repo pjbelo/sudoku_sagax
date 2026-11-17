@@ -224,6 +224,66 @@ abstract class AppLocalizations {
   /// **'Scoreboard'**
   String get scoreboard;
 
+  /// No description provided for @daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily;
+
+  /// No description provided for @dailyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily puzzle'**
+  String get dailyTitle;
+
+  /// No description provided for @dailyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'One puzzle a day, the same for everyone. Easier early in the week, harder at the weekend.'**
+  String get dailyIntro;
+
+  /// No description provided for @dailyToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today · {date}'**
+  String dailyToday(String date);
+
+  /// No description provided for @dailyPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play today\'s puzzle'**
+  String get dailyPlay;
+
+  /// No description provided for @dailyContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue today\'s puzzle'**
+  String get dailyContinue;
+
+  /// No description provided for @dailySolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Solved today in {time}'**
+  String dailySolved(String time);
+
+  /// No description provided for @dailyStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily streak'**
+  String get dailyStreak;
+
+  /// No description provided for @dailyBestStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Best daily streak'**
+  String get dailyBestStreak;
+
+  /// No description provided for @dailyComeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Come back tomorrow for a new puzzle.'**
+  String get dailyComeBack;
+
   /// No description provided for @levelLabel.
   ///
   /// In en, this message translates to:

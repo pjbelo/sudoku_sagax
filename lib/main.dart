@@ -12,6 +12,7 @@ import 'sagax_theme.dart';
 import 'screens/home_screen.dart';
 import 'services/analytics_service.dart';
 import 'services/audio_service.dart';
+import 'services/daily_service.dart';
 import 'services/lesson_service.dart';
 import 'services/saved_game_service.dart';
 import 'services/scoreboard_service.dart';
@@ -33,6 +34,8 @@ Future<void> main() async {
   await SettingsService.instance.load();
   await ScoreboardService.instance.load();
   await SavedGameService.instance.load();
+  await SavedGameService.daily.load();
+  await DailyService.instance.load();
   await StatisticsService.instance.load();
   await LessonService.instance.load();
   await AudioService.instance.init();

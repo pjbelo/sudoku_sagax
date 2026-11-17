@@ -72,6 +72,41 @@ class AppLocalizationsFr extends AppLocalizations {
   String get scoreboard => 'Records';
 
   @override
+  String get daily => 'Quotidien';
+
+  @override
+  String get dailyTitle => 'Grille du jour';
+
+  @override
+  String get dailyIntro =>
+      'Une grille par jour, la même pour tout le monde. Plus facile en début de semaine, plus difficile le week-end.';
+
+  @override
+  String dailyToday(String date) {
+    return 'Aujourd\'hui · $date';
+  }
+
+  @override
+  String get dailyPlay => 'Jouer la grille du jour';
+
+  @override
+  String get dailyContinue => 'Reprendre la grille du jour';
+
+  @override
+  String dailySolved(String time) {
+    return 'Résolue aujourd\'hui en $time';
+  }
+
+  @override
+  String get dailyStreak => 'Série quotidienne';
+
+  @override
+  String get dailyBestStreak => 'Meilleure série quotidienne';
+
+  @override
+  String get dailyComeBack => 'Revenez demain pour une nouvelle grille.';
+
+  @override
   String get levelLabel => 'Niveau';
 
   @override

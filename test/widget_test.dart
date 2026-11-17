@@ -9,6 +9,7 @@ import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/main.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
+import 'package:sudoku_sagax/services/daily_service.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
@@ -77,6 +78,8 @@ void main() {
     await ScoreboardService.instance.load();
     await SavedGameService.instance.load();
     await StatisticsService.instance.load();
+    await SavedGameService.daily.load();
+    await DailyService.instance.load();
     await skipLessonSuggestions();
   });
 

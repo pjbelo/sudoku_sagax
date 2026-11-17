@@ -72,6 +72,41 @@ class AppLocalizationsDe extends AppLocalizations {
   String get scoreboard => 'Bestenliste';
 
   @override
+  String get daily => 'Täglich';
+
+  @override
+  String get dailyTitle => 'Tagesrätsel';
+
+  @override
+  String get dailyIntro =>
+      'Ein Rätsel pro Tag, für alle dasselbe. Am Wochenanfang leichter, am Wochenende schwerer.';
+
+  @override
+  String dailyToday(String date) {
+    return 'Heute · $date';
+  }
+
+  @override
+  String get dailyPlay => 'Heutiges Rätsel spielen';
+
+  @override
+  String get dailyContinue => 'Heutiges Rätsel fortsetzen';
+
+  @override
+  String dailySolved(String time) {
+    return 'Heute gelöst in $time';
+  }
+
+  @override
+  String get dailyStreak => 'Tagesserie';
+
+  @override
+  String get dailyBestStreak => 'Beste Tagesserie';
+
+  @override
+  String get dailyComeBack => 'Komm morgen für ein neues Rätsel wieder.';
+
+  @override
   String get levelLabel => 'Level';
 
   @override

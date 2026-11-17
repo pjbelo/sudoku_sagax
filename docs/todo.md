@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B4.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B5.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -71,11 +71,13 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   to look; Show me (or a wrong move) brings the reasoning; the player makes
   the move. Finished lessons are ticked. Home's links open them, and a level
   offers its lesson the first time it is played.
-- **B5. Daily puzzle (S–M).** One puzzle a day, the same for everyone,
-  generated on the device from the date, so it works offline with no
-  account. A calendar shows the days solved and the current streak. Note:
-  a later change to the generator would change that day's puzzle between
-  app versions, so the daily generator has to be kept as it is once shipped.
+- ~~**B5. Daily puzzle (S–M).**~~ Done on 2026-11-17: one puzzle a day,
+  the same for everyone and offline (`lib/game/daily_puzzle.dart`, frozen,
+  with a golden test), easier early in the week (Mon level 3 → Sun level 8).
+  A Daily button beside Scoreboard opens today's puzzle, the daily streak
+  and a month calendar of the days solved; its game is saved apart from
+  Continue. To make room, Options moved to the row of small links (Info,
+  Lessons, Options, language).
 - **B6. Accessibility (M).** Make the board readable by VoiceOver and
   TalkBack (each cell announces its row, column, digit, notes and whether it
   is a given), mark errors, conflicts (A4) and hints with a shape as well as
@@ -96,9 +98,9 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
 ## Other open items
 
 - **Home with Continue on a phone.** With a saved game, the Continue button
-  pushes the links row (Info, Lessons, language) below the bottom of a
-  390×844 phone held upright, so it needs a scroll (by about 35 px, 62 in
-  Spanish and French). Without a saved game everything fits. Options: a
+  pushes the links row (Info, Lessons, Options, language) below the bottom
+  of a 390×844 phone held upright, so it needs a scroll (by about 50 px, 75
+  in Spanish and French). Without a saved game everything fits. Options: a
   tighter gap, a smaller logo when Continue shows, or Continue in place of
   the tagline.
 
