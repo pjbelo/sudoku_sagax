@@ -18,6 +18,7 @@ import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
 import 'game_screen.dart';
 import 'info_screen.dart';
+import 'lessons_screen.dart';
 import 'options_screen.dart';
 import 'scoreboard_screen.dart';
 
@@ -182,6 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _openInfo() => unawaited(_open(const InfoScreen(), 'info_opened'));
 
+  void _openLessons() =>
+      unawaited(_open(const LessonsScreen(), 'lessons_opened'));
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -262,6 +266,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: _openInfo,
                   icon: const Icon(
                     Icons.info_outline,
+                    color: AppColors.electricCyan,
+                  ),
+                ),
+                IconButton(
+                  tooltip: l10n.lessons,
+                  onPressed: _openLessons,
+                  icon: const Icon(
+                    Icons.school_outlined,
                     color: AppColors.electricCyan,
                   ),
                 ),
@@ -411,12 +423,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Info and language buttons.
+  /// Info, Lessons and language buttons.
   Widget _buildLinks(AppLocalizations l10n) {
     final primary = Theme.of(context).primaryColor;
+    final language = _languageLabel(
+      Localizations.localeOf(context).languageCode,
+    );
     return Wrap(
       alignment: WrapAlignment.center,
-      spacing: 16,
+      spacing: 12,
       children: [
         TextButton.icon(
           onPressed: _openInfo,
@@ -427,11 +442,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         TextButton.icon(
-          onPressed: _showLanguagePicker,
-          icon: Icon(Icons.language, color: primary),
+          onPressed: _openLessons,
+          icon: Icon(Icons.school_outlined, color: primary),
           label: Text(
-            _languageLabel(Localizations.localeOf(context).languageCode),
+            l10n.lessons,
             style: GoogleFonts.exo2(fontSize: 16, color: primary),
+          ),
+        ),
+        // Only the flag, so the three links share one line on a phone; the
+        // tooltip and the picker name the language.
+        Tooltip(
+          message: language,
+          child: TextButton.icon(
+            onPressed: _showLanguagePicker,
+            icon: Icon(Icons.language, color: primary),
+            label: Text(
+              language.split(' ').first,
+              style: GoogleFonts.exo2(fontSize: 16, color: primary),
+            ),
           ),
         ),
       ],

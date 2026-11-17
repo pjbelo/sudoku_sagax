@@ -378,6 +378,85 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get lessons => 'Lektionen';
+
+  @override
+  String get lessonsIntro =>
+      'Kurze Lektionen, eine pro Technik: Die App erklärt, du machst den Zug.';
+
+  @override
+  String get lessonDoneBadge => 'Erledigt';
+
+  @override
+  String lessonFromLevel(int level) {
+    return 'Ab Level $level';
+  }
+
+  @override
+  String get lessonTry =>
+      'Finde den Zug: Tippe auf das Feld, dann auf seine Zahl.';
+
+  @override
+  String get lessonWrong => 'Nicht dieser. Hier ist die Begründung:';
+
+  @override
+  String get lessonNowYou => 'Jetzt mach den Zug.';
+
+  @override
+  String get lessonSuccess => 'Gut gemacht!';
+
+  @override
+  String get lessonFinish => 'Fertig';
+
+  @override
+  String lessonSuggestTitle(String technique) {
+    return 'Neue Technik: $technique';
+  }
+
+  @override
+  String lessonSuggestMessage(int level) {
+    return 'Level $level braucht sie. Eine kurze Lektion zeigt, wie sie funktioniert.';
+  }
+
+  @override
+  String get lessonOpen => 'Lektion';
+
+  @override
+  String get playNow => 'Spielen';
+
+  @override
+  String get lessonIntroHiddenSingle =>
+      'Ein versteckter Single ist eine Zahl, die in einer Zeile, Spalte oder einem Block nur in ein Feld passt. Wähle einen Block und eine Zahl, die ihm noch fehlt: Sehen alle anderen Felder diese Zahl schon, gehört sie in das eine Feld, das übrig bleibt.';
+
+  @override
+  String get lessonIntroNakedSingle =>
+      'Ein nackter Single ist ein Feld, das nur eine Zahl enthalten kann: Seine Zeile, Spalte und sein Block enthalten die anderen acht schon.';
+
+  @override
+  String get lessonIntroPointingPair =>
+      'Kann eine Zahl in einem Block nur in einer Zeile (oder Spalte) stehen, muss sie dort in dieser Zeile stehen. Also kann sie nirgends sonst in dieser Zeile stehen.';
+
+  @override
+  String get lessonIntroBoxLine =>
+      'Kann eine Zahl in einer Zeile (oder Spalte) nur in einem Block stehen, muss sie dort in diesem Block stehen. Also kann sie in den übrigen Feldern des Blocks nicht stehen.';
+
+  @override
+  String get lessonIntroNakedPair =>
+      'Können zwei Felder einer Zeile, Spalte oder eines Blocks nur dieselben zwei Zahlen enthalten, gehören diese Zahlen in diese zwei Felder. Kein anderes Feld der Einheit kann sie enthalten.';
+
+  @override
+  String get lessonIntroHiddenPair =>
+      'Passen zwei Zahlen nur in dieselben zwei Felder einer Zeile, Spalte oder eines Blocks, müssen diese Felder sie enthalten. Alle anderen Kandidaten dieser zwei Felder fallen weg.';
+
+  @override
+  String get lessonIntroNakedTriple =>
+      'Können drei Felder einer Einheit zusammen nur drei Zahlen enthalten, gehören diese drei Zahlen in diese Felder. Der Rest der Einheit kann sie nicht enthalten.';
+
+  @override
+  String get lessonIntroXWing =>
+      'Passt eine Zahl in zwei Zeilen jeweils nur in zwei Felder, und liegen diese Felder in denselben zwei Spalten, besetzt die Zahl in jeder Zeile eine Ecke. So oder so bekommen diese Spalten sie dort, also kann sie nirgends sonst in ihnen stehen.';
+
+  @override
   String get optionsTitle => 'Optionen';
 
   @override

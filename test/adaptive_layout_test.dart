@@ -12,6 +12,8 @@ import 'package:sudoku_sagax/l10n/app_localizations.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/screens/home_screen.dart';
 import 'package:sudoku_sagax/screens/info_screen.dart';
+import 'package:sudoku_sagax/screens/lesson_screen.dart';
+import 'package:sudoku_sagax/screens/lessons_screen.dart';
 import 'package:sudoku_sagax/screens/options_screen.dart';
 import 'package:sudoku_sagax/screens/review_screen.dart';
 import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
@@ -89,6 +91,7 @@ void main() {
     );
     await SavedGameService.instance.load();
     await StatisticsService.instance.load();
+    await skipLessonSuggestions();
   });
 
   group('no screen overflows', () {
@@ -117,6 +120,9 @@ void main() {
       'options': const OptionsScreen(),
       'info': const InfoScreen(),
       'review': _reviewScreen(),
+      'lessons': const LessonsScreen(),
+      // The X-Wing lesson has the longest texts.
+      'lesson': const LessonScreen(technique: CoachTechnique.xWing),
     };
 
     for (final MapEntry(key: windowName, value: window) in windows.entries) {

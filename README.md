@@ -74,6 +74,7 @@ lib/
     puzzle_bank.dart           GENERATED graded puzzles for levels 6–9 (tool/generate_puzzle_bank.dart)
     logic_coach.dart           Pure Dart: the logic coach (next step, named technique, eliminations)
     game_review.dart           Pure Dart: hints and mistakes of a game, techniques a puzzle needs
+    lessons.dart               Pure Dart: one lesson per technique, on a board found with the coach
     sudoku_game.dart           Game state: entries, notes, hints, mistakes, undo/redo, fill notes, JSON; formatTime
   services/
     analytics_service.dart     Firebase Analytics wrapper (no-op until initialised)
@@ -82,6 +83,7 @@ lib/
     scoreboard_service.dart    Top-10 times per level (persisted)
     saved_game_service.dart    The game in progress, for Continue (persisted)
     statistics_service.dart    Games and wins per level, day streak (persisted)
+    lesson_service.dart        Finished lessons, levels that suggested theirs (persisted)
   screens/
     home_screen.dart           Logo, 3×3 level selector, Play, Continue, Scoreboard, Options, Info, language
     game_screen.dart           Board, stats, controls, number pad, pause, win bar + summary
@@ -89,6 +91,8 @@ lib/
     scoreboard_screen.dart     Per-level best times and statistics
     info_screen.dart           How to play, Brain Benefits, scientific references, credits
     review_screen.dart         After a win: techniques needed, hints and mistakes with the logic available
+    lessons_screen.dart        The lessons, finished ones ticked
+    lesson_screen.dart         One guided lesson: the app explains, the player makes the move
   widgets/                     SudokuBoard, NumberPad, CoachCard, LevelSelector, SudokuLogo, confirm dialog, fade route
   l10n/                        .arb sources + generated AppLocalizations
 assets/                        images (app logo sudoku-sagax-transp.png, Sagax logo), musics, sounds
@@ -176,7 +180,8 @@ Firebase. Event names follow Slidox:
 `hint_used` (both with the `technique`) ·
 `notes_filled` ·
 `level_completed` · `next_level` · `same_level` · `play_again` ·
-`back_to_menu` · `review_opened` · `game_left` · `continue_selected` · `game_resumed` ·
+`back_to_menu` · `review_opened` · `lessons_opened` · `lesson_opened` ·
+`lesson_done` · `lesson_suggested` · `game_left` · `continue_selected` · `game_resumed` ·
 `saved_game_replaced` · `option_changed` · `options_restored` ·
 `scoreboard_opened` · `scoreboard_cleared` · `statistics_viewed` ·
 `statistics_cleared` · `options_opened` · `info_opened` ·

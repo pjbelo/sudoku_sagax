@@ -7,6 +7,7 @@ import 'package:foldable/foldable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../game/game_review.dart';
+import '../game/lessons.dart';
 import '../game/logic_coach.dart';
 import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
@@ -14,17 +15,20 @@ import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
+import '../services/lesson_service.dart';
 import '../services/saved_game_service.dart';
 import '../services/scoreboard_service.dart';
 import '../services/settings_service.dart';
 import '../services/statistics_service.dart';
 import '../widgets/adaptive_layout.dart';
 import '../widgets/coach_card.dart';
+import '../widgets/confirm_dialog.dart';
 import '../widgets/duo_layout.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
 import '../widgets/number_pad.dart';
 import '../widgets/sudoku_board.dart';
+import 'lesson_screen.dart';
 import 'review_screen.dart';
 
 // ============================================================
@@ -181,6 +185,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _countedAsStarted = false;
     // A new game replaces the saved one (the home screen asks first).
     unawaited(_savedGames.clear());
+    // Once the screen is up: the level's lesson, the first time it's played.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _suggestLesson());
     _analytics.log('game_session_start', {
       'level': level,
       'clues': _game.puzzle.clueCount,
@@ -189,6 +195,41 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       'mark_conflicts': _settings.markConflicts ? 1 : 0,
       'left_handed': _settings.leftHanded ? 1 : 0,
     });
+  }
+
+  /// The first time a level is played, it offers the lesson of the
+  /// technique it brings in (unless that lesson is done). The game waits,
+  /// paused, while the player decides and while the lesson is open.
+  Future<void> _suggestLesson() async {
+    final lessons = LessonService.instance;
+    if (!mounted || lessons.wasSuggested(_level)) return;
+    unawaited(lessons.markSuggested(_level));
+    final todo = lessonsIntroducedAt(_level)
+        .where((technique) => !lessons.isDone(technique))
+        .toList();
+    if (todo.isEmpty) return;
+    final technique = todo.first;
+
+    final l10n = AppLocalizations.of(context)!;
+    final wasPaused = _userPaused;
+    setState(() => _userPaused = true);
+    final open = await showConfirmDialog(
+      context,
+      title: l10n.lessonSuggestTitle(techniqueName(l10n, technique)),
+      message: l10n.lessonSuggestMessage(_level),
+      confirmLabel: l10n.lessonOpen,
+      cancelLabel: l10n.playNow,
+    );
+    _analytics.log('lesson_suggested', {
+      'level': _level,
+      'technique': technique.name,
+      'accepted': open ? 1 : 0,
+    });
+    if (open && mounted) {
+      await Navigator.of(context)
+          .push(fadeRoute<void>(LessonScreen(technique: technique)));
+    }
+    if (mounted) setState(() => _userPaused = wasPaused);
   }
 
   /// Continues a game the player left unfinished.

@@ -378,6 +378,85 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get lessons => 'Lecciones';
+
+  @override
+  String get lessonsIntro =>
+      'Lecciones cortas, una por técnica: la app explica, tú haces la jugada.';
+
+  @override
+  String get lessonDoneBadge => 'Hecha';
+
+  @override
+  String lessonFromLevel(int level) {
+    return 'Desde el nivel $level';
+  }
+
+  @override
+  String get lessonTry =>
+      'Encuentra la jugada: toca la celda y luego su número.';
+
+  @override
+  String get lessonWrong => 'No es esta. Este es el razonamiento:';
+
+  @override
+  String get lessonNowYou => 'Ahora haz la jugada.';
+
+  @override
+  String get lessonSuccess => '¡Muy bien!';
+
+  @override
+  String get lessonFinish => 'Terminar';
+
+  @override
+  String lessonSuggestTitle(String technique) {
+    return 'Técnica nueva: $technique';
+  }
+
+  @override
+  String lessonSuggestMessage(int level) {
+    return 'El nivel $level la necesita. Una lección corta muestra cómo funciona.';
+  }
+
+  @override
+  String get lessonOpen => 'Lección';
+
+  @override
+  String get playNow => 'Jugar';
+
+  @override
+  String get lessonIntroHiddenSingle =>
+      'Un único oculto es un número que solo cabe en una celda de una fila, columna o caja. Elige una caja y un número que le falte: si todas las demás celdas ya ven ese número, va en la única que queda.';
+
+  @override
+  String get lessonIntroNakedSingle =>
+      'Un único desnudo es una celda que solo puede llevar un número: su fila, columna y caja ya tienen los otros ocho.';
+
+  @override
+  String get lessonIntroPointingPair =>
+      'Si, dentro de una caja, un número solo puede ir en una fila (o columna), tiene que ir en esa fila ahí. Así que no puede ir en ningún otro sitio de esa fila.';
+
+  @override
+  String get lessonIntroBoxLine =>
+      'Si, en una fila (o columna), un número solo puede ir dentro de una caja, tiene que ir ahí en esa caja. Así que no puede ir en las demás celdas de la caja.';
+
+  @override
+  String get lessonIntroNakedPair =>
+      'Si dos celdas de una fila, columna o caja solo pueden llevar los mismos dos números, esos números van en esas dos celdas. Ninguna otra celda de esa unidad puede llevarlos.';
+
+  @override
+  String get lessonIntroHiddenPair =>
+      'Si dos números solo caben en las mismas dos celdas de una fila, columna o caja, esas celdas tienen que llevarlos. Los demás candidatos de esas dos celdas sobran.';
+
+  @override
+  String get lessonIntroNakedTriple =>
+      'Si tres celdas de una unidad solo pueden llevar tres números entre ellas, esos tres números van en esas celdas. El resto de la unidad no puede llevarlos.';
+
+  @override
+  String get lessonIntroXWing =>
+      'Si, en dos filas, un número solo cabe en dos celdas en cada una, y esas celdas están en las mismas dos columnas, el número ocupa una esquina en cada fila. Sea como sea, esas columnas lo reciben ahí, así que no puede ir en ningún otro sitio de ellas.';
+
+  @override
   String get optionsTitle => 'Opciones';
 
   @override

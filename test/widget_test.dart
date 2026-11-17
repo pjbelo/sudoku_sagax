@@ -77,6 +77,7 @@ void main() {
     await ScoreboardService.instance.load();
     await SavedGameService.instance.load();
     await StatisticsService.instance.load();
+    await skipLessonSuggestions();
   });
 
   testWidgets('home shows the level selector and menu', (tester) async {

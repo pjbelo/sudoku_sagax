@@ -692,6 +692,132 @@ abstract class AppLocalizations {
   /// **'row {row}, column {column}'**
   String cellName(int row, int column);
 
+  /// No description provided for @lessons.
+  ///
+  /// In en, this message translates to:
+  /// **'Lessons'**
+  String get lessons;
+
+  /// No description provided for @lessonsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Short lessons, one per technique: the app explains, you make the move.'**
+  String get lessonsIntro;
+
+  /// No description provided for @lessonDoneBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get lessonDoneBadge;
+
+  /// No description provided for @lessonFromLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'From level {level}'**
+  String lessonFromLevel(int level);
+
+  /// No description provided for @lessonTry.
+  ///
+  /// In en, this message translates to:
+  /// **'Find the move: tap the cell, then its digit.'**
+  String get lessonTry;
+
+  /// No description provided for @lessonWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Not this one. Here is the reasoning:'**
+  String get lessonWrong;
+
+  /// No description provided for @lessonNowYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Now make the move.'**
+  String get lessonNowYou;
+
+  /// No description provided for @lessonSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done!'**
+  String get lessonSuccess;
+
+  /// No description provided for @lessonFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get lessonFinish;
+
+  /// No description provided for @lessonSuggestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New technique: {technique}'**
+  String lessonSuggestTitle(String technique);
+
+  /// No description provided for @lessonSuggestMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} needs it. A short lesson shows how it works.'**
+  String lessonSuggestMessage(int level);
+
+  /// No description provided for @lessonOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson'**
+  String get lessonOpen;
+
+  /// No description provided for @playNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get playNow;
+
+  /// No description provided for @lessonIntroHiddenSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'A hidden single is a digit that fits in only one cell of a row, column or box. Pick a box and a digit it still lacks: if every other cell already sees that digit, it goes in the one cell left.'**
+  String get lessonIntroHiddenSingle;
+
+  /// No description provided for @lessonIntroNakedSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'A naked single is a cell that can hold only one digit: its row, column and box already hold the other eight between them.'**
+  String get lessonIntroNakedSingle;
+
+  /// No description provided for @lessonIntroPointingPair.
+  ///
+  /// In en, this message translates to:
+  /// **'If, inside a box, a digit can only go in one row (or column), it must go in that row there. So it can\'t go anywhere else along that row.'**
+  String get lessonIntroPointingPair;
+
+  /// No description provided for @lessonIntroBoxLine.
+  ///
+  /// In en, this message translates to:
+  /// **'If, along a row (or column), a digit can only go inside one box, it must go there in that box. So it can\'t go in the box\'s other cells.'**
+  String get lessonIntroBoxLine;
+
+  /// No description provided for @lessonIntroNakedPair.
+  ///
+  /// In en, this message translates to:
+  /// **'If two cells of a row, column or box can only hold the same two digits, those two digits go in those two cells. No other cell of that unit can hold them.'**
+  String get lessonIntroNakedPair;
+
+  /// No description provided for @lessonIntroHiddenPair.
+  ///
+  /// In en, this message translates to:
+  /// **'If two digits fit only in the same two cells of a row, column or box, those cells must take them. Any other candidates in those two cells can go.'**
+  String get lessonIntroHiddenPair;
+
+  /// No description provided for @lessonIntroNakedTriple.
+  ///
+  /// In en, this message translates to:
+  /// **'If three cells of a unit can only hold three digits between them, those three digits go in those cells. The rest of the unit can\'t hold them.'**
+  String get lessonIntroNakedTriple;
+
+  /// No description provided for @lessonIntroXWing.
+  ///
+  /// In en, this message translates to:
+  /// **'If, in two rows, a digit fits in only two cells each, and those cells line up in the same two columns, the digit takes one corner in each row. Either way, those columns get it there, so it can\'t go anywhere else in them.'**
+  String get lessonIntroXWing;
+
   /// No description provided for @optionsTitle.
   ///
   /// In en, this message translates to:

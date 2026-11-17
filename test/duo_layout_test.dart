@@ -28,6 +28,7 @@ void main() {
     await ScoreboardService.instance.load();
     await SavedGameService.instance.load();
     await StatisticsService.instance.load();
+    await skipLessonSuggestions();
   });
 
   group('outer display', () {

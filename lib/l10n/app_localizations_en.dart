@@ -376,6 +376,84 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get lessons => 'Lessons';
+
+  @override
+  String get lessonsIntro =>
+      'Short lessons, one per technique: the app explains, you make the move.';
+
+  @override
+  String get lessonDoneBadge => 'Done';
+
+  @override
+  String lessonFromLevel(int level) {
+    return 'From level $level';
+  }
+
+  @override
+  String get lessonTry => 'Find the move: tap the cell, then its digit.';
+
+  @override
+  String get lessonWrong => 'Not this one. Here is the reasoning:';
+
+  @override
+  String get lessonNowYou => 'Now make the move.';
+
+  @override
+  String get lessonSuccess => 'Well done!';
+
+  @override
+  String get lessonFinish => 'Finish';
+
+  @override
+  String lessonSuggestTitle(String technique) {
+    return 'New technique: $technique';
+  }
+
+  @override
+  String lessonSuggestMessage(int level) {
+    return 'Level $level needs it. A short lesson shows how it works.';
+  }
+
+  @override
+  String get lessonOpen => 'Lesson';
+
+  @override
+  String get playNow => 'Play';
+
+  @override
+  String get lessonIntroHiddenSingle =>
+      'A hidden single is a digit that fits in only one cell of a row, column or box. Pick a box and a digit it still lacks: if every other cell already sees that digit, it goes in the one cell left.';
+
+  @override
+  String get lessonIntroNakedSingle =>
+      'A naked single is a cell that can hold only one digit: its row, column and box already hold the other eight between them.';
+
+  @override
+  String get lessonIntroPointingPair =>
+      'If, inside a box, a digit can only go in one row (or column), it must go in that row there. So it can\'t go anywhere else along that row.';
+
+  @override
+  String get lessonIntroBoxLine =>
+      'If, along a row (or column), a digit can only go inside one box, it must go there in that box. So it can\'t go in the box\'s other cells.';
+
+  @override
+  String get lessonIntroNakedPair =>
+      'If two cells of a row, column or box can only hold the same two digits, those two digits go in those two cells. No other cell of that unit can hold them.';
+
+  @override
+  String get lessonIntroHiddenPair =>
+      'If two digits fit only in the same two cells of a row, column or box, those cells must take them. Any other candidates in those two cells can go.';
+
+  @override
+  String get lessonIntroNakedTriple =>
+      'If three cells of a unit can only hold three digits between them, those three digits go in those cells. The rest of the unit can\'t hold them.';
+
+  @override
+  String get lessonIntroXWing =>
+      'If, in two rows, a digit fits in only two cells each, and those cells line up in the same two columns, the digit takes one corner in each row. Either way, those columns get it there, so it can\'t go anywhere else in them.';
+
+  @override
   String get optionsTitle => 'Options';
 
   @override

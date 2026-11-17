@@ -381,6 +381,85 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get lessons => 'Leçons';
+
+  @override
+  String get lessonsIntro =>
+      'De courtes leçons, une par technique : l\'app explique, vous jouez le coup.';
+
+  @override
+  String get lessonDoneBadge => 'Faite';
+
+  @override
+  String lessonFromLevel(int level) {
+    return 'Dès le niveau $level';
+  }
+
+  @override
+  String get lessonTry =>
+      'Trouvez le coup : touchez la case, puis son chiffre.';
+
+  @override
+  String get lessonWrong => 'Pas celui-ci. Voici le raisonnement :';
+
+  @override
+  String get lessonNowYou => 'À vous de jouer le coup.';
+
+  @override
+  String get lessonSuccess => 'Bravo !';
+
+  @override
+  String get lessonFinish => 'Terminer';
+
+  @override
+  String lessonSuggestTitle(String technique) {
+    return 'Nouvelle technique : $technique';
+  }
+
+  @override
+  String lessonSuggestMessage(int level) {
+    return 'Le niveau $level en a besoin. Une courte leçon montre comment elle marche.';
+  }
+
+  @override
+  String get lessonOpen => 'Leçon';
+
+  @override
+  String get playNow => 'Jouer';
+
+  @override
+  String get lessonIntroHiddenSingle =>
+      'Un singleton caché est un chiffre qui ne va que dans une seule case d\'une ligne, d\'une colonne ou d\'un carré. Choisissez un carré et un chiffre qui lui manque : si toutes les autres cases voient déjà ce chiffre, il va dans la seule qui reste.';
+
+  @override
+  String get lessonIntroNakedSingle =>
+      'Un singleton nu est une case qui ne peut contenir qu\'un seul chiffre : sa ligne, sa colonne et son carré contiennent déjà les huit autres.';
+
+  @override
+  String get lessonIntroPointingPair =>
+      'Si, dans un carré, un chiffre ne peut aller que sur une ligne (ou une colonne), il doit aller sur cette ligne à cet endroit. Il ne peut donc aller nulle part ailleurs sur cette ligne.';
+
+  @override
+  String get lessonIntroBoxLine =>
+      'Si, sur une ligne (ou une colonne), un chiffre ne peut aller que dans un seul carré, il doit aller là dans ce carré. Il ne peut donc pas aller dans les autres cases du carré.';
+
+  @override
+  String get lessonIntroNakedPair =>
+      'Si deux cases d\'une ligne, d\'une colonne ou d\'un carré ne peuvent contenir que les deux mêmes chiffres, ces chiffres vont dans ces deux cases. Aucune autre case de cette unité ne peut les contenir.';
+
+  @override
+  String get lessonIntroHiddenPair =>
+      'Si deux chiffres ne vont que dans les deux mêmes cases d\'une ligne, d\'une colonne ou d\'un carré, ces cases doivent les contenir. Les autres candidats de ces deux cases s\'en vont.';
+
+  @override
+  String get lessonIntroNakedTriple =>
+      'Si trois cases d\'une unité ne peuvent contenir que trois chiffres à elles trois, ces chiffres vont dans ces cases. Le reste de l\'unité ne peut pas les contenir.';
+
+  @override
+  String get lessonIntroXWing =>
+      'Si, sur deux lignes, un chiffre ne va que dans deux cases chacune, et que ces cases sont dans les deux mêmes colonnes, le chiffre occupe un coin sur chaque ligne. Quoi qu\'il arrive, ces colonnes le reçoivent là : il ne peut donc aller nulle part ailleurs dans ces colonnes.';
+
+  @override
   String get optionsTitle => 'Options';
 
   @override

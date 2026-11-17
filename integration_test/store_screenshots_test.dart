@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/main.dart';
+import 'package:sudoku_sagax/services/lesson_service.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
@@ -165,6 +166,11 @@ Future<void> _resetState(String lang) async {
   await ScoreboardService.instance.load();
   await SavedGameService.instance.load();
   await StatisticsService.instance.load();
+  // No lesson suggestion over the game.
+  await LessonService.instance.load();
+  for (int level = 1; level <= 9; level++) {
+    await LessonService.instance.markSuggested(level);
+  }
   for (final s in _seededScores) {
     await ScoreboardService.instance.add(
       _level,

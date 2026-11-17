@@ -378,6 +378,85 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get lessons => 'Lições';
+
+  @override
+  String get lessonsIntro =>
+      'Lições curtas, uma por técnica: a app explica, tu fazes a jogada.';
+
+  @override
+  String get lessonDoneBadge => 'Feita';
+
+  @override
+  String lessonFromLevel(int level) {
+    return 'A partir do nível $level';
+  }
+
+  @override
+  String get lessonTry =>
+      'Encontra a jogada: toca na célula e depois no número.';
+
+  @override
+  String get lessonWrong => 'Não é esta. Eis o raciocínio:';
+
+  @override
+  String get lessonNowYou => 'Agora faz a jogada.';
+
+  @override
+  String get lessonSuccess => 'Muito bem!';
+
+  @override
+  String get lessonFinish => 'Terminar';
+
+  @override
+  String lessonSuggestTitle(String technique) {
+    return 'Técnica nova: $technique';
+  }
+
+  @override
+  String lessonSuggestMessage(int level) {
+    return 'O nível $level precisa dela. Uma lição curta mostra como funciona.';
+  }
+
+  @override
+  String get lessonOpen => 'Lição';
+
+  @override
+  String get playNow => 'Jogar';
+
+  @override
+  String get lessonIntroHiddenSingle =>
+      'Uma posição única é um número que só cabe numa célula de uma linha, coluna ou quadrado. Escolhe um quadrado e um número que lhe falte: se todas as outras células já veem esse número, ele vai para a única que sobra.';
+
+  @override
+  String get lessonIntroNakedSingle =>
+      'Um candidato único é uma célula que só pode levar um número: a sua linha, coluna e quadrado já têm os outros oito.';
+
+  @override
+  String get lessonIntroPointingPair =>
+      'Se, dentro de um quadrado, um número só pode ir para uma linha (ou coluna), tem de ir para essa linha ali. Por isso, não pode ir para mais nenhum sítio dessa linha.';
+
+  @override
+  String get lessonIntroBoxLine =>
+      'Se, numa linha (ou coluna), um número só pode ir para dentro de um quadrado, tem de ir para ali nesse quadrado. Por isso, não pode ir para as outras células do quadrado.';
+
+  @override
+  String get lessonIntroNakedPair =>
+      'Se duas células de uma linha, coluna ou quadrado só podem levar os mesmos dois números, esses números vão para essas duas células. Nenhuma outra célula dessa unidade os pode levar.';
+
+  @override
+  String get lessonIntroHiddenPair =>
+      'Se dois números só cabem nas mesmas duas células de uma linha, coluna ou quadrado, essas células têm de os levar. Os outros candidatos dessas duas células saem.';
+
+  @override
+  String get lessonIntroNakedTriple =>
+      'Se três células de uma unidade só podem levar três números entre elas, esses três números vão para essas células. O resto da unidade não os pode levar.';
+
+  @override
+  String get lessonIntroXWing =>
+      'Se, em duas linhas, um número só cabe em duas células em cada uma, e essas células estão nas mesmas duas colunas, o número fica num canto de cada linha. Seja como for, essas colunas recebem-no ali, por isso não pode ir para mais nenhum sítio delas.';
+
+  @override
   String get optionsTitle => 'Opções';
 
   @override

@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B3.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B4.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -65,10 +65,12 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   needed (the coach's steps, counted by technique), then each hint and
   mistake with its time and cell; a mistake shows the logical step that was
   available just before it. The events are saved with the game.
-- **B4. Guided lessons (M–L, needs B1).** One short lesson per technique,
-  played on a prepared board: the app explains, the player makes the move.
-  Finished lessons are kept, and a level suggests its lesson the first time
-  it is played.
+- ~~**B4. Guided lessons (M–L, needs B1).**~~ Done on 2026-11-17: eight
+  lessons, one per coach technique, each on a real board where that
+  technique is the next step. The lesson explains the technique and where
+  to look; Show me (or a wrong move) brings the reasoning; the player makes
+  the move. Finished lessons are ticked. Home's links open them, and a level
+  offers its lesson the first time it is played.
 - **B5. Daily puzzle (S–M).** One puzzle a day, the same for everyone,
   generated on the device from the date, so it works offline with no
   account. A calendar shows the days solved and the current streak. Note:
@@ -92,6 +94,13 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   screenshots that show it.
 
 ## Other open items
+
+- **Home with Continue on a phone.** With a saved game, the Continue button
+  pushes the links row (Info, Lessons, language) below the bottom of a
+  390×844 phone held upright, so it needs a scroll (by about 35 px, 62 in
+  Spanish and French). Without a saved game everything fits. Options: a
+  tighter gap, a smaller logo when Continue shows, or Continue in place of
+  the tagline.
 
 - **Upload the website.** The privacy page now lists the statistics and the
   game in progress among the data kept on the device (built on 2026-11-17).

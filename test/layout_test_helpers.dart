@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:foldable/foldable.dart';
 import 'package:sudoku_sagax/l10n/app_localizations.dart';
 import 'package:sudoku_sagax/sagax_theme.dart';
+import 'package:sudoku_sagax/services/lesson_service.dart';
 import 'package:sudoku_sagax/widgets/adaptive_layout.dart';
 import 'package:sudoku_sagax/widgets/coach_card.dart';
 
@@ -223,5 +224,14 @@ Future<void> useHint(WidgetTester tester) async {
   for (int stage = 0; stage < 3 && next.evaluate().isNotEmpty; stage++) {
     await tester.tap(next);
     await tester.pumpAndSettle();
+  }
+}
+
+/// Marks every level as having suggested its lesson already, so no dialog
+/// opens when a test starts a game. Call after the services are loaded.
+Future<void> skipLessonSuggestions() async {
+  await LessonService.instance.load();
+  for (int level = 1; level <= 9; level++) {
+    await LessonService.instance.markSuggested(level);
   }
 }
