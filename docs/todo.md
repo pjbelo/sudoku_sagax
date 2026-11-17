@@ -1,17 +1,28 @@
 # To Do
 
-## Proposed improvements
+## Agreed improvements
 
 These come from the review of the game and of its competitors on 2026-11-16;
-the reasons are in [competition.md](competition.md). **None is agreed yet.**
-Each has an id so it can be picked or dropped; move the agreed ones to
-"Agreed improvements" and delete the rest.
+the reasons are in [competition.md](competition.md). All of them (A1–A4 and
+B1–B9) were agreed on 2026-11-17; none is started yet.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
+### Suggested order
+
+1. **Version 1.1:** A1–A4, B1, B2. A1–A4 catch up with the genre; the coach
+   and graded levels give the app its identity (the answer to Guideline 4.3).
+2. **Version 1.2:** B3, B4, B5. Review and lessons complete the coach; the
+   daily puzzle brings players back.
+3. **Later:** B6, B7, B8, B9.
+
+After each version, redo the screenshots, videos, descriptions and App
+Review notes so the new features come first (see [publishing.md](publishing.md)).
+
 ### A. Catch up with the genre
 
-Things players expect from any sudoku app. They don't set the app apart, but their absence is felt.
+Things players expect from any sudoku app. They don't set the app apart, but
+their absence is felt.
 
 - **A1. Save and resume (S–M).** Keep the game in progress (puzzle, entries,
   notes, hints, mistakes, time) on the device after every move. Home shows
@@ -26,9 +37,13 @@ Things players expect from any sudoku app. They don't set the app apart, but the
   - "Fill notes": one tap writes every candidate, for players who don't
     enjoy the bookkeeping. An option, off by default on levels 1–5.
   - Haptic feedback on entries, errors and the win (follows a new option).
-- **A4. Mark conflicts (S).** Optionally show two equal digits in the same
-  row, column or box. Unlike "Show errors", it doesn't use the solution, so
-  it gives nothing away.
+- **A4. Mark conflicts (S).** A new option, "Mark conflicts", **on by
+  default**, which the player can switch off in Options. When on, two equal
+  digits in the same row, column or box are marked. Unlike "Show errors", it
+  doesn't use the solution, so it gives nothing away. Both options can be on
+  at once, so the conflict mark must not be confused with Show errors' red.
+  The new default goes in `SettingsService` (and "Restore defaults" turns it
+  back on), its test and the defaults listed in CLAUDE.md.
 
 ### B. Set the app apart
 
@@ -64,33 +79,20 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   app versions, so the daily generator has to be kept as it is once shipped.
 - **B6. Accessibility (M).** Make the board readable by VoiceOver and
   TalkBack (each cell announces its row, column, digit, notes and whether it
-  is a given), mark errors and hints with a shape as well as a colour, and
-  add a high-contrast option. Mainstream sudoku apps largely skip this.
+  is a given), mark errors, conflicts (A4) and hints with a shape as well as
+  a colour, and add a high-contrast option. Mainstream sudoku apps largely
+  skip this.
 - **B7. Game Center and Google Play Games (M).** Leaderboards for the best
-  time at each level and for the daily puzzle, plus achievements (first
-  win at each level, win without hints, seven-day streak, a technique
-  learned). Needs setup in App Store Connect and Play Console, as was done
-  for MasterCode.
+  time at each level and for the daily puzzle (needs B5), plus achievements
+  (first win at each level, win without hints, seven-day streak, a technique
+  learned, which needs B4). Needs setup in App Store Connect and Play
+  Console, as was done for MasterCode.
 - **B8. Share a puzzle (S).** A short code or link for the puzzle just
   played, so a friend can solve the same grid and compare times.
 - **B9. Light theme (S–M).** A light version of the Sagax theme that
-  follows the system setting. Affects the screenshots of every sister app's
-  look, so decide it for the brand, not only for this app.
-
-### Suggested order
-
-1. **Version 1.1:** A1, B1, B2, A2. Save and resume removes the biggest
-   annoyance; the coach and graded levels give the app its identity.
-2. **Version 1.2:** B3, B4, B5, A3. Review and lessons complete the coach;
-   the daily puzzle brings players back.
-3. **Later:** B6, B7, A4, B8, B9.
-
-After each version, redo the screenshots, videos, descriptions and App
-Review notes so the new features come first (see [publishing.md](publishing.md)).
-
-## Agreed improvements
-
-None yet.
+  follows the system setting. The theme is shared with the sister apps, so
+  plan the light palette for the brand, not only for this app, and redo the
+  screenshots that show it.
 
 ## Other open items
 
