@@ -216,6 +216,60 @@ class AppLocalizationsEn extends AppLocalizations {
       'All scores for every level will be deleted. This cannot be undone.';
 
   @override
+  String get bestTimes => 'Best times';
+
+  @override
+  String get statistics => 'Statistics';
+
+  @override
+  String get statPlayed => 'Played';
+
+  @override
+  String get statSolved => 'Solved';
+
+  @override
+  String get statBestTime => 'Best time';
+
+  @override
+  String get statAverageTime => 'Average time';
+
+  @override
+  String get statNoHints => 'Without hints';
+
+  @override
+  String get statNoMistakes => 'Without mistakes';
+
+  @override
+  String get streakCurrent => 'Day streak';
+
+  @override
+  String get streakBest => 'Best streak';
+
+  @override
+  String streakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '$count day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get streakNote => 'A day counts when you solve at least one puzzle.';
+
+  @override
+  String get clearStats => 'Reset statistics';
+
+  @override
+  String get clearStatsTitle => 'Reset the statistics?';
+
+  @override
+  String get clearStatsMessage =>
+      'The statistics of every level and the day streaks will be deleted. This cannot be undone.';
+
+  @override
   String get cancel => 'Cancel';
 
   @override

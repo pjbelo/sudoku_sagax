@@ -217,6 +217,60 @@ class AppLocalizationsDe extends AppLocalizations {
       'Alle Ergebnisse aller Level werden gelöscht. Dies kann nicht rückgängig gemacht werden.';
 
   @override
+  String get bestTimes => 'Bestzeiten';
+
+  @override
+  String get statistics => 'Statistik';
+
+  @override
+  String get statPlayed => 'Gespielt';
+
+  @override
+  String get statSolved => 'Gelöst';
+
+  @override
+  String get statBestTime => 'Bestzeit';
+
+  @override
+  String get statAverageTime => 'Durchschnitt';
+
+  @override
+  String get statNoHints => 'Ohne Tipps';
+
+  @override
+  String get statNoMistakes => 'Ohne Fehler';
+
+  @override
+  String get streakCurrent => 'Tage in Folge';
+
+  @override
+  String get streakBest => 'Beste Serie';
+
+  @override
+  String streakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tage',
+      one: '$count Tag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get streakNote => 'Ein Tag zählt, wenn du mindestens ein Rätsel löst.';
+
+  @override
+  String get clearStats => 'Statistik zurücksetzen';
+
+  @override
+  String get clearStatsTitle => 'Statistik zurücksetzen?';
+
+  @override
+  String get clearStatsMessage =>
+      'Die Statistik aller Level und die Tagesserien werden gelöscht. Dies kann nicht rückgängig gemacht werden.';
+
+  @override
   String get cancel => 'Abbrechen';
 
   @override

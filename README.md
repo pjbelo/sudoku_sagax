@@ -76,11 +76,12 @@ lib/
     settings_service.dart      Options + language (ChangeNotifier, persisted)
     scoreboard_service.dart    Top-10 times per level (persisted)
     saved_game_service.dart    The game in progress, for Continue (persisted)
+    statistics_service.dart    Games and wins per level, day streak (persisted)
   screens/
     home_screen.dart           Logo, 3×3 level selector, Play, Continue, Scoreboard, Options, Info, language
     game_screen.dart           Board, stats, controls, number pad, pause, win bar + summary
     options_screen.dart        The four switches + Restore defaults
-    scoreboard_screen.dart     Per-level best times
+    scoreboard_screen.dart     Per-level best times and statistics
     info_screen.dart           How to play, Brain Benefits, scientific references, credits
   widgets/                     SudokuBoard, NumberPad, LevelSelector, SudokuLogo, confirm dialog, fade route
   l10n/                        .arb sources + generated AppLocalizations
@@ -169,7 +170,8 @@ Firebase. Event names follow Slidox:
 `level_completed` · `next_level` · `same_level` · `play_again` ·
 `back_to_menu` · `game_left` · `continue_selected` · `game_resumed` ·
 `saved_game_replaced` · `option_changed` · `options_restored` ·
-`scoreboard_opened` · `scoreboard_cleared` · `options_opened` · `info_opened` ·
+`scoreboard_opened` · `scoreboard_cleared` · `statistics_viewed` ·
+`statistics_cleared` · `options_opened` · `info_opened` ·
 `language_changed`
 
 Parameter values are strings or numbers; booleans are sent as 0/1.

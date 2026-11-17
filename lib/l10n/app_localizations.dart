@@ -476,6 +476,96 @@ abstract class AppLocalizations {
   /// **'All scores for every level will be deleted. This cannot be undone.'**
   String get clearScoresMessage;
 
+  /// No description provided for @bestTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Best times'**
+  String get bestTimes;
+
+  /// No description provided for @statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// No description provided for @statPlayed.
+  ///
+  /// In en, this message translates to:
+  /// **'Played'**
+  String get statPlayed;
+
+  /// No description provided for @statSolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Solved'**
+  String get statSolved;
+
+  /// No description provided for @statBestTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Best time'**
+  String get statBestTime;
+
+  /// No description provided for @statAverageTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Average time'**
+  String get statAverageTime;
+
+  /// No description provided for @statNoHints.
+  ///
+  /// In en, this message translates to:
+  /// **'Without hints'**
+  String get statNoHints;
+
+  /// No description provided for @statNoMistakes.
+  ///
+  /// In en, this message translates to:
+  /// **'Without mistakes'**
+  String get statNoMistakes;
+
+  /// No description provided for @streakCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Day streak'**
+  String get streakCurrent;
+
+  /// No description provided for @streakBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best streak'**
+  String get streakBest;
+
+  /// No description provided for @streakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{{count} day} other{{count} days}}'**
+  String streakDays(int count);
+
+  /// No description provided for @streakNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A day counts when you solve at least one puzzle.'**
+  String get streakNote;
+
+  /// No description provided for @clearStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset statistics'**
+  String get clearStats;
+
+  /// No description provided for @clearStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset the statistics?'**
+  String get clearStatsTitle;
+
+  /// No description provided for @clearStatsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The statistics of every level and the day streaks will be deleted. This cannot be undone.'**
+  String get clearStatsMessage;
+
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:

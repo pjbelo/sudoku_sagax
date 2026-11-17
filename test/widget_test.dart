@@ -7,6 +7,7 @@ import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
+import 'package:sudoku_sagax/services/statistics_service.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
 
@@ -27,6 +28,7 @@ void main() {
     await SettingsService.instance.load();
     await ScoreboardService.instance.load();
     await SavedGameService.instance.load();
+    await StatisticsService.instance.load();
   });
 
   testWidgets('home shows the level selector and menu', (tester) async {
@@ -70,6 +72,12 @@ void main() {
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
     expect(find.text('Hints: 35 · Mistakes: 0'), findsOneWidget);
+    final stats = StatisticsService.instance.levelStats(1);
+    expect(stats.started, 1);
+    expect(stats.solved, 1);
+    expect(stats.solvedWithoutHints, 0);
+    expect(stats.solvedWithoutMistakes, 1);
+    expect(StatisticsService.instance.currentStreak(DateTime.now()), 1);
     expect(find.text('🏆 New best time for this level!'), findsOneWidget);
     expect(ScoreboardService.instance.scoresFor(1), hasLength(1));
     // 35 hints × 30 s penalty.
@@ -85,6 +93,11 @@ void main() {
     await tester.tap(find.text('Scoreboard'));
     await tester.pumpAndSettle();
     expect(find.text('🥇'), findsOneWidget);
+
+    await tester.tap(find.text('Statistics'));
+    await tester.pumpAndSettle();
+    expect(find.text('1 · 100%'), findsOneWidget); // solved
+    expect(find.text('1 day'), findsNWidgets(2)); // both streaks
   });
 
   testWidgets('show errors adds the mistakes counter', (tester) async {
@@ -144,6 +157,7 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
     expect(saves.hasSavedGame, isFalse);
+    expect(StatisticsService.instance.levelStats(1).started, 0);
     expect(find.textContaining('Continue'), findsNothing);
 
     // One hint, then Back: no confirmation, and Home offers Continue.
@@ -164,6 +178,8 @@ void main() {
     await tester.tap(find.text('Hint +30s'));
     await tester.pumpAndSettle();
     expect(saves.savedGame!.game.hintsUsed, 2);
+    // A continued game is still one game.
+    expect(StatisticsService.instance.levelStats(1).started, 1);
     await tester.pageBack();
     await tester.pumpAndSettle();
 

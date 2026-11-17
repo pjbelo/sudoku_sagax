@@ -219,6 +219,61 @@ class AppLocalizationsFr extends AppLocalizations {
       'Tous les records de tous les niveaux seront supprimés. Cette action est irréversible.';
 
   @override
+  String get bestTimes => 'Meilleurs temps';
+
+  @override
+  String get statistics => 'Statistiques';
+
+  @override
+  String get statPlayed => 'Jouées';
+
+  @override
+  String get statSolved => 'Résolues';
+
+  @override
+  String get statBestTime => 'Meilleur temps';
+
+  @override
+  String get statAverageTime => 'Temps moyen';
+
+  @override
+  String get statNoHints => 'Sans indice';
+
+  @override
+  String get statNoMistakes => 'Sans erreur';
+
+  @override
+  String get streakCurrent => 'Jours d\'affilée';
+
+  @override
+  String get streakBest => 'Meilleure série';
+
+  @override
+  String streakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours',
+      one: '$count jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get streakNote =>
+      'Un jour compte quand vous résolvez au moins une grille.';
+
+  @override
+  String get clearStats => 'Réinitialiser les statistiques';
+
+  @override
+  String get clearStatsTitle => 'Réinitialiser les statistiques ?';
+
+  @override
+  String get clearStatsMessage =>
+      'Les statistiques de tous les niveaux et les séries de jours seront supprimées. Cette action est irréversible.';
+
+  @override
   String get cancel => 'Annuler';
 
   @override

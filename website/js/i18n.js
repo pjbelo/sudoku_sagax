@@ -193,7 +193,7 @@ window.SUDOKU_SAGAX_I18N = {
         [
           "6. Data Storage",
           [
-            "The App plays fully offline. Your options, chosen language and scoreboard are stored only on your device and are never sent to us; they are deleted when you uninstall the App. Analytics and crash data are processed and stored on Google Firebase servers, in accordance with their security and retention policies."
+            "The App plays fully offline. Your options, chosen language, scoreboard, statistics and game in progress are stored only on your device and are never sent to us; they are deleted when you uninstall the App. Analytics and crash data are processed and stored on Google Firebase servers, in accordance with their security and retention policies."
           ],
           null
         ],
@@ -421,7 +421,7 @@ window.SUDOKU_SAGAX_I18N = {
         [
           "6. Armazenamento de Dados",
           [
-            "A Aplicação funciona totalmente offline. As tuas opções, o idioma escolhido e os recordes são guardados apenas no teu dispositivo e nunca nos são enviados; são apagados quando desinstalas a Aplicação. Os dados analíticos e de falhas são processados e armazenados nos servidores da Google Firebase, de acordo com as suas políticas de segurança e retenção."
+            "A Aplicação funciona totalmente offline. As tuas opções, o idioma escolhido, os recordes, as estatísticas e o jogo em curso são guardados apenas no teu dispositivo e nunca nos são enviados; são apagados quando desinstalas a Aplicação. Os dados analíticos e de falhas são processados e armazenados nos servidores da Google Firebase, de acordo com as suas políticas de segurança e retenção."
           ],
           null
         ],
@@ -649,7 +649,7 @@ window.SUDOKU_SAGAX_I18N = {
         [
           "6. Almacenamiento de Datos",
           [
-            "La Aplicación funciona totalmente sin conexión. Tus opciones, el idioma elegido y los récords se guardan solo en tu dispositivo y nunca se nos envían; se eliminan al desinstalar la Aplicación. Los datos analíticos y de fallos se procesan y almacenan en los servidores de Google Firebase, de acuerdo con sus políticas de seguridad y retención."
+            "La Aplicación funciona totalmente sin conexión. Tus opciones, el idioma elegido, los récords, las estadísticas y la partida en curso se guardan solo en tu dispositivo y nunca se nos envían; se eliminan al desinstalar la Aplicación. Los datos analíticos y de fallos se procesan y almacenan en los servidores de Google Firebase, de acuerdo con sus políticas de seguridad y retención."
           ],
           null
         ],
@@ -877,7 +877,7 @@ window.SUDOKU_SAGAX_I18N = {
         [
           "6. Stockage des Données",
           [
-            "L'Application fonctionne entièrement hors ligne. Vos options, la langue choisie et le classement sont enregistrés uniquement sur votre appareil et ne nous sont jamais envoyés ; ils sont supprimés lorsque vous désinstallez l'Application. Les données d'analyse et de plantage sont traitées et stockées sur les serveurs de Google Firebase, conformément à leurs politiques de sécurité et de conservation."
+            "L'Application fonctionne entièrement hors ligne. Vos options, la langue choisie, le classement, les statistiques et la partie en cours sont enregistrés uniquement sur votre appareil et ne nous sont jamais envoyés ; ils sont supprimés lorsque vous désinstallez l'Application. Les données d'analyse et de plantage sont traitées et stockées sur les serveurs de Google Firebase, conformément à leurs politiques de sécurité et de conservation."
           ],
           null
         ],
@@ -1105,7 +1105,7 @@ window.SUDOKU_SAGAX_I18N = {
         [
           "6. Datenspeicherung",
           [
-            "Die App funktioniert vollständig offline. Deine Optionen, die gewählte Sprache und die Bestenliste werden nur auf deinem Gerät gespeichert und nie an uns gesendet; sie werden beim Deinstallieren der App gelöscht. Analyse- und Absturzdaten werden auf den Servern von Google Firebase gemäß deren Sicherheits- und Aufbewahrungsrichtlinien verarbeitet und gespeichert."
+            "Die App funktioniert vollständig offline. Deine Optionen, die gewählte Sprache, die Bestenliste, die Statistik und das laufende Spiel werden nur auf deinem Gerät gespeichert und nie an uns gesendet; sie werden beim Deinstallieren der App gelöscht. Analyse- und Absturzdaten werden auf den Servern von Google Firebase gemäß deren Sicherheits- und Aufbewahrungsrichtlinien verarbeitet und gespeichert."
           ],
           null
         ],

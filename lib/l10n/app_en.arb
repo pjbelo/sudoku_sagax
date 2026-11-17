@@ -107,6 +107,26 @@
   "clearScores": "Clear scoreboard",
   "clearScoresTitle": "Clear the scoreboard?",
   "clearScoresMessage": "All scores for every level will be deleted. This cannot be undone.",
+  "bestTimes": "Best times",
+  "statistics": "Statistics",
+  "statPlayed": "Played",
+  "statSolved": "Solved",
+  "statBestTime": "Best time",
+  "statAverageTime": "Average time",
+  "statNoHints": "Without hints",
+  "statNoMistakes": "Without mistakes",
+  "streakCurrent": "Day streak",
+  "streakBest": "Best streak",
+  "streakDays": "{count, plural, one{{count} day} other{{count} days}}",
+  "@streakDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "streakNote": "A day counts when you solve at least one puzzle.",
+  "clearStats": "Reset statistics",
+  "clearStatsTitle": "Reset the statistics?",
+  "clearStatsMessage": "The statistics of every level and the day streaks will be deleted. This cannot be undone.",
   "cancel": "Cancel",
   "delete": "Delete",
   "infoScreenTitle": "Info",

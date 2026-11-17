@@ -11,15 +11,24 @@ import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/scoreboard_service.dart';
+import '../services/statistics_service.dart';
 import '../widgets/adaptive_layout.dart';
 import '../widgets/confirm_dialog.dart';
 import '../widgets/level_selector.dart';
 
-/// Best times per level: a level picker on top, the top 10 below.
+/// Best times and statistics per level: a switch between the two views and
+/// a level picker on top, the top 10 or the statistics below.
 class ScoreboardScreen extends StatefulWidget {
-  const ScoreboardScreen({super.key, this.initialLevel = 1});
+  const ScoreboardScreen({
+    super.key,
+    this.initialLevel = 1,
+    this.showStatistics = false,
+  });
 
   final int initialLevel;
+
+  /// Opens on the statistics instead of the best times.
+  final bool showStatistics;
 
   @override
   State<ScoreboardScreen> createState() => _ScoreboardScreenState();
@@ -28,7 +37,11 @@ class ScoreboardScreen extends StatefulWidget {
 class _ScoreboardScreenState extends State<ScoreboardScreen> {
   late int _level = widget.initialLevel;
   final _scores = ScoreboardService.instance;
+  final _statistics = StatisticsService.instance;
   final _audio = AudioService.instance;
+
+  /// Statistics instead of the best times.
+  late bool _showStatistics = widget.showStatistics;
 
   static const _medals = ['🥇', '🥈', '🥉'];
 
@@ -50,6 +63,32 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     AnalyticsService.instance.log('scoreboard_cleared');
     await _scores.clear();
     if (mounted) setState(() {});
+  }
+
+  Future<void> _clearStatistics() async {
+    final l10n = AppLocalizations.of(context)!;
+    _click();
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l10n.clearStatsTitle,
+      message: l10n.clearStatsMessage,
+      confirmLabel: l10n.delete,
+      cancelLabel: l10n.cancel,
+      destructive: true,
+    );
+    if (!confirmed) return;
+    AnalyticsService.instance.log('statistics_cleared');
+    await _statistics.clear();
+    if (mounted) setState(() {});
+  }
+
+  void _showView({required bool statistics}) {
+    if (statistics == _showStatistics) return;
+    _click();
+    if (statistics) {
+      AnalyticsService.instance.log('statistics_viewed', {'level': _level});
+    }
+    setState(() => _showStatistics = statistics);
   }
 
   void _selectLevel(int level) {
@@ -78,6 +117,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                _buildViewSwitch(l10n),
+                SizedBox(height: compact ? 8 : 16),
                 LevelSelector(
                   selected: _level,
                   chipSize: (compact ? 52 : 64) * scale,
@@ -90,11 +131,19 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
               ],
             ),
           ),
-          second: _buildList(l10n, maxWidth: listWidth),
+          second: _buildContent(l10n, maxWidth: listWidth),
           // The levels in one row above the list.
           single: Column(
             children: [
               const SizedBox(height: 8),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: listWidth + 48),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: _buildViewSwitch(l10n),
+                ),
+              ),
+              const SizedBox(height: 4),
               ConstrainedBox(
                 // 32 is the selector's own side padding, so that the row of
                 // chips lines up with the list.
@@ -108,12 +157,112 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
               ),
               _buildSummary(l10n),
               const SizedBox(height: 12),
-              Expanded(child: _buildList(l10n, maxWidth: listWidth)),
+              Expanded(child: _buildContent(l10n, maxWidth: listWidth)),
               _buildFooter(l10n),
               const SizedBox(height: 12),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// Best times | Statistics.
+  Widget _buildViewSwitch(AppLocalizations l10n) {
+    final primary = Theme.of(context).primaryColor;
+    return SizedBox(
+      width: double.infinity,
+      child: SegmentedButton<bool>(
+        segments: [
+          // Shrunk to one line in a narrow window, rather than wrapped.
+          ButtonSegment(value: false, label: _oneLine(l10n.bestTimes)),
+          ButtonSegment(value: true, label: _oneLine(l10n.statistics)),
+        ],
+        selected: {_showStatistics},
+        onSelectionChanged: (selection) =>
+            _showView(statistics: selection.first),
+        showSelectedIcon: false,
+        style: SegmentedButton.styleFrom(
+          foregroundColor: AppColors.softSlate,
+          selectedForegroundColor: AppColors.midnightNavy,
+          selectedBackgroundColor: primary,
+          side: BorderSide(color: primary.withValues(alpha: 0.6)),
+          textStyle: GoogleFonts.exo2(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _oneLine(String text) {
+    return FittedBox(fit: BoxFit.scaleDown, child: Text(text, maxLines: 1));
+  }
+
+  Widget _buildContent(AppLocalizations l10n, {required double maxWidth}) {
+    return _showStatistics
+        ? _buildStatistics(l10n, maxWidth: maxWidth)
+        : _buildList(l10n, maxWidth: maxWidth);
+  }
+
+  /// The day streaks, then the counters of the level, at most [maxWidth]
+  /// wide. Like the list, it fills its pane so the margins scroll too.
+  Widget _buildStatistics(AppLocalizations l10n, {required double maxWidth}) {
+    final stats = _statistics.levelStats(_level);
+    final locale = Localizations.localeOf(context).languageCode;
+    String time(int? seconds) => seconds == null ? '–' : formatTime(seconds);
+    final percent = stats.solvedPercent;
+    final solved = percent == null
+        ? '${stats.solved}'
+        : '${stats.solved} · '
+              '${NumberFormat.percentPattern(locale).format(percent / 100)}';
+
+    return LayoutBuilder(
+      builder: (context, constraints) => ListView(
+        padding: EdgeInsets.fromLTRB(
+          max(24, (constraints.maxWidth - maxWidth) / 2),
+          0,
+          max(24, (constraints.maxWidth - maxWidth) / 2),
+          12,
+        ),
+        children: [
+          _StatTiles(
+            tiles: [
+              (
+                l10n.streakCurrent,
+                l10n.streakDays(_statistics.currentStreak(DateTime.now())),
+              ),
+              (l10n.streakBest, l10n.streakDays(_statistics.bestStreak)),
+            ],
+          ),
+          Text(
+            l10n.streakNote,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(fontSize: 13, color: AppColors.softSlate),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            '${l10n.levelLabel} $_level',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.exo2(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.snowWhite,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _StatTiles(
+            tiles: [
+              (l10n.statPlayed, '${stats.started}'),
+              (l10n.statSolved, solved),
+              (l10n.statBestTime, time(stats.bestSeconds)),
+              (l10n.statAverageTime, time(stats.averageSeconds)),
+              (l10n.statNoHints, '${stats.solvedWithoutHints}'),
+              (l10n.statNoMistakes, '${stats.solvedWithoutMistakes}'),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -179,20 +328,27 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     );
   }
 
-  /// Clear scoreboard (once there is something to clear) and Back.
+  Widget _buildClearButton(String label, VoidCallback onPressed) {
+    return TextButton.icon(
+      onPressed: onPressed,
+      icon: const Icon(Icons.delete_outline, color: AppColors.errorRed),
+      label: Text(
+        label,
+        style: GoogleFonts.exo2(fontSize: 15, color: AppColors.errorRed),
+      ),
+    );
+  }
+
+  /// Clear scoreboard or Reset statistics (once there is something to
+  /// clear) and Back.
   Widget _buildFooter(AppLocalizations l10n) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (!_scores.isEmpty)
-          TextButton.icon(
-            onPressed: _clear,
-            icon: const Icon(Icons.delete_outline, color: AppColors.errorRed),
-            label: Text(
-              l10n.clearScores,
-              style: GoogleFonts.exo2(fontSize: 15, color: AppColors.errorRed),
-            ),
-          ),
+        if (!_showStatistics && !_scores.isEmpty)
+          _buildClearButton(l10n.clearScores, _clear),
+        if (_showStatistics && !_statistics.isEmpty)
+          _buildClearButton(l10n.clearStats, _clearStatistics),
         TextButton(
           onPressed: () {
             _click();
@@ -286,6 +442,77 @@ class _ScoreRow extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: rank == 1 ? AppColors.hintAmber : primary,
               fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Labelled values in two columns.
+class _StatTiles extends StatelessWidget {
+  const _StatTiles({required this.tiles});
+
+  /// (label, value) pairs.
+  final List<(String, String)> tiles;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (int i = 0; i < tiles.length; i += 2)
+          Row(
+            children: [
+              Expanded(child: _tile(context, tiles[i])),
+              const SizedBox(width: 10),
+              Expanded(
+                child: i + 1 < tiles.length
+                    ? _tile(context, tiles[i + 1])
+                    : const SizedBox(),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget _tile(BuildContext context, (String, String) tile) {
+    final (label, value) = tile;
+    final primary = Theme.of(context).primaryColor;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.cardDark,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: primary.withValues(alpha: 0.25)),
+      ),
+      child: Column(
+        children: [
+          // One line, so that the two tiles of a row keep the same height.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                color: AppColors.softSlate,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: GoogleFonts.exo2(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: primary,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
             ),
           ),
         ],

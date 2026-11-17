@@ -15,6 +15,7 @@ import 'services/audio_service.dart';
 import 'services/saved_game_service.dart';
 import 'services/scoreboard_service.dart';
 import 'services/settings_service.dart';
+import 'services/statistics_service.dart';
 import 'widgets/adaptive_layout.dart';
 
 Future<void> main() async {
@@ -31,6 +32,7 @@ Future<void> main() async {
   await SettingsService.instance.load();
   await ScoreboardService.instance.load();
   await SavedGameService.instance.load();
+  await StatisticsService.instance.load();
   await AudioService.instance.init();
   runApp(const SudokuSagaxApp());
 }

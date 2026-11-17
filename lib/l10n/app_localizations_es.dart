@@ -217,6 +217,60 @@ class AppLocalizationsEs extends AppLocalizations {
       'Se eliminarán todos los récords de todos los niveles. Esta acción no se puede deshacer.';
 
   @override
+  String get bestTimes => 'Mejores tiempos';
+
+  @override
+  String get statistics => 'Estadísticas';
+
+  @override
+  String get statPlayed => 'Jugadas';
+
+  @override
+  String get statSolved => 'Resueltas';
+
+  @override
+  String get statBestTime => 'Mejor tiempo';
+
+  @override
+  String get statAverageTime => 'Tiempo medio';
+
+  @override
+  String get statNoHints => 'Sin pistas';
+
+  @override
+  String get statNoMistakes => 'Sin errores';
+
+  @override
+  String get streakCurrent => 'Racha de días';
+
+  @override
+  String get streakBest => 'Mejor racha';
+
+  @override
+  String streakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '$count día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get streakNote => 'Un día cuenta cuando resuelves al menos un puzle.';
+
+  @override
+  String get clearStats => 'Restablecer estadísticas';
+
+  @override
+  String get clearStatsTitle => '¿Restablecer las estadísticas?';
+
+  @override
+  String get clearStatsMessage =>
+      'Se eliminarán las estadísticas de todos los niveles y las rachas de días. Esta acción no se puede deshacer.';
+
+  @override
   String get cancel => 'Cancelar';
 
   @override

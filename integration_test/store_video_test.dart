@@ -31,6 +31,7 @@ import 'package:sudoku_sagax/services/audio_service.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
+import 'package:sudoku_sagax/services/statistics_service.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
 import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
@@ -199,6 +200,7 @@ Future<void> _resetState(String lang) async {
   SettingsService.instance.locale = Locale(lang);
   await ScoreboardService.instance.load();
   await SavedGameService.instance.load();
+  await StatisticsService.instance.load();
   for (final s in _seededScores) {
     await ScoreboardService.instance.add(
       _level,

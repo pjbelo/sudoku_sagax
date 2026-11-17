@@ -122,7 +122,7 @@ unplug.
      app interactions, crash logs and diagnostics, and app/device identifiers.
      This data is collected for analytics and crash reporting, not shared
      (Firebase acts as a service provider), and encrypted in transit. Options,
-     scores and the saved game never leave the device. Use Google's
+     scores, statistics and the saved game never leave the device. Use Google's
      [Firebase data disclosure guide](https://firebase.google.com/docs/android/play-data-disclosure);
      Slidox uses the same SDKs plus Performance, so its answers are a superset.
 4. Fill in the **Store listing** (texts from

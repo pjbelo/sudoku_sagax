@@ -12,6 +12,7 @@ import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
+import 'package:sudoku_sagax/services/statistics_service.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
 import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
@@ -26,6 +27,7 @@ void main() {
     await SettingsService.instance.load();
     await ScoreboardService.instance.load();
     await SavedGameService.instance.load();
+    await StatisticsService.instance.load();
   });
 
   group('outer display', () {

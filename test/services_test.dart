@@ -6,6 +6,7 @@ import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
+import 'package:sudoku_sagax/services/statistics_service.dart';
 
 ScoreEntry entry(int seconds, {int hints = 0, int day = 1}) => ScoreEntry(
   seconds: seconds,
@@ -141,6 +142,114 @@ void main() {
         expect(SavedGameService.instance.hasSavedGame, isFalse);
         final prefs = await SharedPreferences.getInstance();
         expect(prefs.getString('saved_game'), isNull);
+      }
+    });
+  });
+
+  group('StatisticsService', () {
+    final stats = StatisticsService.instance;
+    DateTime day(int d, [int hour = 12]) => DateTime(2026, 3, d, hour);
+
+    Future<void> win(int level, int seconds, DateTime now, {int hints = 0}) =>
+        stats.recordWin(
+          level,
+          seconds: seconds,
+          hints: hints,
+          mistakes: seconds.isOdd ? 1 : 0,
+          now: now,
+        );
+
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      await stats.load();
+    });
+
+    test('empty at first', () {
+      expect(stats.isEmpty, isTrue);
+      final level = stats.levelStats(1);
+      expect(level.started, 0);
+      expect(level.bestSeconds, isNull);
+      expect(level.averageSeconds, isNull);
+      expect(level.solvedPercent, isNull);
+      expect(stats.currentStreak(day(1)), 0);
+    });
+
+    test('counts games, times, hints and mistakes per level', () async {
+      for (int i = 0; i < 4; i++) {
+        await stats.recordStart(3);
+      }
+      await win(3, 300, day(1));
+      await win(3, 201, day(1), hints: 2); // odd: one mistake
+      await win(3, 240, day(1));
+
+      final level = stats.levelStats(3);
+      expect(level.started, 4);
+      expect(level.solved, 3);
+      expect(level.solvedPercent, 75);
+      expect(level.bestSeconds, 201);
+      expect(level.averageSeconds, 247);
+      expect(level.solvedWithoutHints, 2);
+      expect(level.solvedWithoutMistakes, 2);
+      expect(stats.levelStats(4).isEmpty, isTrue);
+    });
+
+    test('the solved share never passes 100%', () async {
+      await win(2, 100, day(1)); // a game resumed from before the update
+      expect(stats.levelStats(2).solvedPercent, isNull);
+      await stats.recordStart(2);
+      await win(2, 100, day(1));
+      expect(stats.levelStats(2).solvedPercent, 100);
+    });
+
+    test('day streak: next days add up, a missed day starts again', () async {
+      await win(1, 100, day(1, 23));
+      await win(1, 100, day(1, 8)); // same day: counted once
+      expect(stats.currentStreak(day(1)), 1);
+      await win(1, 100, day(2, 0));
+      await win(1, 100, day(3, 22));
+      expect(stats.currentStreak(day(3)), 3);
+      // Still alive the next day, before that day's first win.
+      expect(stats.currentStreak(day(4, 7)), 3);
+      // A whole day missed: broken.
+      expect(stats.currentStreak(day(5)), 0);
+
+      await win(1, 100, day(6));
+      expect(stats.currentStreak(day(6)), 1);
+      expect(stats.bestStreak, 3);
+    });
+
+    test('day streak across a month end and a clock change', () async {
+      // Europe changes the clocks on the last Sunday of March (the 29th).
+      await win(1, 100, DateTime(2026, 3, 28, 23, 30));
+      await win(1, 100, DateTime(2026, 3, 29, 0, 30));
+      await win(1, 100, DateTime(2026, 3, 30, 9));
+      await win(1, 100, DateTime(2026, 3, 31, 9));
+      await win(1, 100, DateTime(2026, 4, 1, 9));
+      expect(stats.currentStreak(DateTime(2026, 4, 1, 20)), 5);
+    });
+
+    test('persists and clears', () async {
+      await stats.recordStart(9);
+      await win(9, 1234, day(1));
+      await stats.load(); // read back from storage
+      expect(stats.levelStats(9).started, 1);
+      expect(stats.levelStats(9).bestSeconds, 1234);
+      expect(stats.currentStreak(day(2)), 1);
+      expect(stats.bestStreak, 1);
+
+      await stats.clear();
+      await stats.load();
+      expect(stats.isEmpty, isTrue);
+      expect(stats.currentStreak(day(1)), 0);
+    });
+
+    test('damaged or old-format data is dropped instead of crashing', () async {
+      for (final raw in ['not json', '{"version": 0}', '{"version": 1}']) {
+        SharedPreferences.setMockInitialValues({'statistics': raw});
+        await stats.load();
+        expect(stats.isEmpty, isTrue);
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getString('statistics'), isNull);
       }
     });
   });

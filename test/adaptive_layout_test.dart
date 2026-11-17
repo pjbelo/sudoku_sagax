@@ -15,6 +15,7 @@ import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
+import 'package:sudoku_sagax/services/statistics_service.dart';
 import 'package:sudoku_sagax/widgets/adaptive_layout.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
 import 'package:sudoku_sagax/widgets/number_pad.dart';
@@ -47,7 +48,21 @@ void main() {
     await SettingsService.instance.load();
     SettingsService.instance.showErrors = true; // the widest row of stats
     await ScoreboardService.instance.load();
+    // Long values for the statistics: an hour-long win and a 3-digit count.
+    final stats = StatisticsService.instance;
+    await stats.load();
+    for (int i = 0; i < 120; i++) {
+      await stats.recordStart(1);
+    }
+    await stats.recordWin(
+      1,
+      seconds: 4567,
+      hints: 0,
+      mistakes: 2,
+      now: DateTime.now(),
+    );
     await SavedGameService.instance.load();
+    await StatisticsService.instance.load();
   });
 
   group('no screen overflows', () {
@@ -72,6 +87,7 @@ void main() {
       'home': const HomeScreen(),
       'game': const GameScreen(),
       'scoreboard': const ScoreboardScreen(),
+      'statistics': const ScoreboardScreen(showStatistics: true),
       'options': const OptionsScreen(),
       'info': const InfoScreen(),
     };
@@ -452,6 +468,63 @@ void main() {
       final firstRow = tester.getTopLeft(find.text('#4'));
       expect(list.left, 0); // it fills the width, so its margins scroll too
       expect(firstChip.left, closeTo(firstRow.dx, 30));
+    });
+  });
+
+  group('statistics', () {
+    testWidgets('the switch shows the statistics of the level', (
+      tester,
+    ) async {
+      await pumpScreen(tester, const ScoreboardScreen(), phonePortrait);
+      expect(find.text('#4'), findsOneWidget);
+      expect(find.text('Played'), findsNothing);
+
+      await tester.tap(find.text('Statistics'));
+      await tester.pumpAndSettle();
+      expect(find.text('#4'), findsNothing);
+      expect(find.text('120'), findsOneWidget); // played
+      expect(find.text('1 · 1%'), findsOneWidget); // solved
+      expect(find.text('1:16:07'), findsNWidgets(2)); // best and average
+      expect(find.text('1 day'), findsNWidgets(2)); // both streaks
+      expect(find.text('Reset statistics'), findsOneWidget);
+
+      // Another level has nothing yet.
+      await tester.tap(
+        find.descendant(
+          of: find.byType(LevelSelector),
+          matching: find.text('2'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('–'), findsNWidgets(2));
+    });
+
+    testWidgets('landscape: the switch sits above the levels', (tester) async {
+      await pumpScreen(
+        tester,
+        const ScoreboardScreen(showStatistics: true),
+        ipad13Landscape,
+      );
+      final selector = tester.getRect(find.byType(LevelSelector));
+      final switcher = tester.getRect(find.byType(SegmentedButton<bool>));
+      expect(switcher.bottom, lessThan(selector.top));
+      expect(tester.getRect(find.text('Played')).left, greaterThan(688));
+    });
+
+    testWidgets('Reset statistics asks, then clears them', (tester) async {
+      await pumpScreen(
+        tester,
+        const ScoreboardScreen(showStatistics: true),
+        phonePortrait,
+      );
+      await tester.tap(find.text('Reset statistics'));
+      await tester.pumpAndSettle();
+      expect(find.text('Reset the statistics?'), findsOneWidget);
+      await tester.tap(find.text('Delete'));
+      await tester.pumpAndSettle();
+      expect(StatisticsService.instance.isEmpty, isTrue);
+      expect(find.text('Reset statistics'), findsNothing);
+      expect(find.text('0 days'), findsNWidgets(2));
     });
   });
 

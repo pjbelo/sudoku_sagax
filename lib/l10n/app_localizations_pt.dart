@@ -217,6 +217,60 @@ class AppLocalizationsPt extends AppLocalizations {
       'Todos os recordes de todos os níveis serão apagados. Esta ação não pode ser desfeita.';
 
   @override
+  String get bestTimes => 'Melhores tempos';
+
+  @override
+  String get statistics => 'Estatísticas';
+
+  @override
+  String get statPlayed => 'Jogados';
+
+  @override
+  String get statSolved => 'Resolvidos';
+
+  @override
+  String get statBestTime => 'Melhor tempo';
+
+  @override
+  String get statAverageTime => 'Tempo médio';
+
+  @override
+  String get statNoHints => 'Sem ajudas';
+
+  @override
+  String get statNoMistakes => 'Sem erros';
+
+  @override
+  String get streakCurrent => 'Dias seguidos';
+
+  @override
+  String get streakBest => 'Melhor sequência';
+
+  @override
+  String streakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias',
+      one: '$count dia',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get streakNote => 'Um dia conta quando resolves pelo menos um puzzle.';
+
+  @override
+  String get clearStats => 'Repor estatísticas';
+
+  @override
+  String get clearStatsTitle => 'Repor as estatísticas?';
+
+  @override
+  String get clearStatsMessage =>
+      'As estatísticas de todos os níveis e as sequências de dias serão apagadas. Esta ação não pode ser desfeita.';
+
+  @override
   String get cancel => 'Cancelar';
 
   @override

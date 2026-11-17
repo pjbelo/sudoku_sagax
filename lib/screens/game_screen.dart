@@ -15,6 +15,7 @@ import '../services/audio_service.dart';
 import '../services/saved_game_service.dart';
 import '../services/scoreboard_service.dart';
 import '../services/settings_service.dart';
+import '../services/statistics_service.dart';
 import '../widgets/adaptive_layout.dart';
 import '../widgets/duo_layout.dart';
 import '../widgets/fade_route.dart';
@@ -74,6 +75,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   /// Scoreboard position of the last win (null = outside the top 10).
   int? _rank;
+
+  /// Whether this game already counts as started in the statistics. That
+  /// happens at the first move, so opening a game and leaving doesn't count.
+  bool _countedAsStarted = false;
 
   bool get _paused => _userPaused || _appPaused;
 
@@ -154,6 +159,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _solved = false;
     _showWinBar = false;
     _rank = null;
+    _countedAsStarted = false;
     // A new game replaces the saved one (the home screen asks first).
     unawaited(_savedGames.clear());
     _analytics.log('game_session_start', {
@@ -170,6 +176,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _level = saved.level;
     _game = saved.game;
     _seconds = saved.seconds;
+    _countedAsStarted = true; // counted when it was first played
     _analytics.log('game_resumed', {'level': _level, 'seconds': _seconds});
   }
 
@@ -181,10 +188,18 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   void _saveProgress() {
     if (_solved) return;
     if (_game.hasProgress) {
+      _countStart();
       unawaited(_savedGames.save(_game, _seconds));
     } else {
       unawaited(_savedGames.clear());
     }
+  }
+
+  /// Counts the game as started in the statistics, once.
+  void _countStart() {
+    if (_countedAsStarted) return;
+    _countedAsStarted = true;
+    unawaited(StatisticsService.instance.recordStart(_level));
   }
 
   /// Back, from any layout: the game stays saved for Continue.
@@ -328,6 +343,16 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _selected = null;
     unawaited(_savedGames.clear()); // nothing left to continue
     unawaited(_audio.playSfx(AudioService.winSfx));
+    _countStart(); // in case the winning move was the first one
+    unawaited(
+      StatisticsService.instance.recordWin(
+        _level,
+        seconds: _seconds,
+        hints: _game.hintsUsed,
+        mistakes: _game.mistakes,
+        now: DateTime.now(),
+      ),
+    );
     final rank = await ScoreboardService.instance.add(
       _level,
       ScoreEntry(

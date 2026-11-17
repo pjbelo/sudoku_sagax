@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1.
+B1–B9) were agreed on 2026-11-17. Done: A1, A2.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -27,9 +27,10 @@ their absence is felt.
 - ~~**A1. Save and resume (S–M).**~~ Done on 2026-11-17: the game is saved
   after every move, in the background and on Back (which no longer asks);
   Home shows Continue, and Play asks before replacing the saved game.
-- **A2. Statistics (S–M).** Per level: games started and solved, best and
-  average time, wins without hints, wins without mistakes, current and best
-  streak of days played. A new screen beside the scoreboard.
+- ~~**A2. Statistics (S–M).**~~ Done on 2026-11-17, as a Statistics view
+  beside Best times on the scoreboard screen: per level, games played (from
+  the first move) and solved, best and average time, wins without hints or
+  mistakes; and the current and best streak of days with a solved puzzle.
 - **A3. Easier entry (S each).**
   - Digit-first entry: pick a number, then tap the cells that take it.
   - Redo, next to Undo.
@@ -95,11 +96,9 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
 
 ## Other open items
 
-- **Privacy page: data kept on the device.** It lists the options, the
-  language and the scoreboard; A1 adds the game in progress and A2 will add
-  statistics. Once A2 is done, add both to `website/privacy.html` and
-  `website/js/i18n.js` (5 languages), rerun `node website/tools/build.js` and
-  upload. Nothing new is collected, so the Firebase answers stay as they are.
+- **Upload the website.** The privacy page now lists the statistics and the
+  game in progress among the data kept on the device (built on 2026-11-17).
+  Upload `website/` to the Plesk document root with the 1.1 release.
 
 - **Benefit 6 wording ("reduced stress").** `benefit6Desc` says flow "is
   linked to enjoyment and reduced stress", but [research.md](research.md)
