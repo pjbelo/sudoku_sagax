@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/sudoku_game.dart';
+import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/l10n/app_localizations.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/screens/home_screen.dart';
 import 'package:sudoku_sagax/screens/info_screen.dart';
 import 'package:sudoku_sagax/screens/options_screen.dart';
 import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
+import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/widgets/adaptive_layout.dart';
@@ -29,6 +32,13 @@ Map<String, Object> _fullScoreboard() {
   return {'scores_level_1': jsonEncode(entries)};
 }
 
+/// A level 8 game left unfinished after an hour, for the Continue button
+/// (the longest label: two-digit hours never happen in practice).
+Future<void> _saveUnfinishedGame() async {
+  final game = SudokuGame(generatePuzzle(8, seed: 1))..hint();
+  await SavedGameService.instance.save(game, 4567);
+}
+
 void main() {
   setUpAll(() => GoogleFonts.config.allowRuntimeFetching = false);
 
@@ -37,6 +47,7 @@ void main() {
     await SettingsService.instance.load();
     SettingsService.instance.showErrors = true; // the widest row of stats
     await ScoreboardService.instance.load();
+    await SavedGameService.instance.load();
   });
 
   group('no screen overflows', () {
@@ -73,6 +84,11 @@ void main() {
             await pumpScreen(tester, screen, window, locale: locale);
             await tester.pumpWidget(const SizedBox());
           }
+          // Home again, with Continue for a game left unfinished.
+          await _saveUnfinishedGame();
+          await pumpScreen(tester, const HomeScreen(), window, locale: locale);
+          expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
+          await tester.pumpWidget(const SizedBox());
         });
       }
     }
@@ -145,6 +161,65 @@ void main() {
       expect(tester.getRect(find.text('PLAY')).left, greaterThan(688));
     });
 
+    testWidgets('Continue fits without scrolling on phones', (tester) async {
+      await _saveUnfinishedGame();
+      // Spanish has the tallest home screen (its tagline takes two lines).
+      for (final locale in const [Locale('en'), Locale('es')]) {
+        for (final window in [phonePortrait, phoneLandscape, duoOuter]) {
+          await pumpScreen(tester, const HomeScreen(), window, locale: locale);
+          await waitForFonts(tester);
+          final bottom = window.size.height - window.padding.bottom;
+          for (final icon in [
+            Icons.play_arrow_rounded, // Continue
+            Icons.emoji_events_outlined, // Scoreboard
+          ]) {
+            expect(
+              tester.getRect(find.byIcon(icon)).bottom,
+              lessThanOrEqualTo(bottom),
+              reason: '${window.size}, ${locale.languageCode}',
+            );
+          }
+        }
+      }
+    });
+
+    testWidgets('Continue under Play in one column, under the brand in two', (
+      tester,
+    ) async {
+      await _saveUnfinishedGame();
+      Rect continueButton() => tester.getRect(
+        find.ancestor(
+          of: find.byIcon(Icons.play_arrow_rounded),
+          matching: find.byType(OutlinedButton),
+        ),
+      );
+
+      await pumpScreen(tester, const HomeScreen(), phonePortrait);
+      expect(find.text('Continue · Level 8 · 1:16:07'), findsOneWidget);
+      final play = tester.getRect(find.text('PLAY'));
+      expect(continueButton().top, greaterThan(play.bottom));
+      expect(
+        continueButton().bottom,
+        lessThan(tester.getRect(find.text('Scoreboard')).top),
+      );
+
+      await pumpScreen(tester, const HomeScreen(), ipad13Landscape);
+      final tagline = tester.getRect(
+        find.text('Fill the grid, sharpen your mind'),
+      );
+      expect(continueButton().right, lessThan(688));
+      expect(continueButton().top, greaterThan(tagline.bottom));
+    });
+
+    testWidgets('Continue leaves out the time with the timer off', (
+      tester,
+    ) async {
+      await _saveUnfinishedGame();
+      SettingsService.instance.timer = false;
+      await pumpScreen(tester, const HomeScreen(), phonePortrait);
+      expect(find.text('Continue · Level 8'), findsOneWidget);
+    });
+
     testWidgets('chips grow with the screen', (tester) async {
       await pumpScreen(tester, const HomeScreen(), ipad13Landscape);
       final tablet = tester.getSize(find.byType(LevelSelector)).width;
@@ -190,15 +265,18 @@ void main() {
       expect(find.byType(AppBar), findsOneWidget);
     });
 
-    testWidgets('tablet in landscape: Back asks before leaving', (
+    testWidgets('tablet in landscape: Back keeps the game for Continue', (
       tester,
     ) async {
-      await pumpScreen(tester, const GameScreen(), ipad13Landscape);
+      await pumpScreen(tester, const HomeScreen(), ipad13Landscape);
+      await tester.tap(find.text('PLAY'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Hint +30s'));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
-      expect(find.text('Keep playing'), findsOneWidget);
+      expect(find.byType(GameScreen), findsNothing);
+      expect(find.textContaining('Continue · Level 1'), findsOneWidget);
     });
 
     testWidgets('left-handed: the keys on the left in landscape', (

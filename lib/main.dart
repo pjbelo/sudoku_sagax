@@ -12,6 +12,7 @@ import 'sagax_theme.dart';
 import 'screens/home_screen.dart';
 import 'services/analytics_service.dart';
 import 'services/audio_service.dart';
+import 'services/saved_game_service.dart';
 import 'services/scoreboard_service.dart';
 import 'services/settings_service.dart';
 import 'widgets/adaptive_layout.dart';
@@ -29,6 +30,7 @@ Future<void> main() async {
   await _initFirebase();
   await SettingsService.instance.load();
   await ScoreboardService.instance.load();
+  await SavedGameService.instance.load();
   await AudioService.instance.init();
   runApp(const SudokuSagaxApp());
 }

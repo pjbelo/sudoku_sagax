@@ -3,13 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
 import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
+import '../services/saved_game_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
+import '../widgets/confirm_dialog.dart';
 import '../widgets/duo_layout.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
@@ -54,10 +57,60 @@ class _HomeScreenState extends State<HomeScreen> {
         .$2;
   }
 
-  void _open(Widget screen, String event, [Map<String, Object>? parameters]) {
+  Future<void> _open(
+    Widget screen,
+    String event, [
+    Map<String, Object>? parameters,
+  ]) async {
     unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85));
     _analytics.log(event, parameters);
-    Navigator.push(context, fadeRoute<void>(screen));
+    await Navigator.push(context, fadeRoute<void>(screen));
+    // Back home: a game left unfinished now shows Continue.
+    if (mounted) setState(() {});
+  }
+
+  /// Starts a new game at the selected level. It replaces the saved game,
+  /// so the player confirms first when there is one.
+  Future<void> _play() async {
+    final saved = SavedGameService.instance.savedGame;
+    if (saved != null) {
+      final l10n = AppLocalizations.of(context)!;
+      unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85));
+      final replace = await showConfirmDialog(
+        context,
+        title: l10n.newGameTitle,
+        message: l10n.newGameMessage(saved.level),
+        confirmLabel: l10n.newGame,
+        cancelLabel: l10n.cancel,
+        destructive: true,
+      );
+      if (!replace || !mounted) return;
+      _analytics.log('saved_game_replaced', {'level': saved.level});
+    }
+    await _open(GameScreen(initialLevel: _selectedLevel), 'level_selected', {
+      'level': _selectedLevel,
+      'clues': sudokuLevels[_selectedLevel - 1].clues,
+    });
+  }
+
+  /// Opens the saved game where the player left it.
+  void _continue() {
+    final saved = SavedGameService.instance.savedGame;
+    if (saved == null) return;
+    unawaited(
+      _open(GameScreen(savedGame: saved), 'continue_selected', {
+        'level': saved.level,
+      }),
+    );
+  }
+
+  /// "Continue · Level 5 · 12:34" (the time only with the Timer option).
+  String _continueLabel(AppLocalizations l10n, SavedGame saved) {
+    var label = '${l10n.continueGame} · ${l10n.levelLabel} ${saved.level}';
+    if (SettingsService.instance.timer) {
+      label += ' · ${formatTime(saved.seconds)}';
+    }
+    return label;
   }
 
   void _showLanguagePicker() {
@@ -127,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _openInfo() => _open(const InfoScreen(), 'info_opened');
+  void _openInfo() => unawaited(_open(const InfoScreen(), 'info_opened'));
 
   @override
   Widget build(BuildContext context) {
@@ -147,8 +200,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: child,
     );
 
-    final menu = _buildMenu(l10n, compact: compact, gap: gap);
     final links = rail == null ? _buildLinks(l10n) : null;
+    // Continue, for a game left unfinished. In two panes it goes under the
+    // brand, where there is room; in one column, under Play.
+    final saved = SavedGameService.instance.savedGame;
+    final continueButton = saved == null
+        ? null
+        : _buildContinueButton(l10n, saved);
 
     return Scaffold(
       body: Stack(
@@ -161,11 +219,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     _buildBrand(l10n, logoHeight: logoHeight, gap: gap),
+                    if (continueButton != null) ...[
+                      SizedBox(height: gap),
+                      continueButton,
+                    ],
                     if (links != null) ...[SizedBox(height: gap), links],
                   ],
                 ),
               ),
-              second: pane(menu),
+              second: pane(_buildMenu(l10n, compact: compact, gap: gap)),
               single: pane(
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -176,7 +238,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       gap: gap,
                     ),
                     SizedBox(height: gap),
-                    menu,
+                    _buildMenu(
+                      l10n,
+                      compact: compact,
+                      gap: gap,
+                      continueButton: continueButton,
+                    ),
                     if (links != null) ...[
                       SizedBox(height: compact ? 10 : 24 * scale),
                       links,
@@ -253,13 +320,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Level selector, Play, Scoreboard and Options.
+  /// Full-width "Continue · Level 5 · 12:34" button.
+  Widget _buildContinueButton(AppLocalizations l10n, SavedGame saved) {
+    return SizedBox(
+      width: double.infinity,
+      child: _SecondaryButton(
+        icon: Icons.play_arrow_rounded,
+        label: _continueLabel(l10n, saved),
+        onPressed: _continue,
+      ),
+    );
+  }
+
+  /// Level selector, Play, [continueButton] (when given), Scoreboard and
+  /// Options.
   Widget _buildMenu(
     AppLocalizations l10n, {
     required bool compact,
     required double gap,
+    Widget? continueButton,
   }) {
     final scale = uiScaleOf(context);
+    final buttonGap = compact ? 10.0 : 14.0 * scale;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -292,19 +374,15 @@ class _HomeScreenState extends State<HomeScreen> {
         // Botão Jogar
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => _open(
-              GameScreen(initialLevel: _selectedLevel),
-              'level_selected',
-              {
-                'level': _selectedLevel,
-                'clues': sudokuLevels[_selectedLevel - 1].clues,
-              },
-            ),
-            child: Text(l10n.play),
-          ),
+          child: ElevatedButton(onPressed: _play, child: Text(l10n.play)),
         ),
-        SizedBox(height: compact ? 10 : 14 * scale),
+        SizedBox(height: buttonGap),
+
+        // Continuar o jogo guardado
+        if (continueButton != null) ...[
+          continueButton,
+          SizedBox(height: buttonGap),
+        ],
 
         // Recordes + Opções
         Row(

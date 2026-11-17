@@ -34,6 +34,37 @@ class SudokuGame {
       notes = List.filled(81, 0),
       hinted = List.filled(81, false);
 
+  /// Rebuilds a game saved with [toJson]. Throws when the data is
+  /// incomplete or damaged (a [FormatException] or a type error).
+  factory SudokuGame.fromJson(Map<String, dynamic> json) {
+    List<int> numbers(String key) {
+      final list = List<int>.from(json[key] as List);
+      if (list.length != 81) throw FormatException('$key needs 81 cells');
+      return list;
+    }
+
+    final level = json['level'] as int;
+    if (level < 1 || level > sudokuLevels.length) {
+      throw FormatException('Unknown level $level');
+    }
+    final hinted = List<bool>.from(json['hinted'] as List);
+    if (hinted.length != 81) throw const FormatException('hinted needs 81');
+
+    final game = SudokuGame(
+      SudokuPuzzle(
+        level: level,
+        givens: numbers('givens'),
+        solution: numbers('solution'),
+      ),
+    );
+    game.values.setAll(0, numbers('values'));
+    game.notes.setAll(0, numbers('notes'));
+    game.hinted.setAll(0, hinted);
+    game.mistakes = json['mistakes'] as int;
+    game.hintsUsed = json['hintsUsed'] as int;
+    return game;
+  }
+
   final SudokuPuzzle puzzle;
 
   /// Current digit per cell (0 = empty), givens included.
@@ -71,6 +102,16 @@ class SudokuGame {
   }
 
   bool get canUndo => _history.isNotEmpty;
+
+  /// Whether the player has done anything yet: a digit, a note, a hint or a
+  /// mistake. A game without progress isn't worth saving.
+  bool get hasProgress {
+    if (hintsUsed > 0 || mistakes > 0) return true;
+    for (int i = 0; i < 81; i++) {
+      if (values[i] != puzzle.givens[i] || notes[i] != 0) return true;
+    }
+    return false;
+  }
 
   /// How many times [digit] appears on the board.
   int placedCount(int digit) => values.where((v) => v == digit).length;
@@ -166,4 +207,17 @@ class SudokuGame {
     }
     return true;
   }
+
+  /// The game as JSON-friendly data, to keep it on the device. The undo
+  /// history is left out, so a resumed game starts with an empty one.
+  Map<String, Object> toJson() => {
+    'level': puzzle.level,
+    'givens': puzzle.givens,
+    'solution': puzzle.solution,
+    'values': values,
+    'notes': notes,
+    'hinted': hinted,
+    'mistakes': mistakes,
+    'hintsUsed': hintsUsed,
+  };
 }

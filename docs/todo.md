@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17; none is started yet.
+B1–B9) were agreed on 2026-11-17. Done: A1.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -24,10 +24,9 @@ Review notes so the new features come first (see [publishing.md](publishing.md))
 Things players expect from any sudoku app. They don't set the app apart, but
 their absence is felt.
 
-- **A1. Save and resume (S–M).** Keep the game in progress (puzzle, entries,
-  notes, hints, mistakes, time) on the device after every move. Home shows
-  "Continue" when there is one. Today the game is lost when the player
-  leaves the screen or the system closes the app.
+- ~~**A1. Save and resume (S–M).**~~ Done on 2026-11-17: the game is saved
+  after every move, in the background and on Back (which no longer asks);
+  Home shows Continue, and Play asks before replacing the saved game.
 - **A2. Statistics (S–M).** Per level: games started and solved, best and
   average time, wins without hints, wins without mistakes, current and best
   streak of days played. A new screen beside the scoreboard.
@@ -95,6 +94,12 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   screenshots that show it.
 
 ## Other open items
+
+- **Privacy page: data kept on the device.** It lists the options, the
+  language and the scoreboard; A1 adds the game in progress and A2 will add
+  statistics. Once A2 is done, add both to `website/privacy.html` and
+  `website/js/i18n.js` (5 languages), rerun `node website/tools/build.js` and
+  upload. Nothing new is collected, so the Firebase answers stay as they are.
 
 - **Benefit 6 wording ("reduced stress").** `benefit6Desc` says flow "is
   linked to enjoyment and reduced stress", but [research.md](research.md)

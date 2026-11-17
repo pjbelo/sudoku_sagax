@@ -103,17 +103,18 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get leaveGameTitle => 'Quitter cette partie ?';
+  String get continueGame => 'Reprendre';
 
   @override
-  String get leaveGameMessage =>
-      'Votre progression sur cette grille sera perdue.';
+  String get newGameTitle => 'Commencer une nouvelle partie ?';
 
   @override
-  String get leave => 'Quitter';
+  String newGameMessage(int level) {
+    return 'La partie inachevée du niveau $level sera perdue.';
+  }
 
   @override
-  String get stay => 'Continuer';
+  String get newGame => 'Nouvelle partie';
 
   @override
   String get congratulations => 'Félicitations !';

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudoku_sagax/main.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
+import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
@@ -25,6 +26,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await SettingsService.instance.load();
     await ScoreboardService.instance.load();
+    await SavedGameService.instance.load();
   });
 
   testWidgets('home shows the level selector and menu', (tester) async {
@@ -63,6 +65,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Solved!'), findsOneWidget);
     expect(find.text('Congratulations!'), findsOneWidget);
+    expect(SavedGameService.instance.hasSavedGame, isFalse);
 
     await tester.tap(find.text('OK'));
     await tester.pumpAndSettle();
@@ -130,29 +133,58 @@ void main() {
     expect(find.text('Resume'), findsNothing);
   });
 
-  testWidgets('leaving a game in progress asks for confirmation', (
-    tester,
-  ) async {
+  testWidgets('a game left unfinished can be continued', (tester) async {
+    final saves = SavedGameService.instance;
     await pumpApp(tester);
+    expect(find.textContaining('Continue'), findsNothing);
     await tester.tap(find.text('PLAY'));
     await tester.pumpAndSettle();
 
+    // No moves yet: leaving keeps nothing.
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(saves.hasSavedGame, isFalse);
+    expect(find.textContaining('Continue'), findsNothing);
+
+    // One hint, then Back: no confirmation, and Home offers Continue.
+    await tester.tap(find.text('PLAY'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Hint +30s'));
     await tester.pumpAndSettle();
-
     await tester.pageBack();
-    await tester.pumpAndSettle();
-    expect(find.text('Leave this game?'), findsOneWidget);
-
-    await tester.tap(find.text('Keep playing'));
-    await tester.pumpAndSettle();
-    expect(find.byType(GameScreen), findsOneWidget);
-
-    await tester.pageBack();
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Leave'));
     await tester.pumpAndSettle();
     expect(find.byType(GameScreen), findsNothing);
-    expect(find.text('PLAY'), findsOneWidget);
+    expect(saves.savedGame!.game.hintsUsed, 1);
+    expect(find.textContaining('Continue · Level 1 · 0:3'), findsOneWidget);
+
+    // Continue brings back the same game: a second hint adds to the first.
+    await tester.tap(find.textContaining('Continue'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GameScreen), findsOneWidget);
+    await tester.tap(find.text('Hint +30s'));
+    await tester.pumpAndSettle();
+    expect(saves.savedGame!.game.hintsUsed, 2);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    // PLAY would replace the saved game, so it asks first.
+    await tester.tap(find.text('PLAY'));
+    await tester.pumpAndSettle();
+    expect(find.text('Start a new game?'), findsOneWidget);
+    expect(
+      find.text('The unfinished game on level 1 will be lost.'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GameScreen), findsNothing);
+    expect(saves.hasSavedGame, isTrue);
+
+    await tester.tap(find.text('PLAY'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('New game'));
+    await tester.pumpAndSettle();
+    expect(find.byType(GameScreen), findsOneWidget);
+    expect(saves.hasSavedGame, isFalse);
   });
 }

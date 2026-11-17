@@ -12,10 +12,10 @@ import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
+import '../services/saved_game_service.dart';
 import '../services/scoreboard_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
-import '../widgets/confirm_dialog.dart';
 import '../widgets/duo_layout.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
@@ -27,9 +27,13 @@ import '../widgets/sudoku_board.dart';
 // ============================================================
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key, this.initialLevel = 1});
+  const GameScreen({super.key, this.initialLevel = 1, this.savedGame});
 
+  /// The level of a new game.
   final int initialLevel;
+
+  /// A game to continue; [initialLevel] is then ignored.
+  final SavedGame? savedGame;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -39,6 +43,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   final _audio = AudioService.instance;
   final _analytics = AnalyticsService.instance;
   final _settings = SettingsService.instance;
+  final _savedGames = SavedGameService.instance;
   final _focusNode = FocusNode();
 
   /// iPhone Duo side strip for the controls (set in build); null elsewhere.
@@ -72,9 +77,6 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   bool get _paused => _userPaused || _appPaused;
 
-  /// Whether leaving now would throw away work worth a confirmation.
-  bool get _hasProgress => !_solved && (_game.canUndo || _game.hintsUsed > 0);
-
   static final _digitKeys = <LogicalKeyboardKey, int>{
     for (final (i, key) in const [
       LogicalKeyboardKey.digit1,
@@ -106,7 +108,12 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _resetFor(widget.initialLevel.clamp(1, sudokuLevels.length));
+    final saved = widget.savedGame;
+    if (saved != null) {
+      _resume(saved);
+    } else {
+      _resetFor(widget.initialLevel.clamp(1, sudokuLevels.length));
+    }
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
   }
 
@@ -122,7 +129,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Stop the clock whenever the app is not in the foreground.
     final background = state != AppLifecycleState.resumed;
-    if (background != _appPaused) setState(() => _appPaused = background);
+    if (background == _appPaused) return;
+    // The system may close the app from the background: save the clock too.
+    if (background) _saveProgress();
+    setState(() => _appPaused = background);
   }
 
   void _tick() {
@@ -144,6 +154,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _solved = false;
     _showWinBar = false;
     _rank = null;
+    // A new game replaces the saved one (the home screen asks first).
+    unawaited(_savedGames.clear());
     _analytics.log('game_session_start', {
       'level': level,
       'clues': _game.puzzle.clueCount,
@@ -153,7 +165,41 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     });
   }
 
+  /// Continues a game the player left unfinished.
+  void _resume(SavedGame saved) {
+    _level = saved.level;
+    _game = saved.game;
+    _seconds = saved.seconds;
+    _analytics.log('game_resumed', {'level': _level, 'seconds': _seconds});
+  }
+
   void _startLevel(int level) => setState(() => _resetFor(level));
+
+  /// Keeps the game on the device, so it can be continued after leaving the
+  /// screen or the app. Called after every move, when the app goes to the
+  /// background and when the player leaves the screen.
+  void _saveProgress() {
+    if (_solved) return;
+    if (_game.hasProgress) {
+      unawaited(_savedGames.save(_game, _seconds));
+    } else {
+      unawaited(_savedGames.clear());
+    }
+  }
+
+  /// Back, from any layout: the game stays saved for Continue.
+  void _onLeave() {
+    if (_solved) return;
+    _saveProgress();
+    if (_game.hasProgress) {
+      _analytics.log('game_left', {
+        'level': _level,
+        'seconds': _seconds,
+        'hints': _game.hintsUsed,
+        'filled': _game.values.where((v) => v != 0).length,
+      });
+    }
+  }
 
   bool get _canPlay => !_solved && !_paused;
 
@@ -170,6 +216,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       if (_game.toggleNote(i, digit)) {
         unawaited(_audio.playSfx(AudioService.digitSfx, volume: 0.5));
         setState(() {});
+        _saveProgress();
       }
       return;
     }
@@ -182,7 +229,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       unawaited(_audio.playSfx(AudioService.digitSfx, volume: 0.8));
     }
     setState(() {});
-    if (_game.isSolved) unawaited(_onSolved());
+    if (_game.isSolved) {
+      unawaited(_onSolved());
+    } else {
+      _saveProgress();
+    }
   }
 
   void _onErase() {
@@ -191,6 +242,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     if (_game.erase(i)) {
       unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.6));
       setState(() {});
+      _saveProgress();
     }
   }
 
@@ -199,6 +251,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     if (_game.undo()) {
       unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.6));
       setState(() {});
+      _saveProgress();
     }
   }
 
@@ -222,7 +275,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       _seconds += hintPenaltySeconds;
       _selected = cell;
     });
-    if (_game.isSolved) unawaited(_onSolved());
+    if (_game.isSolved) {
+      unawaited(_onSolved());
+    } else {
+      _saveProgress();
+    }
   }
 
   void _onTogglePause() {
@@ -269,6 +326,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     // Set before the await so the clock stops on this exact second.
     _solved = true;
     _selected = null;
+    unawaited(_savedGames.clear()); // nothing left to continue
     unawaited(_audio.playSfx(AudioService.winSfx));
     final rank = await ScoreboardService.instance.add(
       _level,
@@ -339,22 +397,6 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     }
   }
 
-  Future<bool> _confirmLeave() async {
-    final l10n = AppLocalizations.of(context)!;
-    final wasPaused = _userPaused;
-    setState(() => _userPaused = true);
-    final leave = await showConfirmDialog(
-      context,
-      title: l10n.leaveGameTitle,
-      message: l10n.leaveGameMessage,
-      confirmLabel: l10n.leave,
-      cancelLabel: l10n.stay,
-      destructive: true,
-    );
-    if (mounted && !leave) setState(() => _userPaused = wasPaused);
-    return leave;
-  }
-
   // --- UI ---
 
   @override
@@ -371,18 +413,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     final showAppBar = rail == null && !isLaptopPose(context) && !_sideBySide;
 
     return PopScope(
-      canPop: !_hasProgress,
-      onPopInvokedWithResult: (didPop, _) async {
-        if (didPop) return;
-        final leave = await _confirmLeave();
-        if (!leave || !context.mounted) return;
-        _analytics.log('game_abandoned', {
-          'level': _level,
-          'seconds': _seconds,
-          'hints': _game.hintsUsed,
-          'filled': _game.values.where((v) => v != 0).length,
-        });
-        Navigator.of(context).pop();
+      // Leaving needs no confirmation: the game is kept for Continue.
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) _onLeave();
       },
       child: Scaffold(
         appBar: showAppBar

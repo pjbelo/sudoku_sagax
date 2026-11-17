@@ -102,17 +102,18 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get leaveGameTitle => 'Dieses Spiel verlassen?';
+  String get continueGame => 'Fortsetzen';
 
   @override
-  String get leaveGameMessage =>
-      'Dein Fortschritt bei diesem Rätsel geht verloren.';
+  String get newGameTitle => 'Neues Spiel starten?';
 
   @override
-  String get leave => 'Verlassen';
+  String newGameMessage(int level) {
+    return 'Das unfertige Spiel auf Level $level geht verloren.';
+  }
 
   @override
-  String get stay => 'Weiterspielen';
+  String get newGame => 'Neues Spiel';
 
   @override
   String get congratulations => 'Glückwunsch!';

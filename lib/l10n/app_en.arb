@@ -40,10 +40,15 @@
       "seconds": { "type": "int" }
     }
   },
-  "leaveGameTitle": "Leave this game?",
-  "leaveGameMessage": "Your progress on this puzzle will be lost.",
-  "leave": "Leave",
-  "stay": "Keep playing",
+  "continueGame": "Continue",
+  "newGameTitle": "Start a new game?",
+  "newGameMessage": "The unfinished game on level {level} will be lost.",
+  "@newGameMessage": {
+    "placeholders": {
+      "level": { "type": "int" }
+    }
+  },
+  "newGame": "New game",
   "congratulations": "Congratulations!",
   "levelCompleted": "You solved level {level} in {time}!",
   "@levelCompleted": {

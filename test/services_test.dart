@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/sudoku_game.dart';
+import 'package:sudoku_sagax/game/sudoku_generator.dart';
+import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 
@@ -95,6 +98,50 @@ void main() {
       SharedPreferences.setMockInitialValues({'scores_level_3': 'not json'});
       await ScoreboardService.instance.load();
       expect(ScoreboardService.instance.scoresFor(3), isEmpty);
+    });
+  });
+
+  group('SavedGameService', () {
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      await SavedGameService.instance.load();
+    });
+
+    test('none at first', () {
+      expect(SavedGameService.instance.hasSavedGame, isFalse);
+      expect(SavedGameService.instance.savedGame, isNull);
+    });
+
+    test('saves, reads back from storage and clears', () async {
+      final service = SavedGameService.instance;
+      final game = SudokuGame(generatePuzzle(5, seed: 3));
+      final cell = game.values.indexOf(0);
+      game.enterDigit(cell, game.solution[cell]);
+      await service.save(game, 125);
+
+      await service.load(); // read back from storage
+      final saved = service.savedGame!;
+      expect(saved.level, 5);
+      expect(saved.seconds, 125);
+      expect(saved.game.values, game.values);
+
+      // Each read is a new copy: playing it leaves the saved game alone.
+      saved.game.erase(cell);
+      expect(service.savedGame!.game.values[cell], game.solution[cell]);
+
+      await service.clear();
+      await service.load();
+      expect(service.hasSavedGame, isFalse);
+    });
+
+    test('damaged or old-format data is dropped instead of crashing', () async {
+      for (final raw in ['not json', '{"version": 0, "seconds": 3}']) {
+        SharedPreferences.setMockInitialValues({'saved_game': raw});
+        await SavedGameService.instance.load();
+        expect(SavedGameService.instance.hasSavedGame, isFalse);
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.getString('saved_game'), isNull);
+      }
     });
   });
 }

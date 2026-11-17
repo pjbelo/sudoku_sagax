@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/sudoku_game.dart';
+import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/l10n/app_localizations.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/screens/home_screen.dart';
 import 'package:sudoku_sagax/screens/options_screen.dart';
 import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
+import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
@@ -22,6 +25,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await SettingsService.instance.load();
     await ScoreboardService.instance.load();
+    await SavedGameService.instance.load();
   });
 
   group('outer display', () {
@@ -50,15 +54,16 @@ void main() {
       expect(pad.bottom, lessThanOrEqualTo(678 - 34));
     });
 
-    testWidgets('game: Back leaves after the usual confirmation', (
-      tester,
-    ) async {
-      await pumpScreen(tester, const GameScreen(), duoOuter);
+    testWidgets('game: Back keeps the game for Continue', (tester) async {
+      await pumpScreen(tester, const HomeScreen(), duoOuter);
+      await tester.tap(find.text('PLAY'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Hint +30s'));
       await tester.pumpAndSettle();
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
-      expect(find.text('Keep playing'), findsOneWidget);
+      expect(find.byType(GameScreen), findsNothing);
+      expect(find.textContaining('Continue · Level 1'), findsOneWidget);
     });
 
     testWidgets('home: everything fits without scrolling', (tester) async {
@@ -199,11 +204,13 @@ void main() {
     });
 
     testWidgets('a dialog stays on one side of the fold', (tester) async {
-      await pumpScreen(tester, const GameScreen(), duoBook);
-      await tester.tap(find.text('Hint +30s'));
+      // With a saved game, PLAY asks before replacing it.
+      final game = SudokuGame(generatePuzzle(1, seed: 1))..hint();
+      await SavedGameService.instance.save(game, 60);
+      await pumpScreen(tester, const HomeScreen(), duoBook);
+      await tester.tap(find.text('PLAY'));
       await tester.pumpAndSettle();
-      await tester.tap(find.byType(BackButton));
-      await tester.pumpAndSettle();
+      expect(find.text('Start a new game?'), findsOneWidget);
       expect(tester.getRect(find.byType(Dialog)).right, lessThanOrEqualTo(455));
     });
 

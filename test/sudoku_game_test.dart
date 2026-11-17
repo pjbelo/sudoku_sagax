@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -111,6 +112,51 @@ void main() {
     expect(game.isFull, isTrue);
     expect(game.isSolved, isTrue);
     expect(game.hint(), isNull);
+  });
+
+  test('progress: none at the start, then any entry, note or hint', () {
+    expect(game.hasProgress, isFalse);
+    game.toggleNote(empty, 3);
+    expect(game.hasProgress, isTrue);
+    game.erase(empty);
+    expect(game.hasProgress, isFalse);
+    game.hint(preferred: empty);
+    expect(game.hasProgress, isTrue);
+  });
+
+  test('a saved game comes back the same, without undo history', () {
+    final peer = peers[empty].firstWhere((p) => game.values[p] == 0);
+    game.toggleNote(peer, 4);
+    game.enterDigit(empty, wrongDigitFor(empty));
+    game.hint(preferred: peer);
+
+    // Through a JSON string, as the app stores it.
+    final copy = SudokuGame.fromJson(
+      jsonDecode(jsonEncode(game.toJson())) as Map<String, dynamic>,
+    );
+    expect(copy.puzzle.level, 3);
+    expect(copy.puzzle.givens, game.puzzle.givens);
+    expect(copy.solution, game.solution);
+    expect(copy.values, game.values);
+    expect(copy.notes, game.notes);
+    expect(copy.hinted, game.hinted);
+    expect(copy.mistakes, 1);
+    expect(copy.hintsUsed, 1);
+    expect(copy.isLocked(peer), isTrue);
+    expect(copy.canUndo, isFalse);
+  });
+
+  test('damaged saved data is refused', () {
+    final json = game.toJson();
+    expect(
+      () => SudokuGame.fromJson({...json, 'values': [1, 2, 3]}),
+      throwsFormatException,
+    );
+    expect(() => SudokuGame.fromJson({...json, 'level': 12}), throwsException);
+    expect(
+      () => SudokuGame.fromJson({...json}..remove('notes')),
+      throwsA(isA<TypeError>()),
+    );
   });
 
   test('a full grid with a mistake is not solved', () {

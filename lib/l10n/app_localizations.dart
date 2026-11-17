@@ -278,29 +278,29 @@ abstract class AppLocalizations {
   /// **'Hint +{seconds}s'**
   String hint(int seconds);
 
-  /// No description provided for @leaveGameTitle.
+  /// No description provided for @continueGame.
   ///
   /// In en, this message translates to:
-  /// **'Leave this game?'**
-  String get leaveGameTitle;
+  /// **'Continue'**
+  String get continueGame;
 
-  /// No description provided for @leaveGameMessage.
+  /// No description provided for @newGameTitle.
   ///
   /// In en, this message translates to:
-  /// **'Your progress on this puzzle will be lost.'**
-  String get leaveGameMessage;
+  /// **'Start a new game?'**
+  String get newGameTitle;
 
-  /// No description provided for @leave.
+  /// No description provided for @newGameMessage.
   ///
   /// In en, this message translates to:
-  /// **'Leave'**
-  String get leave;
+  /// **'The unfinished game on level {level} will be lost.'**
+  String newGameMessage(int level);
 
-  /// No description provided for @stay.
+  /// No description provided for @newGame.
   ///
   /// In en, this message translates to:
-  /// **'Keep playing'**
-  String get stay;
+  /// **'New game'**
+  String get newGame;
 
   /// No description provided for @congratulations.
   ///
