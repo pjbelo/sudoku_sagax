@@ -522,6 +522,38 @@ class AppLocalizationsEs extends AppLocalizations {
       'Rodea dos números iguales en la misma fila, columna o caja. No usa la solución, así que no revela nada.';
 
   @override
+  String get cellEmpty => 'vacía';
+
+  @override
+  String get cellGiven => 'fija';
+
+  @override
+  String get cellHint => 'pista';
+
+  @override
+  String get cellWrong => 'errónea';
+
+  @override
+  String get cellConflict => 'en conflicto';
+
+  @override
+  String cellNotes(String notes) {
+    return 'notas $notes';
+  }
+
+  @override
+  String numberKey(int digit, int remaining) {
+    return '$digit, faltan $remaining';
+  }
+
+  @override
+  String get optHighContrast => 'Alto contraste';
+
+  @override
+  String get optHighContrastDesc =>
+      'Líneas de la cuadrícula, notas y resaltados más marcados en el tablero. También se activa cuando el sistema pide más contraste.';
+
+  @override
   String get optHints => 'Botón de pista';
 
   @override

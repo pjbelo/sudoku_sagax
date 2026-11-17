@@ -25,7 +25,7 @@ void main() {
   group('SettingsService', () {
     test('defaults: sound ON, timer ON, show errors OFF, hints ON, '
         'left-handed OFF, fill notes on easy levels OFF, vibration ON, '
-        'mark conflicts ON', () async {
+        'mark conflicts ON, high contrast OFF', () async {
       SharedPreferences.setMockInitialValues({});
       final s = SettingsService.instance;
       await s.load();
@@ -37,6 +37,7 @@ void main() {
       expect(s.fillNotesEasy, isFalse);
       expect(s.haptics, isTrue);
       expect(s.markConflicts, isTrue);
+      expect(s.highContrast, isFalse);
       expect(s.isDefault, isTrue);
       expect(s.locale, isNull);
     });
@@ -62,6 +63,7 @@ void main() {
       s.leftHanded = true;
       s.haptics = false;
       s.markConflicts = false;
+      s.highContrast = true;
       s.locale = const Locale('pt');
 
       await s.load(); // read back from storage
@@ -70,6 +72,7 @@ void main() {
       expect(s.leftHanded, isTrue);
       expect(s.haptics, isFalse);
       expect(s.markConflicts, isFalse);
+      expect(s.highContrast, isTrue);
       expect(s.locale, const Locale('pt'));
       expect(s.isDefault, isFalse);
 

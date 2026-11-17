@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B5.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B6.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -78,11 +78,13 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   and a month calendar of the days solved; its game is saved apart from
   Continue. To make room, Options moved to the row of small links (Info,
   Lessons, Options, language).
-- **B6. Accessibility (M).** Make the board readable by VoiceOver and
-  TalkBack (each cell announces its row, column, digit, notes and whether it
-  is a given), mark errors, conflicts (A4) and hints with a shape as well as
-  a colour, and add a high-contrast option. Mainstream sudoku apps largely
-  skip this.
+- ~~**B6. Accessibility (M).**~~ Done on 2026-11-17: VoiceOver and
+  TalkBack read every cell ("row 3, column 5, 7, given"; "…, empty, notes 2
+  4 7"; hint, wrong, conflict) and every key ("5, 3 left"); wrong digits are
+  underlined, hints have a corner dot, conflicts an outline; a High contrast
+  option (off by default, and on by itself when the system asks for more
+  contrast) strengthens the grid lines, notes, highlights and keys. Still
+  worth a pass on a real device with VoiceOver and TalkBack on.
 - **B7. Game Center and Google Play Games (M).** Leaderboards for the best
   time at each level and for the daily puzzle (needs B5), plus achievements
   (first win at each level, win without hints, seven-day streak, a technique

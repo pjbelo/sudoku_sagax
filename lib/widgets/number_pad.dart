@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../game/sudoku_game.dart';
+import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 
 /// Digits 1–9 in a row, or as a 3×3 keypad when [grid] is set. Each key
@@ -19,6 +20,7 @@ class NumberPad extends StatelessWidget {
     required this.onDigit,
     this.height = 58,
     this.grid = false,
+    this.highContrast = false,
   });
 
   final SudokuGame game;
@@ -32,8 +34,13 @@ class NumberPad extends StatelessWidget {
   final double height;
   final bool grid;
 
+  /// Stronger key borders and digits (see [SudokuBoard.highContrast]).
+  final bool highContrast;
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final strong = highContrast || MediaQuery.highContrastOf(context);
     // The digits are sized from the keys, so system text scaling stays out.
     return MediaQuery.withNoTextScaling(
       child: grid
@@ -42,15 +49,21 @@ class NumberPad extends StatelessWidget {
                 for (int first = 1; first <= 7; first += 3)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: _row(first, 3, 4),
+                    child: _row(l10n, first, 3, 4, strong),
                   ),
               ],
             )
-          : _row(1, 9, 2.5),
+          : _row(l10n, 1, 9, 2.5, strong),
     );
   }
 
-  Widget _row(int first, int count, double gap) {
+  Widget _row(
+    AppLocalizations l10n,
+    int first,
+    int count,
+    double gap,
+    bool strong,
+  ) {
     return SizedBox(
       height: height,
       child: Row(
@@ -59,7 +72,7 @@ class NumberPad extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: gap),
-                child: _key(d),
+                child: _key(l10n, d, strong),
               ),
             ),
         ],
@@ -67,17 +80,35 @@ class NumberPad extends StatelessWidget {
     );
   }
 
-  Widget _key(int digit) {
+  Widget _key(AppLocalizations l10n, int digit, bool strong) {
     final remaining = (9 - game.placedCount(digit)).clamp(0, 9);
     final active = digit == activeDigit;
     final Color color;
     if (active) {
       color = AppColors.midnightNavy;
-    } else if (notesMode) {
+    } else if (notesMode && !strong) {
       color = AppColors.softSlate;
     } else {
       color = AppColors.snowWhite;
     }
+    // Screen readers hear "5, 3 left" rather than the two numbers.
+    return Semantics(
+      label: l10n.numberKey(digit, remaining),
+      button: true,
+      selected: active,
+      onTap: () => onDigit(digit),
+      excludeSemantics: true,
+      child: _keyFace(digit, remaining, active, color, strong),
+    );
+  }
+
+  Widget _keyFace(
+    int digit,
+    int remaining,
+    bool active,
+    Color color,
+    bool strong,
+  ) {
     return Opacity(
       opacity: remaining == 0 && !active ? 0.35 : 1,
       child: Material(
@@ -86,8 +117,9 @@ class NumberPad extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(
             color: AppColors.electricCyan.withValues(
-              alpha: notesMode || active ? 0.6 : 0.3,
+              alpha: strong ? 0.9 : (notesMode || active ? 0.6 : 0.3),
             ),
+            width: strong ? 1.5 : 1,
           ),
         ),
         child: InkWell(

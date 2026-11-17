@@ -11,6 +11,7 @@ import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/lesson_service.dart';
+import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
 import '../widgets/coach_card.dart';
 import '../widgets/number_pad.dart';
@@ -194,6 +195,7 @@ class _LessonScreenState extends State<LessonScreen> {
       game: _game,
       selected: null,
       showErrors: false,
+      highContrast: SettingsService.instance.highContrast,
       highlight: _highlight(),
       onCellTap: _onCellTap,
     );
@@ -203,6 +205,7 @@ class _LessonScreenState extends State<LessonScreen> {
     return NumberPad(
       game: _game,
       notesMode: false,
+      highContrast: SettingsService.instance.highContrast,
       onDigit: _onDigit,
       height: height,
       grid: grid,

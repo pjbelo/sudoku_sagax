@@ -519,6 +519,38 @@ class AppLocalizationsEn extends AppLocalizations {
       'Outline two equal digits in the same row, column or box. It doesn\'t use the solution, so it gives nothing away.';
 
   @override
+  String get cellEmpty => 'empty';
+
+  @override
+  String get cellGiven => 'given';
+
+  @override
+  String get cellHint => 'hint';
+
+  @override
+  String get cellWrong => 'wrong';
+
+  @override
+  String get cellConflict => 'conflict';
+
+  @override
+  String cellNotes(String notes) {
+    return 'notes $notes';
+  }
+
+  @override
+  String numberKey(int digit, int remaining) {
+    return '$digit, $remaining left';
+  }
+
+  @override
+  String get optHighContrast => 'High contrast';
+
+  @override
+  String get optHighContrastDesc =>
+      'Stronger grid lines, notes and highlights on the board. Also on when the system asks for more contrast.';
+
+  @override
   String get optHints => 'Hint button';
 
   @override

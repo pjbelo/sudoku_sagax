@@ -1022,6 +1022,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   Widget _buildNumberPad({required double height, bool grid = false}) {
     return NumberPad(
       game: _game,
+      highContrast: _settings.highContrast,
       notesMode: _notesMode,
       activeDigit: _activeDigit,
       onDigit: _onDigit,
@@ -1159,6 +1160,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           highlight: _coachHighlight(),
           showErrors: _settings.showErrors,
           markConflicts: _settings.markConflicts,
+          highContrast: _settings.highContrast,
           onCellTap: _onCellTap,
           hidden: _userPaused,
         ),

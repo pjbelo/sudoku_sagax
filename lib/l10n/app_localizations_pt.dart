@@ -522,6 +522,38 @@ class AppLocalizationsPt extends AppLocalizations {
       'Contorna dois números iguais na mesma linha, coluna ou quadrado. Não usa a solução, por isso não revela nada.';
 
   @override
+  String get cellEmpty => 'vazia';
+
+  @override
+  String get cellGiven => 'pista';
+
+  @override
+  String get cellHint => 'ajuda';
+
+  @override
+  String get cellWrong => 'errado';
+
+  @override
+  String get cellConflict => 'em conflito';
+
+  @override
+  String cellNotes(String notes) {
+    return 'notas $notes';
+  }
+
+  @override
+  String numberKey(int digit, int remaining) {
+    return '$digit, faltam $remaining';
+  }
+
+  @override
+  String get optHighContrast => 'Alto contraste';
+
+  @override
+  String get optHighContrastDesc =>
+      'Linhas da grelha, notas e destaques mais fortes no tabuleiro. Liga-se também quando o sistema pede mais contraste.';
+
+  @override
   String get optHints => 'Botão de ajuda';
 
   @override

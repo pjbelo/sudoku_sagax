@@ -932,6 +932,60 @@ abstract class AppLocalizations {
   /// **'Outline two equal digits in the same row, column or box. It doesn\'t use the solution, so it gives nothing away.'**
   String get optMarkConflictsDesc;
 
+  /// No description provided for @cellEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'empty'**
+  String get cellEmpty;
+
+  /// No description provided for @cellGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'given'**
+  String get cellGiven;
+
+  /// No description provided for @cellHint.
+  ///
+  /// In en, this message translates to:
+  /// **'hint'**
+  String get cellHint;
+
+  /// No description provided for @cellWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'wrong'**
+  String get cellWrong;
+
+  /// No description provided for @cellConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'conflict'**
+  String get cellConflict;
+
+  /// No description provided for @cellNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'notes {notes}'**
+  String cellNotes(String notes);
+
+  /// No description provided for @numberKey.
+  ///
+  /// In en, this message translates to:
+  /// **'{digit}, {remaining} left'**
+  String numberKey(int digit, int remaining);
+
+  /// No description provided for @optHighContrast.
+  ///
+  /// In en, this message translates to:
+  /// **'High contrast'**
+  String get optHighContrast;
+
+  /// No description provided for @optHighContrastDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Stronger grid lines, notes and highlights on the board. Also on when the system asks for more contrast.'**
+  String get optHighContrastDesc;
+
   /// No description provided for @optHints.
   ///
   /// In en, this message translates to:

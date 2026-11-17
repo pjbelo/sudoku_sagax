@@ -12,7 +12,7 @@ import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
 
 /// Sound, Timer, Show errors, Mark conflicts, Hint button, Fill notes on easy levels,
-/// Vibration and Left-handed switches.
+/// Vibration, High contrast and Left-handed switches.
 /// Changes are saved immediately.
 class OptionsScreen extends StatelessWidget {
   const OptionsScreen({super.key});
@@ -114,6 +114,17 @@ class OptionsScreen extends StatelessWidget {
                   _click();
                   settings.haptics = v;
                   _logChange('haptics', v);
+                },
+              ),
+              _OptionCard(
+                icon: Icons.contrast,
+                title: l10n.optHighContrast,
+                description: l10n.optHighContrastDesc,
+                value: settings.highContrast,
+                onChanged: (v) {
+                  _click();
+                  settings.highContrast = v;
+                  _logChange('high_contrast', v);
                 },
               ),
               _OptionCard(

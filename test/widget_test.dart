@@ -8,6 +8,7 @@ import 'package:sudoku_sagax/game/logic_coach.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/main.dart';
+import 'package:sudoku_sagax/sagax_theme.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
 import 'package:sudoku_sagax/services/daily_service.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
@@ -514,5 +515,119 @@ void main() {
     expect(event.digit, wrong);
     expect(event.technique, available.technique);
     expect(event.stepCell, available.cell);
+  });
+
+  group('accessibility', () {
+    late SudokuGame game;
+    late int given;
+    late int empty;
+
+    setUp(() {
+      game = SudokuGame(generatePuzzle(1, seed: 4));
+      given = game.values.indexWhere((v) => v != 0);
+      empty = game.values.indexOf(0);
+    });
+
+    String cellName(int i) => 'row ${rowOf(i) + 1}, column ${colOf(i) + 1}';
+
+    testWidgets('cells and keys speak to screen readers', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await continueGame(tester, game);
+
+      expect(
+        find.bySemanticsLabel(
+          '${cellName(given)}, ${game.values[given]}, given',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel('${cellName(empty)}, empty'),
+        findsOneWidget,
+      );
+      final placed = game.values.where((v) => v == 5).length;
+      expect(find.bySemanticsLabel('5, ${9 - placed} left'), findsOneWidget);
+
+      // Notes are read out too.
+      await tester.tap(find.text('Notes'));
+      await tester.pumpAndSettle();
+      await tapCell(tester, empty);
+      await tapDigit(tester, 3);
+      await tapDigit(tester, 7);
+      expect(
+        find.bySemanticsLabel('${cellName(empty)}, empty, notes 3 7'),
+        findsOneWidget,
+      );
+      semantics.dispose();
+    });
+
+    testWidgets('a hint and an error have a shape as well as a colour', (
+      tester,
+    ) async {
+      SettingsService.instance.showErrors = true;
+      final semantics = tester.ensureSemantics();
+      await continueGame(tester, game);
+      final wrong = game.solution[empty] % 9 + 1;
+      await tapCell(tester, empty);
+      await tapDigit(tester, wrong);
+      expect(find.byKey(ValueKey('wrong-$empty')), findsOneWidget);
+      expect(
+        find.bySemanticsLabel(RegExp('^${cellName(empty)}, $wrong, wrong')),
+        findsOneWidget,
+      );
+
+      // The coach fixes the mistake first: the cell becomes a hint.
+      await useHint(tester);
+      expect(find.byKey(ValueKey('wrong-$empty')), findsNothing);
+      expect(find.byKey(ValueKey('hint-$empty')), findsOneWidget);
+      expect(
+        find.bySemanticsLabel(
+          '${cellName(empty)}, ${game.solution[empty]}, hint',
+        ),
+        findsOneWidget,
+      );
+      semantics.dispose();
+    });
+
+    testWidgets('high contrast: from the option or from the system', (
+      tester,
+    ) async {
+      await continueGame(tester, game);
+      bool boardContrast() =>
+          tester.widget<SudokuBoard>(find.byType(SudokuBoard)).highContrast;
+      expect(boardContrast(), isFalse);
+
+      SettingsService.instance.highContrast = true;
+      await continueGame(tester, game);
+      expect(boardContrast(), isTrue);
+      expect(
+        tester.widget<NumberPad>(find.byType(NumberPad)).highContrast,
+        isTrue,
+      );
+
+      // The option off, but the system asking for more contrast: the
+      // board's notes turn white.
+      SettingsService.instance.highContrast = false;
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(highContrast: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      final noted = SudokuGame(generatePuzzle(1, seed: 4))
+        ..toggleNote(empty, 4);
+      await continueGame(tester, noted);
+      // The note, not a given 4: notes are in Inter, digits in Exo 2.
+      final note = tester.widget<Text>(
+        find.descendant(
+          of: find.byType(SudokuBoard),
+          matching: find.byWidgetPredicate(
+            (w) =>
+                w is Text &&
+                w.data == '4' &&
+                (w.style?.fontFamily ?? '').startsWith('Inter'),
+          ),
+        ),
+      );
+      expect(note.style?.color, AppColors.snowWhite);
+    });
   });
 }

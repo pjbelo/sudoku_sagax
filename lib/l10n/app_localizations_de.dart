@@ -522,6 +522,38 @@ class AppLocalizationsDe extends AppLocalizations {
       'Umrandet zwei gleiche Zahlen in derselben Zeile, Spalte oder im selben Block. Nutzt nicht die Lösung und verrät daher nichts.';
 
   @override
+  String get cellEmpty => 'leer';
+
+  @override
+  String get cellGiven => 'vorgegeben';
+
+  @override
+  String get cellHint => 'Tipp';
+
+  @override
+  String get cellWrong => 'falsch';
+
+  @override
+  String get cellConflict => 'im Konflikt';
+
+  @override
+  String cellNotes(String notes) {
+    return 'Notizen $notes';
+  }
+
+  @override
+  String numberKey(int digit, int remaining) {
+    return '$digit, noch $remaining';
+  }
+
+  @override
+  String get optHighContrast => 'Hoher Kontrast';
+
+  @override
+  String get optHighContrastDesc =>
+      'Kräftigere Gitterlinien, Notizen und Markierungen auf dem Spielfeld. Schaltet sich auch ein, wenn das System mehr Kontrast verlangt.';
+
+  @override
   String get optHints => 'Tipp-Taste';
 
   @override

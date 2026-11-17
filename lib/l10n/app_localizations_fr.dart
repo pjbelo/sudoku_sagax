@@ -525,6 +525,38 @@ class AppLocalizationsFr extends AppLocalizations {
       'Entoure deux chiffres identiques dans la même ligne, colonne ou carré. La solution n\'est pas utilisée : rien n\'est dévoilé.';
 
   @override
+  String get cellEmpty => 'vide';
+
+  @override
+  String get cellGiven => 'donnée';
+
+  @override
+  String get cellHint => 'indice';
+
+  @override
+  String get cellWrong => 'fausse';
+
+  @override
+  String get cellConflict => 'en conflit';
+
+  @override
+  String cellNotes(String notes) {
+    return 'notes $notes';
+  }
+
+  @override
+  String numberKey(int digit, int remaining) {
+    return '$digit, encore $remaining';
+  }
+
+  @override
+  String get optHighContrast => 'Contraste élevé';
+
+  @override
+  String get optHighContrastDesc =>
+      'Lignes de la grille, notes et surlignages plus marqués. S\'active aussi quand le système demande plus de contraste.';
+
+  @override
   String get optHints => 'Bouton d\'indice';
 
   @override
