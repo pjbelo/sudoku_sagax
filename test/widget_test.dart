@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudoku_sagax/game/logic_coach.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/main.dart';
@@ -11,9 +12,12 @@ import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/services/statistics_service.dart';
+import 'package:sudoku_sagax/widgets/coach_card.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
 import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
+
+import 'layout_test_helpers.dart';
 
 // AudioService.init() is never called here, so every sound is a no-op.
 Future<void> pumpApp(WidgetTester tester) async {
@@ -104,10 +108,8 @@ void main() {
 
     // Level 1 has 81 - 46 = 35 empty cells.
     for (int i = 0; i < 35; i++) {
-      await tester.tap(find.text('Hint +30s'));
-      await tester.pump();
+      await useHint(tester);
     }
-    await tester.pumpAndSettle();
     expect(find.text('Solved!'), findsOneWidget);
     expect(find.text('Congratulations!'), findsOneWidget);
     expect(SavedGameService.instance.hasSavedGame, isFalse);
@@ -208,8 +210,7 @@ void main() {
     // One hint, then Back: no confirmation, and Home offers Continue.
     await tester.tap(find.text('PLAY'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Hint +30s'));
-    await tester.pumpAndSettle();
+    await useHint(tester);
     await tester.pageBack();
     await tester.pumpAndSettle();
     expect(find.byType(GameScreen), findsNothing);
@@ -220,8 +221,7 @@ void main() {
     await tester.tap(find.textContaining('Continue'));
     await tester.pumpAndSettle();
     expect(find.byType(GameScreen), findsOneWidget);
-    await tester.tap(find.text('Hint +30s'));
-    await tester.pumpAndSettle();
+    await useHint(tester);
     expect(saves.savedGame!.game.hintsUsed, 2);
     // A continued game is still one game.
     expect(StatisticsService.instance.levelStats(1).started, 1);
@@ -403,6 +403,82 @@ void main() {
       SettingsService.instance.markConflicts = false;
       await tapCell(tester, empty); // any rebuild
       expect(outlinedCells(), findsNothing);
+    });
+  });
+
+  group('logic coach', () {
+    testWidgets('three steps: where, why, then the digit; only it costs', (
+      tester,
+    ) async {
+      final game = SudokuGame(generatePuzzle(1, seed: 4));
+      final step = findCoachStep(game)!;
+      final unit = step.lookAt;
+      final unitLabel = switch (unit.kind) {
+        UnitKind.row => 'Row ${unit.index + 1}',
+        UnitKind.column => 'Column ${unit.index + 1}',
+        UnitKind.box => 'Box ${unit.index + 1}',
+      };
+      BoardHighlight? highlight() =>
+          tester.widget<SudokuBoard>(find.byType(SudokuBoard)).highlight;
+
+      await continueGame(tester, game);
+      await tester.tap(find.text('Hint +30s'));
+      await tester.pumpAndSettle();
+      expect(find.text('Hidden single'), findsOneWidget);
+      expect(find.text('Where to look: $unitLabel.'), findsOneWidget);
+      expect(highlight()!.area, unit.cells.toSet());
+
+      // Closing costs nothing.
+      await tester.tap(find.text('Close'));
+      await tester.pumpAndSettle();
+      expect(find.byType(CoachCard), findsNothing);
+      expect(highlight(), isNull);
+      expect(savedGame().hintsUsed, 0);
+
+      await tester.tap(find.text('Hint +30s'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Show me'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('fits in only one cell'), findsOneWidget);
+      expect(highlight()!.focus, {step.cell});
+      expect(savedGame().values[step.cell], 0);
+
+      await tester.tap(find.text('Apply +30s'));
+      await tester.pumpAndSettle();
+      expect(find.text('The ${step.digit} is in place.'), findsOneWidget);
+      expect(savedGame().values[step.cell], step.digit);
+      expect(savedGame().isLocked(step.cell), isTrue);
+      expect(savedGame().hintsUsed, 1);
+      expect(
+        SavedGameService.instance.savedGame!.seconds,
+        greaterThanOrEqualTo(hintPenaltySeconds),
+      );
+
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(find.byType(CoachCard), findsNothing);
+      expect(find.text('Hint +30s'), findsOneWidget);
+    });
+
+    testWidgets('a wrong digit is found first', (tester) async {
+      final game = SudokuGame(generatePuzzle(1, seed: 4));
+      final cell = game.values.indexOf(0);
+      final wrong = game.solution[cell] % 9 + 1;
+      game.enterDigit(cell, wrong);
+
+      await continueGame(tester, game);
+      await tester.tap(find.text('Hint +30s'));
+      await tester.pumpAndSettle();
+      expect(find.text('Mistake'), findsOneWidget);
+      await tester.tap(find.text('Show me'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text("The highlighted $wrong doesn't belong in this cell."),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Apply +30s'));
+      await tester.pumpAndSettle();
+      expect(savedGame().values[cell], game.solution[cell]);
     });
   });
 }

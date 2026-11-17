@@ -117,6 +117,143 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get techniqueHiddenSingle => 'Hidden single';
+
+  @override
+  String get techniqueNakedSingle => 'Naked single';
+
+  @override
+  String get techniquePointingPair => 'Pointing pair';
+
+  @override
+  String get techniqueBoxLine => 'Box-line reduction';
+
+  @override
+  String get techniqueNakedPair => 'Naked pair';
+
+  @override
+  String get techniqueHiddenPair => 'Hidden pair';
+
+  @override
+  String get techniqueNakedTriple => 'Naked triple';
+
+  @override
+  String get techniqueXWing => 'X-Wing';
+
+  @override
+  String get techniqueMistake => 'Mistake';
+
+  @override
+  String get techniqueFromSolution => 'From the solution';
+
+  @override
+  String unitRow(int n) {
+    return 'Row $n';
+  }
+
+  @override
+  String unitColumn(int n) {
+    return 'Column $n';
+  }
+
+  @override
+  String unitBox(int n) {
+    return 'Box $n';
+  }
+
+  @override
+  String coachLook(String unit) {
+    return 'Where to look: $unit.';
+  }
+
+  @override
+  String coachLookMistake(String unit) {
+    return 'One of your digits is wrong. Where to look: $unit.';
+  }
+
+  @override
+  String coachLookFallback(String unit) {
+    return 'None of the coach\'s techniques works here. Where to look: $unit.';
+  }
+
+  @override
+  String coachHiddenSingle(String unit, int digit) {
+    return '$unit: the $digit fits in only one cell.';
+  }
+
+  @override
+  String coachNakedSingle(int digit) {
+    return 'The highlighted cell already sees every digit but $digit in its row, column and box, so it must be $digit.';
+  }
+
+  @override
+  String coachPointingRow(String box, int digit) {
+    return '$box: the $digit only fits in the highlighted cells, all in one row. So it can\'t go in the red cells of that row.';
+  }
+
+  @override
+  String coachPointingColumn(String box, int digit) {
+    return '$box: the $digit only fits in the highlighted cells, all in one column. So it can\'t go in the red cells of that column.';
+  }
+
+  @override
+  String coachBoxLine(String line, int digit) {
+    return '$line: the $digit only fits in the highlighted cells, all in one box. So it can\'t go in the red cells of that box.';
+  }
+
+  @override
+  String coachNakedPair(String unit, int a, int b) {
+    return '$unit: the two highlighted cells can only hold $a or $b. So the red cells can\'t hold them.';
+  }
+
+  @override
+  String coachHiddenPair(String unit, int a, int b) {
+    return '$unit: $a and $b only fit in the two highlighted cells. So those cells can\'t hold any other digit.';
+  }
+
+  @override
+  String coachNakedTriple(String unit, int a, int b, int c) {
+    return '$unit: the three highlighted cells can only hold $a, $b or $c. So the red cells can\'t hold them.';
+  }
+
+  @override
+  String coachXWingRows(int digit) {
+    return 'In two rows, the $digit only fits in the four highlighted cells, which share two columns. Either way, each of those columns gets its $digit there, so it can\'t go in the red cells.';
+  }
+
+  @override
+  String coachXWingColumns(int digit) {
+    return 'In two columns, the $digit only fits in the four highlighted cells, which share two rows. Either way, each of those rows gets its $digit there, so it can\'t go in the red cells.';
+  }
+
+  @override
+  String coachMistake(int digit) {
+    return 'The highlighted $digit doesn\'t belong in this cell.';
+  }
+
+  @override
+  String get coachFallback =>
+      'The highlighted cell will be filled in from the solution.';
+
+  @override
+  String coachDone(int digit) {
+    return 'The $digit is in place.';
+  }
+
+  @override
+  String coachCorrected(int digit) {
+    return 'Corrected: this cell takes the $digit.';
+  }
+
+  @override
+  String get coachShow => 'Show me';
+
+  @override
+  String coachApply(int seconds) {
+    return 'Apply +${seconds}s';
+  }
+
+  @override
   String get continueGame => 'Continue';
 
   @override
@@ -209,7 +346,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String optHintsDesc(int seconds) {
-    return 'Show a button that fills in a correct number (+$seconds s).';
+    return 'Show a button for the logic coach: it explains the next step, and placing the digit costs +$seconds s.';
   }
 
   @override

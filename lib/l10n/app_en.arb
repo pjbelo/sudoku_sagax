@@ -54,6 +54,149 @@
       "seconds": { "type": "int" }
     }
   },
+  "techniqueHiddenSingle": "Hidden single",
+  "techniqueNakedSingle": "Naked single",
+  "techniquePointingPair": "Pointing pair",
+  "techniqueBoxLine": "Box-line reduction",
+  "techniqueNakedPair": "Naked pair",
+  "techniqueHiddenPair": "Hidden pair",
+  "techniqueNakedTriple": "Naked triple",
+  "techniqueXWing": "X-Wing",
+  "techniqueMistake": "Mistake",
+  "techniqueFromSolution": "From the solution",
+  "unitRow": "Row {n}",
+  "@unitRow": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "unitColumn": "Column {n}",
+  "@unitColumn": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "unitBox": "Box {n}",
+  "@unitBox": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "coachLook": "Where to look: {unit}.",
+  "@coachLook": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "coachLookMistake": "One of your digits is wrong. Where to look: {unit}.",
+  "@coachLookMistake": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "coachLookFallback": "None of the coach's techniques works here. Where to look: {unit}.",
+  "@coachLookFallback": {
+    "placeholders": {
+      "unit": { "type": "String" }
+    }
+  },
+  "coachHiddenSingle": "{unit}: the {digit} fits in only one cell.",
+  "@coachHiddenSingle": {
+    "placeholders": {
+      "unit": { "type": "String" },
+      "digit": { "type": "int" }
+    }
+  },
+  "coachNakedSingle": "The highlighted cell already sees every digit but {digit} in its row, column and box, so it must be {digit}.",
+  "@coachNakedSingle": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
+  "coachPointingRow": "{box}: the {digit} only fits in the highlighted cells, all in one row. So it can't go in the red cells of that row.",
+  "@coachPointingRow": {
+    "placeholders": {
+      "box": { "type": "String" },
+      "digit": { "type": "int" }
+    }
+  },
+  "coachPointingColumn": "{box}: the {digit} only fits in the highlighted cells, all in one column. So it can't go in the red cells of that column.",
+  "@coachPointingColumn": {
+    "placeholders": {
+      "box": { "type": "String" },
+      "digit": { "type": "int" }
+    }
+  },
+  "coachBoxLine": "{line}: the {digit} only fits in the highlighted cells, all in one box. So it can't go in the red cells of that box.",
+  "@coachBoxLine": {
+    "placeholders": {
+      "line": { "type": "String" },
+      "digit": { "type": "int" }
+    }
+  },
+  "coachNakedPair": "{unit}: the two highlighted cells can only hold {a} or {b}. So the red cells can't hold them.",
+  "@coachNakedPair": {
+    "placeholders": {
+      "unit": { "type": "String" },
+      "a": { "type": "int" },
+      "b": { "type": "int" }
+    }
+  },
+  "coachHiddenPair": "{unit}: {a} and {b} only fit in the two highlighted cells. So those cells can't hold any other digit.",
+  "@coachHiddenPair": {
+    "placeholders": {
+      "unit": { "type": "String" },
+      "a": { "type": "int" },
+      "b": { "type": "int" }
+    }
+  },
+  "coachNakedTriple": "{unit}: the three highlighted cells can only hold {a}, {b} or {c}. So the red cells can't hold them.",
+  "@coachNakedTriple": {
+    "placeholders": {
+      "unit": { "type": "String" },
+      "a": { "type": "int" },
+      "b": { "type": "int" },
+      "c": { "type": "int" }
+    }
+  },
+  "coachXWingRows": "In two rows, the {digit} only fits in the four highlighted cells, which share two columns. Either way, each of those columns gets its {digit} there, so it can't go in the red cells.",
+  "@coachXWingRows": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
+  "coachXWingColumns": "In two columns, the {digit} only fits in the four highlighted cells, which share two rows. Either way, each of those rows gets its {digit} there, so it can't go in the red cells.",
+  "@coachXWingColumns": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
+  "coachMistake": "The highlighted {digit} doesn't belong in this cell.",
+  "@coachMistake": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
+  "coachFallback": "The highlighted cell will be filled in from the solution.",
+  "coachDone": "The {digit} is in place.",
+  "@coachDone": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
+  "coachCorrected": "Corrected: this cell takes the {digit}.",
+  "@coachCorrected": {
+    "placeholders": {
+      "digit": { "type": "int" }
+    }
+  },
+  "coachShow": "Show me",
+  "coachApply": "Apply +{seconds}s",
+  "@coachApply": {
+    "placeholders": {
+      "seconds": { "type": "int" }
+    }
+  },
   "continueGame": "Continue",
   "newGameTitle": "Start a new game?",
   "newGameMessage": "The unfinished game on level {level} will be lost.",
@@ -109,7 +252,7 @@
   "optMarkConflicts": "Mark conflicts",
   "optMarkConflictsDesc": "Outline two equal digits in the same row, column or box. It doesn't use the solution, so it gives nothing away.",
   "optHints": "Hint button",
-  "optHintsDesc": "Show a button that fills in a correct number (+{seconds} s).",
+  "optHintsDesc": "Show a button for the logic coach: it explains the next step, and placing the digit costs +{seconds} s.",
   "@optHintsDesc": {
     "placeholders": {
       "seconds": { "type": "int" }

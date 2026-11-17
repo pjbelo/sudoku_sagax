@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -46,14 +46,15 @@ their absence is felt.
 What competitors do badly or not at all. These are also the answer to App
 Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
 
-- **B1. Logic coach: hints that explain (M–L).** Add a solver to `lib/game/`
-  that works like a person, one named technique at a time: naked and hidden
-  single, naked and hidden pair, pointing pair, box-line reduction, naked
-  triple, X-Wing. The hint then has three steps: (1) names the technique and
-  where to look, (2) highlights the cells involved and explains the
-  deduction in a sentence, (3) places the digit or removes the candidates.
-  The explanation stays on screen until the player closes it. Only step 3
-  costs time. Everything in B2–B4 builds on this solver.
+- ~~**B1. Logic coach: hints that explain (M–L).**~~ Done on 2026-11-17:
+  `lib/game/logic_coach.dart` finds the next step with the simplest named
+  technique (hidden and naked single, pointing pair, box-line reduction,
+  naked and hidden pair, naked triple, X-Wing; a wrong digit first). The
+  Hint button opens a card in place of the keys: where to look, why (cells
+  highlighted, candidates shown), then Apply, the only step that costs
+  time; it stays until closed. Every step places a digit (eliminations lead
+  up to it). On 80 puzzles of levels 6–9, about 2% of steps still fall back
+  to a digit from the solution: B2 will grade those levels by technique.
 - **B2. Levels graded by technique (M, needs B1).** The generator uses the
   solver to make sure each level needs the techniques it names and nothing
   harder. Today levels 6–9 are only checked for a unique solution, so a

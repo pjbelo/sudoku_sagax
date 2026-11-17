@@ -120,6 +120,142 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get techniqueHiddenSingle => 'Versteckter Single';
+
+  @override
+  String get techniqueNakedSingle => 'Nackter Single';
+
+  @override
+  String get techniquePointingPair => 'Zeigendes Paar';
+
+  @override
+  String get techniqueBoxLine => 'Linie-Block-Reduktion';
+
+  @override
+  String get techniqueNakedPair => 'Nacktes Paar';
+
+  @override
+  String get techniqueHiddenPair => 'Verstecktes Paar';
+
+  @override
+  String get techniqueNakedTriple => 'Nacktes Tripel';
+
+  @override
+  String get techniqueXWing => 'X-Wing';
+
+  @override
+  String get techniqueMistake => 'Fehler';
+
+  @override
+  String get techniqueFromSolution => 'Aus der Lösung';
+
+  @override
+  String unitRow(int n) {
+    return 'Zeile $n';
+  }
+
+  @override
+  String unitColumn(int n) {
+    return 'Spalte $n';
+  }
+
+  @override
+  String unitBox(int n) {
+    return 'Block $n';
+  }
+
+  @override
+  String coachLook(String unit) {
+    return 'Schau hier: $unit.';
+  }
+
+  @override
+  String coachLookMistake(String unit) {
+    return 'Eine deiner Zahlen ist falsch. Schau hier: $unit.';
+  }
+
+  @override
+  String coachLookFallback(String unit) {
+    return 'Keine Technik des Trainers hilft hier. Schau hier: $unit.';
+  }
+
+  @override
+  String coachHiddenSingle(String unit, int digit) {
+    return '$unit: Die $digit passt nur in ein Feld.';
+  }
+
+  @override
+  String coachNakedSingle(int digit) {
+    return 'Das markierte Feld sieht in seiner Zeile, Spalte und seinem Block schon alle Zahlen außer der $digit, also muss es die $digit sein.';
+  }
+
+  @override
+  String coachPointingRow(String box, int digit) {
+    return '$box: Die $digit passt nur in die markierten Felder, alle in derselben Zeile. Also kann sie nicht in die roten Felder dieser Zeile.';
+  }
+
+  @override
+  String coachPointingColumn(String box, int digit) {
+    return '$box: Die $digit passt nur in die markierten Felder, alle in derselben Spalte. Also kann sie nicht in die roten Felder dieser Spalte.';
+  }
+
+  @override
+  String coachBoxLine(String line, int digit) {
+    return '$line: Die $digit passt nur in die markierten Felder, alle im selben Block. Also kann sie nicht in die roten Felder dieses Blocks.';
+  }
+
+  @override
+  String coachNakedPair(String unit, int a, int b) {
+    return '$unit: Die zwei markierten Felder können nur $a oder $b enthalten. Also können die roten Felder sie nicht enthalten.';
+  }
+
+  @override
+  String coachHiddenPair(String unit, int a, int b) {
+    return '$unit: Die $a und die $b passen nur in die zwei markierten Felder. Also können diese Felder keine andere Zahl enthalten.';
+  }
+
+  @override
+  String coachNakedTriple(String unit, int a, int b, int c) {
+    return '$unit: Die drei markierten Felder können nur $a, $b oder $c enthalten. Also können die roten Felder sie nicht enthalten.';
+  }
+
+  @override
+  String coachXWingRows(int digit) {
+    return 'In zwei Zeilen passt die $digit nur in die vier markierten Felder, die sich zwei Spalten teilen. So oder so bekommt jede dieser Spalten dort ihre $digit, also kann sie nicht in die roten Felder.';
+  }
+
+  @override
+  String coachXWingColumns(int digit) {
+    return 'In zwei Spalten passt die $digit nur in die vier markierten Felder, die sich zwei Zeilen teilen. So oder so bekommt jede dieser Zeilen dort ihre $digit, also kann sie nicht in die roten Felder.';
+  }
+
+  @override
+  String coachMistake(int digit) {
+    return 'Die markierte $digit gehört nicht in dieses Feld.';
+  }
+
+  @override
+  String get coachFallback => 'Das markierte Feld wird aus der Lösung gefüllt.';
+
+  @override
+  String coachDone(int digit) {
+    return 'Die $digit ist an ihrem Platz.';
+  }
+
+  @override
+  String coachCorrected(int digit) {
+    return 'Korrigiert: In dieses Feld gehört die $digit.';
+  }
+
+  @override
+  String get coachShow => 'Zeigen';
+
+  @override
+  String coachApply(int seconds) {
+    return 'Anwenden +${seconds}s';
+  }
+
+  @override
   String get continueGame => 'Fortsetzen';
 
   @override
@@ -212,7 +348,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String optHintsDesc(int seconds) {
-    return 'Zeigt eine Taste, die eine richtige Zahl einträgt (+$seconds s).';
+    return 'Zeigt eine Taste für den Logik-Trainer: Er erklärt den nächsten Schritt, und das Setzen der Zahl kostet +$seconds s.';
   }
 
   @override

@@ -5,6 +5,30 @@ import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
 import '../sagax_theme.dart';
 
+/// What the logic coach shows on the board while it explains a step. It
+/// replaces the usual selection highlights.
+class BoardHighlight {
+  const BoardHighlight({
+    this.area = const {},
+    this.focus = const {},
+    this.removed = const {},
+    this.candidates = const {},
+  });
+
+  /// Where to look: a light amber tint.
+  final Set<int> area;
+
+  /// The cells of the pattern and the cell to fill: a strong amber tint.
+  final Set<int> focus;
+
+  /// Cells that lose candidates: a light red tint.
+  final Set<int> removed;
+
+  /// Candidates to show (cell → digits mask), in amber, in place of the
+  /// player's notes.
+  final Map<int, int> candidates;
+}
+
 /// The 9×9 grid. Highlights the selected cell, its row/column/box and every
 /// cell holding the same digit; outlines conflicts; shows pencil notes as a
 /// 3×3 mini-grid.
@@ -16,6 +40,7 @@ class SudokuBoard extends StatelessWidget {
     this.activeDigit,
     required this.showErrors,
     this.markConflicts = false,
+    this.highlight,
     required this.onCellTap,
     this.hidden = false,
   });
@@ -34,6 +59,9 @@ class SudokuBoard extends StatelessWidget {
   /// conflicts" option). An outline, not a fill, so it can't be mistaken for
   /// Show errors, which may be on at the same time.
   final bool markConflicts;
+
+  /// The logic coach's highlights, while it explains a step.
+  final BoardHighlight? highlight;
   final ValueChanged<int> onCellTap;
 
   /// Draws an empty grid, used while the game is paused.
@@ -112,8 +140,19 @@ class SudokuBoard extends StatelessWidget {
     final showWrong = showErrors && game.isWrong(i);
     final showConflict = markConflicts && game.hasConflict(i);
 
+    final coach = highlight;
     final Color background;
-    if (isSelected) {
+    if (coach != null) {
+      if (coach.focus.contains(i)) {
+        background = AppColors.hintAmber.withValues(alpha: 0.32);
+      } else if (coach.removed.contains(i)) {
+        background = AppColors.errorRed.withValues(alpha: 0.16);
+      } else if (coach.area.contains(i)) {
+        background = AppColors.hintAmber.withValues(alpha: 0.10);
+      } else {
+        background = Colors.transparent;
+      }
+    } else if (isSelected) {
       background = AppColors.electricCyan.withValues(alpha: 0.38);
     } else if (showWrong) {
       background = AppColors.errorRed.withValues(alpha: 0.18);
@@ -146,8 +185,15 @@ class SudokuBoard extends StatelessWidget {
           color: color,
         ),
       );
+    } else if (coach != null && coach.candidates.containsKey(i)) {
+      content = _buildNotes(
+        coach.candidates[i]!,
+        cell,
+        0,
+        color: AppColors.hintAmber,
+      );
     } else if (game.notes[i] != 0) {
-      content = _buildNotes(i, cell, selValue);
+      content = _buildNotes(game.notes[i], cell, selValue);
     }
 
     return AnimatedContainer(
@@ -164,7 +210,8 @@ class SudokuBoard extends StatelessWidget {
     );
   }
 
-  Widget _buildNotes(int i, double cell, int selValue) {
+  /// The digits of [mask] as a 3×3 mini-grid, in [color] when given.
+  Widget _buildNotes(int mask, double cell, int selValue, {Color? color}) {
     return Padding(
       padding: EdgeInsets.all(cell * 0.06),
       child: Column(
@@ -176,7 +223,13 @@ class SudokuBoard extends StatelessWidget {
                   for (int c = 0; c < 3; c++)
                     Expanded(
                       child: Center(
-                        child: _note(i, r * 3 + c + 1, cell, selValue),
+                        child: _note(
+                          mask,
+                          r * 3 + c + 1,
+                          cell,
+                          selValue,
+                          color,
+                        ),
                       ),
                     ),
                 ],
@@ -187,8 +240,8 @@ class SudokuBoard extends StatelessWidget {
     );
   }
 
-  Widget? _note(int i, int digit, double cell, int selValue) {
-    if (!game.hasNote(i, digit)) return null;
+  Widget? _note(int mask, int digit, double cell, int selValue, Color? color) {
+    if (mask & (1 << (digit - 1)) == 0) return null;
     final match = digit == selValue;
     return Text(
       '$digit',
@@ -196,7 +249,7 @@ class SudokuBoard extends StatelessWidget {
         fontSize: cell * 0.23,
         height: 1,
         fontWeight: match ? FontWeight.bold : FontWeight.w500,
-        color: match ? AppColors.electricCyan : AppColors.softSlate,
+        color: color ?? (match ? AppColors.electricCyan : AppColors.softSlate),
       ),
     );
   }

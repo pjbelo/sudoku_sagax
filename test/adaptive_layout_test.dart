@@ -17,6 +17,7 @@ import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/services/statistics_service.dart';
 import 'package:sudoku_sagax/widgets/adaptive_layout.dart';
+import 'package:sudoku_sagax/widgets/coach_card.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
 import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
@@ -100,6 +101,18 @@ void main() {
             await pumpScreen(tester, screen, window, locale: locale);
             await tester.pumpWidget(const SizedBox());
           }
+          // The game with the coach card open on its longest step.
+          await pumpScreen(tester, const GameScreen(), window, locale: locale);
+          await tester.tap(find.byIcon(Icons.lightbulb_outline));
+          await tester.pumpAndSettle();
+          await tester.tap(
+            find.descendant(
+              of: find.byType(CoachCard),
+              matching: find.byType(ElevatedButton),
+            ),
+          );
+          await tester.pumpAndSettle();
+          await tester.pumpWidget(const SizedBox());
           // Home again, with Continue for a game left unfinished.
           await _saveUnfinishedGame();
           await pumpScreen(tester, const HomeScreen(), window, locale: locale);
@@ -287,8 +300,7 @@ void main() {
       await pumpScreen(tester, const HomeScreen(), ipad13Landscape);
       await tester.tap(find.text('PLAY'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Hint +30s'));
-      await tester.pumpAndSettle();
+      await useHint(tester);
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
       expect(find.byType(GameScreen), findsNothing);

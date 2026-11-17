@@ -119,6 +119,143 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get techniqueHiddenSingle => 'Único oculto';
+
+  @override
+  String get techniqueNakedSingle => 'Único desnudo';
+
+  @override
+  String get techniquePointingPair => 'Pareja apuntadora';
+
+  @override
+  String get techniqueBoxLine => 'Reducción línea-caja';
+
+  @override
+  String get techniqueNakedPair => 'Pareja desnuda';
+
+  @override
+  String get techniqueHiddenPair => 'Pareja oculta';
+
+  @override
+  String get techniqueNakedTriple => 'Trío desnudo';
+
+  @override
+  String get techniqueXWing => 'X-Wing';
+
+  @override
+  String get techniqueMistake => 'Error';
+
+  @override
+  String get techniqueFromSolution => 'De la solución';
+
+  @override
+  String unitRow(int n) {
+    return 'Fila $n';
+  }
+
+  @override
+  String unitColumn(int n) {
+    return 'Columna $n';
+  }
+
+  @override
+  String unitBox(int n) {
+    return 'Caja $n';
+  }
+
+  @override
+  String coachLook(String unit) {
+    return 'Dónde mirar: $unit.';
+  }
+
+  @override
+  String coachLookMistake(String unit) {
+    return 'Uno de tus números está mal. Dónde mirar: $unit.';
+  }
+
+  @override
+  String coachLookFallback(String unit) {
+    return 'Ninguna técnica del entrenador sirve aquí. Dónde mirar: $unit.';
+  }
+
+  @override
+  String coachHiddenSingle(String unit, int digit) {
+    return '$unit: el $digit solo cabe en una celda.';
+  }
+
+  @override
+  String coachNakedSingle(int digit) {
+    return 'La celda resaltada ya ve todos los números menos el $digit en su fila, columna y caja, así que tiene que ser $digit.';
+  }
+
+  @override
+  String coachPointingRow(String box, int digit) {
+    return '$box: el $digit solo cabe en las celdas resaltadas, todas en la misma fila. Así que no puede ir en las celdas en rojo de esa fila.';
+  }
+
+  @override
+  String coachPointingColumn(String box, int digit) {
+    return '$box: el $digit solo cabe en las celdas resaltadas, todas en la misma columna. Así que no puede ir en las celdas en rojo de esa columna.';
+  }
+
+  @override
+  String coachBoxLine(String line, int digit) {
+    return '$line: el $digit solo cabe en las celdas resaltadas, todas en la misma caja. Así que no puede ir en las celdas en rojo de esa caja.';
+  }
+
+  @override
+  String coachNakedPair(String unit, int a, int b) {
+    return '$unit: las dos celdas resaltadas solo pueden llevar $a o $b. Así que las celdas en rojo no pueden llevarlos.';
+  }
+
+  @override
+  String coachHiddenPair(String unit, int a, int b) {
+    return '$unit: el $a y el $b solo caben en las dos celdas resaltadas. Así que esas celdas no pueden llevar otro número.';
+  }
+
+  @override
+  String coachNakedTriple(String unit, int a, int b, int c) {
+    return '$unit: las tres celdas resaltadas solo pueden llevar $a, $b o $c. Así que las celdas en rojo no pueden llevarlos.';
+  }
+
+  @override
+  String coachXWingRows(int digit) {
+    return 'En dos filas, el $digit solo cabe en las cuatro celdas resaltadas, que comparten dos columnas. Sea como sea, cada una de esas columnas tiene ahí su $digit, así que no puede ir en las celdas en rojo.';
+  }
+
+  @override
+  String coachXWingColumns(int digit) {
+    return 'En dos columnas, el $digit solo cabe en las cuatro celdas resaltadas, que comparten dos filas. Sea como sea, cada una de esas filas tiene ahí su $digit, así que no puede ir en las celdas en rojo.';
+  }
+
+  @override
+  String coachMistake(int digit) {
+    return 'El $digit resaltado no va en esta celda.';
+  }
+
+  @override
+  String get coachFallback =>
+      'La celda resaltada se rellenará con la solución.';
+
+  @override
+  String coachDone(int digit) {
+    return 'El $digit está en su sitio.';
+  }
+
+  @override
+  String coachCorrected(int digit) {
+    return 'Corregido: esta celda lleva el $digit.';
+  }
+
+  @override
+  String get coachShow => 'Mostrar';
+
+  @override
+  String coachApply(int seconds) {
+    return 'Aplicar +${seconds}s';
+  }
+
+  @override
   String get continueGame => 'Continuar';
 
   @override
@@ -211,7 +348,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String optHintsDesc(int seconds) {
-    return 'Muestra un botón que rellena un número correcto (+$seconds s).';
+    return 'Muestra un botón para el entrenador de lógica: explica el siguiente paso, y colocar el número cuesta +$seconds s.';
   }
 
   @override

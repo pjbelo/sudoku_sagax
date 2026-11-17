@@ -31,6 +31,7 @@ import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/services/statistics_service.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
+import 'package:sudoku_sagax/widgets/coach_card.dart';
 import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
 
@@ -87,8 +88,18 @@ void main() {
       for (final i in empty.where((i) => i < 36).take(12)) {
         await _enter(tester, i, game.solution[i]);
       }
-      await tester.tap(find.byIcon(Icons.lightbulb_outline)); // hint
+      // A hint through the coach: Show me, Apply, OK.
+      await tester.tap(find.byIcon(Icons.lightbulb_outline));
       await tester.pumpAndSettle();
+      for (int stage = 0; stage < 3; stage++) {
+        await tester.tap(
+          find.descendant(
+            of: find.byType(CoachCard),
+            matching: find.byType(ElevatedButton),
+          ),
+        );
+        await tester.pumpAndSettle();
+      }
 
       await tester.tap(find.byIcon(Icons.edit_outlined)); // notes on
       await tester.pumpAndSettle();

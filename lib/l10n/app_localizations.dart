@@ -302,6 +302,198 @@ abstract class AppLocalizations {
   /// **'Hint +{seconds}s'**
   String hint(int seconds);
 
+  /// No description provided for @techniqueHiddenSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden single'**
+  String get techniqueHiddenSingle;
+
+  /// No description provided for @techniqueNakedSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'Naked single'**
+  String get techniqueNakedSingle;
+
+  /// No description provided for @techniquePointingPair.
+  ///
+  /// In en, this message translates to:
+  /// **'Pointing pair'**
+  String get techniquePointingPair;
+
+  /// No description provided for @techniqueBoxLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Box-line reduction'**
+  String get techniqueBoxLine;
+
+  /// No description provided for @techniqueNakedPair.
+  ///
+  /// In en, this message translates to:
+  /// **'Naked pair'**
+  String get techniqueNakedPair;
+
+  /// No description provided for @techniqueHiddenPair.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden pair'**
+  String get techniqueHiddenPair;
+
+  /// No description provided for @techniqueNakedTriple.
+  ///
+  /// In en, this message translates to:
+  /// **'Naked triple'**
+  String get techniqueNakedTriple;
+
+  /// No description provided for @techniqueXWing.
+  ///
+  /// In en, this message translates to:
+  /// **'X-Wing'**
+  String get techniqueXWing;
+
+  /// No description provided for @techniqueMistake.
+  ///
+  /// In en, this message translates to:
+  /// **'Mistake'**
+  String get techniqueMistake;
+
+  /// No description provided for @techniqueFromSolution.
+  ///
+  /// In en, this message translates to:
+  /// **'From the solution'**
+  String get techniqueFromSolution;
+
+  /// No description provided for @unitRow.
+  ///
+  /// In en, this message translates to:
+  /// **'Row {n}'**
+  String unitRow(int n);
+
+  /// No description provided for @unitColumn.
+  ///
+  /// In en, this message translates to:
+  /// **'Column {n}'**
+  String unitColumn(int n);
+
+  /// No description provided for @unitBox.
+  ///
+  /// In en, this message translates to:
+  /// **'Box {n}'**
+  String unitBox(int n);
+
+  /// No description provided for @coachLook.
+  ///
+  /// In en, this message translates to:
+  /// **'Where to look: {unit}.'**
+  String coachLook(String unit);
+
+  /// No description provided for @coachLookMistake.
+  ///
+  /// In en, this message translates to:
+  /// **'One of your digits is wrong. Where to look: {unit}.'**
+  String coachLookMistake(String unit);
+
+  /// No description provided for @coachLookFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'None of the coach\'s techniques works here. Where to look: {unit}.'**
+  String coachLookFallback(String unit);
+
+  /// No description provided for @coachHiddenSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'{unit}: the {digit} fits in only one cell.'**
+  String coachHiddenSingle(String unit, int digit);
+
+  /// No description provided for @coachNakedSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'The highlighted cell already sees every digit but {digit} in its row, column and box, so it must be {digit}.'**
+  String coachNakedSingle(int digit);
+
+  /// No description provided for @coachPointingRow.
+  ///
+  /// In en, this message translates to:
+  /// **'{box}: the {digit} only fits in the highlighted cells, all in one row. So it can\'t go in the red cells of that row.'**
+  String coachPointingRow(String box, int digit);
+
+  /// No description provided for @coachPointingColumn.
+  ///
+  /// In en, this message translates to:
+  /// **'{box}: the {digit} only fits in the highlighted cells, all in one column. So it can\'t go in the red cells of that column.'**
+  String coachPointingColumn(String box, int digit);
+
+  /// No description provided for @coachBoxLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{line}: the {digit} only fits in the highlighted cells, all in one box. So it can\'t go in the red cells of that box.'**
+  String coachBoxLine(String line, int digit);
+
+  /// No description provided for @coachNakedPair.
+  ///
+  /// In en, this message translates to:
+  /// **'{unit}: the two highlighted cells can only hold {a} or {b}. So the red cells can\'t hold them.'**
+  String coachNakedPair(String unit, int a, int b);
+
+  /// No description provided for @coachHiddenPair.
+  ///
+  /// In en, this message translates to:
+  /// **'{unit}: {a} and {b} only fit in the two highlighted cells. So those cells can\'t hold any other digit.'**
+  String coachHiddenPair(String unit, int a, int b);
+
+  /// No description provided for @coachNakedTriple.
+  ///
+  /// In en, this message translates to:
+  /// **'{unit}: the three highlighted cells can only hold {a}, {b} or {c}. So the red cells can\'t hold them.'**
+  String coachNakedTriple(String unit, int a, int b, int c);
+
+  /// No description provided for @coachXWingRows.
+  ///
+  /// In en, this message translates to:
+  /// **'In two rows, the {digit} only fits in the four highlighted cells, which share two columns. Either way, each of those columns gets its {digit} there, so it can\'t go in the red cells.'**
+  String coachXWingRows(int digit);
+
+  /// No description provided for @coachXWingColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'In two columns, the {digit} only fits in the four highlighted cells, which share two rows. Either way, each of those rows gets its {digit} there, so it can\'t go in the red cells.'**
+  String coachXWingColumns(int digit);
+
+  /// No description provided for @coachMistake.
+  ///
+  /// In en, this message translates to:
+  /// **'The highlighted {digit} doesn\'t belong in this cell.'**
+  String coachMistake(int digit);
+
+  /// No description provided for @coachFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'The highlighted cell will be filled in from the solution.'**
+  String get coachFallback;
+
+  /// No description provided for @coachDone.
+  ///
+  /// In en, this message translates to:
+  /// **'The {digit} is in place.'**
+  String coachDone(int digit);
+
+  /// No description provided for @coachCorrected.
+  ///
+  /// In en, this message translates to:
+  /// **'Corrected: this cell takes the {digit}.'**
+  String coachCorrected(int digit);
+
+  /// No description provided for @coachShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show me'**
+  String get coachShow;
+
+  /// No description provided for @coachApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply +{seconds}s'**
+  String coachApply(int seconds);
+
   /// No description provided for @continueGame.
   ///
   /// In en, this message translates to:
@@ -461,7 +653,7 @@ abstract class AppLocalizations {
   /// No description provided for @optHintsDesc.
   ///
   /// In en, this message translates to:
-  /// **'Show a button that fills in a correct number (+{seconds} s).'**
+  /// **'Show a button for the logic coach: it explains the next step, and placing the digit costs +{seconds} s.'**
   String optHintsDesc(int seconds);
 
   /// No description provided for @optLeftHanded.

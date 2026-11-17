@@ -60,8 +60,7 @@ void main() {
       await pumpScreen(tester, const HomeScreen(), duoOuter);
       await tester.tap(find.text('PLAY'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Hint +30s'));
-      await tester.pumpAndSettle();
+      await useHint(tester);
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
       expect(find.byType(GameScreen), findsNothing);
@@ -133,10 +132,8 @@ void main() {
         );
         // Level 1 has 81 - 46 = 35 empty cells.
         for (int i = 0; i < 35; i++) {
-          await tester.tap(find.byIcon(Icons.lightbulb_outline));
-          await tester.pump();
+          await useHint(tester);
         }
-        await tester.pumpAndSettle();
 
         final title = find.text(lookupAppLocalizations(locale).congratulations);
         // The title is about 46 points high on one line and 92 on two.

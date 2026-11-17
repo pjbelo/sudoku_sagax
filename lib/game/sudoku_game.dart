@@ -229,10 +229,18 @@ class SudokuGame {
       if (open.isEmpty) return null;
       target = open[(rng ?? Random()).nextInt(open.length)];
     }
-    _fillCorrect(target);
+    applyHint(target);
+    return target;
+  }
+
+  /// Fills cell [i] with its correct digit and locks it, as a hint. The
+  /// candidates in [noteRemovals] (cell → digits mask), ruled out by the
+  /// coach's step, are taken out of the notes too.
+  void applyHint(int i, {Map<int, int> noteRemovals = const {}}) {
+    noteRemovals.forEach((cell, mask) => notes[cell] &= ~mask);
+    _fillCorrect(i);
     hintsUsed++;
     _redoHistory.clear(); // a hint is a new change too
-    return target;
   }
 
   void _fillCorrect(int i) {

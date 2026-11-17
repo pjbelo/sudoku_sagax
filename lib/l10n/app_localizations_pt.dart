@@ -119,6 +119,143 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get techniqueHiddenSingle => 'Única posição';
+
+  @override
+  String get techniqueNakedSingle => 'Único candidato';
+
+  @override
+  String get techniquePointingPair => 'Par apontador';
+
+  @override
+  String get techniqueBoxLine => 'Redução linha-quadrado';
+
+  @override
+  String get techniqueNakedPair => 'Par nu';
+
+  @override
+  String get techniqueHiddenPair => 'Par escondido';
+
+  @override
+  String get techniqueNakedTriple => 'Trio nu';
+
+  @override
+  String get techniqueXWing => 'X-Wing';
+
+  @override
+  String get techniqueMistake => 'Erro';
+
+  @override
+  String get techniqueFromSolution => 'Da solução';
+
+  @override
+  String unitRow(int n) {
+    return 'Linha $n';
+  }
+
+  @override
+  String unitColumn(int n) {
+    return 'Coluna $n';
+  }
+
+  @override
+  String unitBox(int n) {
+    return 'Quadrado $n';
+  }
+
+  @override
+  String coachLook(String unit) {
+    return 'Onde olhar: $unit.';
+  }
+
+  @override
+  String coachLookMistake(String unit) {
+    return 'Um dos teus números está errado. Onde olhar: $unit.';
+  }
+
+  @override
+  String coachLookFallback(String unit) {
+    return 'Nenhuma técnica do treinador resulta aqui. Onde olhar: $unit.';
+  }
+
+  @override
+  String coachHiddenSingle(String unit, int digit) {
+    return '$unit: o $digit só cabe numa célula.';
+  }
+
+  @override
+  String coachNakedSingle(int digit) {
+    return 'A célula destacada já vê todos os números menos o $digit na sua linha, coluna e quadrado, por isso tem de ser $digit.';
+  }
+
+  @override
+  String coachPointingRow(String box, int digit) {
+    return '$box: o $digit só cabe nas células destacadas, todas na mesma linha. Por isso, não pode ir para as células a vermelho dessa linha.';
+  }
+
+  @override
+  String coachPointingColumn(String box, int digit) {
+    return '$box: o $digit só cabe nas células destacadas, todas na mesma coluna. Por isso, não pode ir para as células a vermelho dessa coluna.';
+  }
+
+  @override
+  String coachBoxLine(String line, int digit) {
+    return '$line: o $digit só cabe nas células destacadas, todas no mesmo quadrado. Por isso, não pode ir para as células a vermelho desse quadrado.';
+  }
+
+  @override
+  String coachNakedPair(String unit, int a, int b) {
+    return '$unit: as duas células destacadas só podem levar $a ou $b. Por isso, as células a vermelho não os podem levar.';
+  }
+
+  @override
+  String coachHiddenPair(String unit, int a, int b) {
+    return '$unit: o $a e o $b só cabem nas duas células destacadas. Por isso, essas células não podem levar outro número.';
+  }
+
+  @override
+  String coachNakedTriple(String unit, int a, int b, int c) {
+    return '$unit: as três células destacadas só podem levar $a, $b ou $c. Por isso, as células a vermelho não os podem levar.';
+  }
+
+  @override
+  String coachXWingRows(int digit) {
+    return 'Em duas linhas, o $digit só cabe nas quatro células destacadas, que partilham duas colunas. Seja como for, cada uma dessas colunas tem o seu $digit ali, por isso ele não pode ir para as células a vermelho.';
+  }
+
+  @override
+  String coachXWingColumns(int digit) {
+    return 'Em duas colunas, o $digit só cabe nas quatro células destacadas, que partilham duas linhas. Seja como for, cada uma dessas linhas tem o seu $digit ali, por isso ele não pode ir para as células a vermelho.';
+  }
+
+  @override
+  String coachMistake(int digit) {
+    return 'O $digit destacado não pertence a esta célula.';
+  }
+
+  @override
+  String get coachFallback =>
+      'A célula destacada vai ser preenchida a partir da solução.';
+
+  @override
+  String coachDone(int digit) {
+    return 'O $digit está no lugar.';
+  }
+
+  @override
+  String coachCorrected(int digit) {
+    return 'Corrigido: esta célula leva o $digit.';
+  }
+
+  @override
+  String get coachShow => 'Mostrar';
+
+  @override
+  String coachApply(int seconds) {
+    return 'Aplicar +${seconds}s';
+  }
+
+  @override
   String get continueGame => 'Continuar';
 
   @override
@@ -211,7 +348,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String optHintsDesc(int seconds) {
-    return 'Mostra um botão que preenche um número correto (+$seconds s).';
+    return 'Mostra um botão para o treinador de lógica: explica o passo seguinte, e colocar o número custa +$seconds s.';
   }
 
   @override

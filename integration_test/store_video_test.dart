@@ -32,6 +32,7 @@ import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
 import 'package:sudoku_sagax/services/settings_service.dart';
 import 'package:sudoku_sagax/services/statistics_service.dart';
+import 'package:sudoku_sagax/widgets/coach_card.dart';
 import 'package:sudoku_sagax/widgets/level_selector.dart';
 import 'package:sudoku_sagax/widgets/number_pad.dart';
 import 'package:sudoku_sagax/widgets/sudoku_board.dart';
@@ -132,10 +133,26 @@ void main() {
     _cue('scene:5');
     await _tapCell(tester, empty.firstWhere((i) => i >= 36 && i < 45));
     await _wait(300);
-    _sfx(AudioService.hintSfx, 0.85);
+    // The coach: where to look, why, then the digit.
+    _sfx(AudioService.buttonSfx, 0.7);
     await _tap(tester, find.byIcon(Icons.lightbulb_outline));
     await tester.pump();
-    await _wait(1400);
+    await _wait(1300);
+    final coachButton = find.descendant(
+      of: find.byType(CoachCard),
+      matching: find.byType(ElevatedButton),
+    );
+    _sfx(AudioService.buttonSfx, 0.7);
+    await _tap(tester, coachButton); // Show me
+    await tester.pump();
+    await _wait(2600);
+    _sfx(AudioService.hintSfx, 0.85);
+    await _tap(tester, coachButton); // Apply
+    await tester.pump();
+    await _wait(1200);
+    await _tap(tester, coachButton); // OK
+    await tester.pump();
+    await _wait(400);
     _cue('cut_out');
 
     // Off camera: fill all but the last three cells, and let the clock run

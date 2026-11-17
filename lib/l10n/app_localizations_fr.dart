@@ -121,6 +121,143 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get techniqueHiddenSingle => 'Singleton caché';
+
+  @override
+  String get techniqueNakedSingle => 'Singleton nu';
+
+  @override
+  String get techniquePointingPair => 'Paire pointante';
+
+  @override
+  String get techniqueBoxLine => 'Réduction ligne-carré';
+
+  @override
+  String get techniqueNakedPair => 'Paire nue';
+
+  @override
+  String get techniqueHiddenPair => 'Paire cachée';
+
+  @override
+  String get techniqueNakedTriple => 'Triplet nu';
+
+  @override
+  String get techniqueXWing => 'X-Wing';
+
+  @override
+  String get techniqueMistake => 'Erreur';
+
+  @override
+  String get techniqueFromSolution => 'D\'après la solution';
+
+  @override
+  String unitRow(int n) {
+    return 'Ligne $n';
+  }
+
+  @override
+  String unitColumn(int n) {
+    return 'Colonne $n';
+  }
+
+  @override
+  String unitBox(int n) {
+    return 'Carré $n';
+  }
+
+  @override
+  String coachLook(String unit) {
+    return 'Où regarder : $unit.';
+  }
+
+  @override
+  String coachLookMistake(String unit) {
+    return 'L\'un de vos chiffres est faux. Où regarder : $unit.';
+  }
+
+  @override
+  String coachLookFallback(String unit) {
+    return 'Aucune technique de l\'entraîneur ne marche ici. Où regarder : $unit.';
+  }
+
+  @override
+  String coachHiddenSingle(String unit, int digit) {
+    return '$unit : le $digit ne va que dans une seule case.';
+  }
+
+  @override
+  String coachNakedSingle(int digit) {
+    return 'La case en surbrillance voit déjà tous les chiffres sauf le $digit dans sa ligne, sa colonne et son carré : c\'est donc un $digit.';
+  }
+
+  @override
+  String coachPointingRow(String box, int digit) {
+    return '$box : le $digit ne va que dans les cases en surbrillance, toutes sur la même ligne. Il ne peut donc pas aller dans les cases en rouge de cette ligne.';
+  }
+
+  @override
+  String coachPointingColumn(String box, int digit) {
+    return '$box : le $digit ne va que dans les cases en surbrillance, toutes dans la même colonne. Il ne peut donc pas aller dans les cases en rouge de cette colonne.';
+  }
+
+  @override
+  String coachBoxLine(String line, int digit) {
+    return '$line : le $digit ne va que dans les cases en surbrillance, toutes dans le même carré. Il ne peut donc pas aller dans les cases en rouge de ce carré.';
+  }
+
+  @override
+  String coachNakedPair(String unit, int a, int b) {
+    return '$unit : les deux cases en surbrillance ne peuvent contenir que $a ou $b. Les cases en rouge ne peuvent donc pas les contenir.';
+  }
+
+  @override
+  String coachHiddenPair(String unit, int a, int b) {
+    return '$unit : le $a et le $b ne vont que dans les deux cases en surbrillance. Ces cases ne peuvent donc contenir aucun autre chiffre.';
+  }
+
+  @override
+  String coachNakedTriple(String unit, int a, int b, int c) {
+    return '$unit : les trois cases en surbrillance ne peuvent contenir que $a, $b ou $c. Les cases en rouge ne peuvent donc pas les contenir.';
+  }
+
+  @override
+  String coachXWingRows(int digit) {
+    return 'Sur deux lignes, le $digit ne va que dans les quatre cases en surbrillance, qui partagent deux colonnes. Quoi qu\'il arrive, chacune de ces colonnes a son $digit là : il ne peut donc pas aller dans les cases en rouge.';
+  }
+
+  @override
+  String coachXWingColumns(int digit) {
+    return 'Dans deux colonnes, le $digit ne va que dans les quatre cases en surbrillance, qui partagent deux lignes. Quoi qu\'il arrive, chacune de ces lignes a son $digit là : il ne peut donc pas aller dans les cases en rouge.';
+  }
+
+  @override
+  String coachMistake(int digit) {
+    return 'Le $digit en surbrillance n\'a pas sa place dans cette case.';
+  }
+
+  @override
+  String get coachFallback =>
+      'La case en surbrillance sera remplie d\'après la solution.';
+
+  @override
+  String coachDone(int digit) {
+    return 'Le $digit est en place.';
+  }
+
+  @override
+  String coachCorrected(int digit) {
+    return 'Corrigé : cette case contient un $digit.';
+  }
+
+  @override
+  String get coachShow => 'Montrer';
+
+  @override
+  String coachApply(int seconds) {
+    return 'Appliquer +${seconds}s';
+  }
+
+  @override
   String get continueGame => 'Reprendre';
 
   @override
@@ -214,7 +351,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String optHintsDesc(int seconds) {
-    return 'Affiche un bouton qui remplit un chiffre correct (+$seconds s).';
+    return 'Affiche un bouton pour l\'entraîneur de logique : il explique l\'étape suivante, et placer le chiffre coûte +$seconds s.';
   }
 
   @override

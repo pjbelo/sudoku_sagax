@@ -4,6 +4,7 @@ import 'package:foldable/foldable.dart';
 import 'package:sudoku_sagax/l10n/app_localizations.dart';
 import 'package:sudoku_sagax/sagax_theme.dart';
 import 'package:sudoku_sagax/widgets/adaptive_layout.dart';
+import 'package:sudoku_sagax/widgets/coach_card.dart';
 
 const _duo = FoldableCapabilities(
   supportLevel: FoldableSupportLevel.available,
@@ -206,4 +207,21 @@ Future<void> pumpScreen(
   await tester.pumpAndSettle();
   await tester.pump(); // FoldAwareBuilder re-reads its origin after layout
   await tester.pumpAndSettle();
+}
+
+/// Takes a hint through the logic coach's three steps, in any language:
+/// the Hint button, then the card's main button for Show me, Apply and OK.
+/// When the hint solves the grid, the card is already gone after Apply.
+Future<void> useHint(WidgetTester tester) async {
+  // Before the card opens, the only light bulb is the Hint button's.
+  await tester.tap(find.byIcon(Icons.lightbulb_outline));
+  await tester.pumpAndSettle();
+  final next = find.descendant(
+    of: find.byType(CoachCard),
+    matching: find.byType(ElevatedButton),
+  );
+  for (int stage = 0; stage < 3 && next.evaluate().isNotEmpty; stage++) {
+    await tester.tap(next);
+    await tester.pumpAndSettle();
+  }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:foldable/foldable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../game/logic_coach.dart';
 import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
 import '../l10n/app_localizations.dart';
@@ -17,6 +18,7 @@ import '../services/scoreboard_service.dart';
 import '../services/settings_service.dart';
 import '../services/statistics_service.dart';
 import '../widgets/adaptive_layout.dart';
+import '../widgets/coach_card.dart';
 import '../widgets/duo_layout.dart';
 import '../widgets/fade_route.dart';
 import '../widgets/level_selector.dart';
@@ -63,6 +65,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Digit-first entry: the digit picked before any cell, placed in each
   /// cell the player then taps. Null in the usual cell-first entry.
   int? _activeDigit;
+
+  /// The logic coach's step on screen (null when the coach is closed), and
+  /// how far it has got: 1 where to look, 2 why, 3 done.
+  CoachStep? _coachStep;
+  int _coachStage = 1;
 
   /// Elapsed play time, hint penalties included. Counted even when the
   /// Timer option hides the clock, so every win can go on the scoreboard.
@@ -159,6 +166,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     _selected = null;
     _notesMode = false;
     _activeDigit = null;
+    _coachStep = null;
     _seconds = 0;
     _userPaused = false;
     _solved = false;
@@ -222,7 +230,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     }
   }
 
-  bool get _canPlay => !_solved && !_paused;
+  /// Entries wait while the coach explains a step.
+  bool get _canPlay => !_solved && !_paused && _coachStep == null;
 
   void _onCellTap(int i) {
     if (!_canPlay) return;
@@ -340,27 +349,125 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     setState(() => _notesMode = !_notesMode);
   }
 
+  /// Opens the logic coach on the next step (for the selected cell when it
+  /// can). Looking costs nothing; only applying the step does.
   void _onHint() {
     if (!_canPlay) return;
-    final cell = _game.hint(preferred: _selected);
-    if (cell == null) return;
+    final step = findCoachStep(_game, preferred: _selected);
+    if (step == null) return;
+    unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.7));
+    _analytics.log('hint_opened', {
+      'level': _level,
+      'technique': step.technique.name,
+    });
+    setState(() {
+      _coachStep = step;
+      _coachStage = 1;
+      _activeDigit = null;
+    });
+  }
+
+  /// The coach card's main button: Show me, then Apply, then OK.
+  void _onCoachButton() {
+    final step = _coachStep;
+    if (step == null || _paused) return;
+    switch (_coachStage) {
+      case 1:
+        unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.7));
+        setState(() => _coachStage = 2);
+      case 2:
+        _applyCoachStep(step);
+      default:
+        _closeCoach();
+    }
+  }
+
+  /// Places the step's digit, as a hint: it is locked and costs time.
+  void _applyCoachStep(CoachStep step) {
+    _game.applyHint(step.cell, noteRemovals: step.removals);
     unawaited(_audio.playSfx(AudioService.hintSfx, volume: 0.85));
     _vibrate(HapticFeedback.selectionClick);
     _analytics.log('hint_used', {
       'level': _level,
       'hints_used': _game.hintsUsed,
       'seconds': _seconds,
+      'technique': step.technique.name,
     });
+    final solved = _game.isSolved;
     setState(() {
       _seconds += hintPenaltySeconds;
-      _selected = cell;
-      _activeDigit = null;
+      _selected = step.cell;
+      _coachStage = 3;
+      if (solved) _coachStep = null; // the win bar takes over
     });
-    if (_game.isSolved) {
+    if (solved) {
       unawaited(_onSolved());
     } else {
       _saveProgress();
     }
+  }
+
+  void _closeCoach() {
+    if (_coachStep == null) return;
+    unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.6));
+    setState(() => _coachStep = null);
+  }
+
+  /// What the board shows for the coach's current stage.
+  BoardHighlight? _coachHighlight() {
+    final step = _coachStep;
+    if (step == null) return null;
+    return switch (_coachStage) {
+      1 => BoardHighlight(area: step.lookAt.cells.toSet()),
+      2 => BoardHighlight(
+        area: step.areaCells,
+        focus: step.focusCells,
+        removed: step.removedCells,
+        candidates: step.candidatesToShow,
+      ),
+      _ => BoardHighlight(focus: {step.cell}),
+    };
+  }
+
+  /// The controls and the number keys, or the coach card in their place.
+  /// The card covers them at their size, so nothing around it moves.
+  Widget _buildEntryArea(AppLocalizations l10n, Widget entry) {
+    final step = _coachStep;
+    if (step == null) return entry;
+    final String text;
+    final String button;
+    switch (_coachStage) {
+      case 1:
+        text = coachLookText(l10n, step);
+        button = l10n.coachShow;
+      case 2:
+        text = coachExplanation(l10n, step);
+        button = l10n.coachApply(hintPenaltySeconds);
+      default:
+        text = coachDoneText(l10n, step);
+        button = l10n.okButton;
+    }
+    return Stack(
+      children: [
+        Visibility(
+          visible: false,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: entry,
+        ),
+        Positioned.fill(
+          child: CoachCard(
+            title: techniqueName(l10n, step.technique),
+            text: text,
+            buttonLabel: button,
+            onButton: _onCoachButton,
+            onClose: _closeCoach,
+            closeLabel: l10n.close,
+          ),
+        ),
+      ],
+    );
   }
 
   void _onTogglePause() {
@@ -385,6 +492,16 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   KeyEventResult _onKey(FocusNode node, KeyEvent event) {
     if (event is KeyUpEvent) return KeyEventResult.ignored;
     final key = event.logicalKey;
+    if (_coachStep != null) {
+      if (key == LogicalKeyboardKey.escape) {
+        _closeCoach();
+      } else if (key == LogicalKeyboardKey.enter && event is KeyDownEvent) {
+        _onCoachButton();
+      } else {
+        return KeyEventResult.ignored;
+      }
+      return KeyEventResult.handled;
+    }
     final digit = _digitKeys[key];
     if (digit != null) {
       _onDigit(digit);
@@ -592,21 +709,30 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
                 child: Center(child: _buildBoardArea(l10n)),
               ),
             ),
-            const SizedBox(height: 12),
-            if (_showWinBar)
-              _buildWinBar(l10n)
-            else if (!_solved) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: _buildControls(l10n),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: _buildNumberPad(height: padHeight),
-              ),
-              const SizedBox(height: 16),
-            ],
+            if (_showWinBar) ...[
+              const SizedBox(height: 12),
+              _buildWinBar(l10n),
+            ] else if (!_solved)
+              _buildEntryArea(
+                l10n,
+                Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: _buildControls(l10n),
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: _buildNumberPad(height: padHeight),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              )
+            else
+              const SizedBox(height: 12),
           ],
         ),
       ),
@@ -717,11 +843,17 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
             const SizedBox(height: 8),
             if (_showWinBar)
               _buildWinBar(l10n)
-            else if (!_solved) ...[
-              _buildControls(l10n, twoRows: narrow),
-              const SizedBox(height: 12),
-              _buildNumberPad(height: keyHeight, grid: true),
-            ],
+            else if (!_solved)
+              _buildEntryArea(
+                l10n,
+                Column(
+                  children: [
+                    _buildControls(l10n, twoRows: narrow),
+                    const SizedBox(height: 12),
+                    _buildNumberPad(height: keyHeight, grid: true),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
@@ -751,11 +883,17 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
             _buildStatus(l10n),
             if (_showWinBar)
               _buildWinBar(l10n)
-            else if (!_solved) ...[
-              _buildControls(l10n),
-              const SizedBox(height: 8),
-              _buildNumberPad(height: padHeight),
-            ],
+            else if (!_solved)
+              _buildEntryArea(
+                l10n,
+                Column(
+                  children: [
+                    _buildControls(l10n),
+                    const SizedBox(height: 8),
+                    _buildNumberPad(height: padHeight),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
@@ -897,8 +1035,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       children: [
         SudokuBoard(
           game: _game,
-          selected: _selected,
-          activeDigit: _activeDigit,
+          selected: _coachStep == null ? _selected : null,
+          activeDigit: _coachStep == null ? _activeDigit : null,
+          highlight: _coachHighlight(),
           showErrors: _settings.showErrors,
           markConflicts: _settings.markConflicts,
           onCellTap: _onCellTap,
