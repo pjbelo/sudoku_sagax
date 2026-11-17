@@ -602,6 +602,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Se eliminarán todos los récords de todos los niveles. Esta acción no se puede deshacer.';
 
   @override
+  String get leaderboards => 'Clasificaciones';
+
+  @override
+  String get achievements => 'Logros';
+
+  @override
   String get bestTimes => 'Mejores tiempos';
 
   @override

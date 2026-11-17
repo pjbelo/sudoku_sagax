@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -13,6 +15,7 @@ import 'screens/home_screen.dart';
 import 'services/analytics_service.dart';
 import 'services/audio_service.dart';
 import 'services/daily_service.dart';
+import 'services/games_service.dart';
 import 'services/lesson_service.dart';
 import 'services/saved_game_service.dart';
 import 'services/scoreboard_service.dart';
@@ -40,6 +43,8 @@ Future<void> main() async {
   await LessonService.instance.load();
   await AudioService.instance.init();
   runApp(const SudokuSagaxApp());
+  // Game Center / Play Games: signs in with its own sheet when needed.
+  unawaited(GamesService.instance.init());
 }
 
 /// Firebase is configured for Android and iOS only (project

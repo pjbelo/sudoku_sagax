@@ -602,6 +602,12 @@ class AppLocalizationsPt extends AppLocalizations {
       'Todos os recordes de todos os níveis serão apagados. Esta ação não pode ser desfeita.';
 
   @override
+  String get leaderboards => 'Classificações';
+
+  @override
+  String get achievements => 'Conquistas';
+
+  @override
   String get bestTimes => 'Melhores tempos';
 
   @override

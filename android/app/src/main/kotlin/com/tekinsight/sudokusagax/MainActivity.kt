@@ -1,12 +1,23 @@
 package com.tekinsight.sudokusagax
 
 import android.media.AudioManager
+import android.os.Bundle
+import com.google.android.gms.games.PlayGamesSdk
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private val ringerChannel = "com.tekinsight.sudokusagax/ringer"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Google Play Games starts only once its project ID is set
+        // (res/values/play_games.xml).
+        if (getString(R.string.game_services_project_id).isNotEmpty()) {
+            PlayGamesSdk.initialize(this)
+        }
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

@@ -10,6 +10,7 @@ import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
+import '../services/games_service.dart';
 import '../services/scoreboard_service.dart';
 import '../services/statistics_service.dart';
 import '../widgets/adaptive_layout.dart';
@@ -328,6 +329,49 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     );
   }
 
+  /// Game Center's (or Play Games') own leaderboards and achievements,
+  /// once the player is signed in.
+  Widget _buildGamesButtons(AppLocalizations l10n) {
+    final games = GamesService.instance;
+    return ListenableBuilder(
+      listenable: games,
+      builder: (context, _) {
+        if (!games.isAvailable) return const SizedBox.shrink();
+        final primary = Theme.of(context).primaryColor;
+        Widget button(IconData icon, String label, VoidCallback onPressed) {
+          return TextButton.icon(
+            onPressed: () {
+              _click();
+              onPressed();
+            },
+            icon: Icon(icon, color: primary),
+            label: Text(
+              label,
+              style: GoogleFonts.exo2(fontSize: 15, color: primary),
+            ),
+          );
+        }
+
+        return Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 8,
+          children: [
+            button(
+              Icons.leaderboard_outlined,
+              l10n.leaderboards,
+              () => unawaited(games.showLeaderboards()),
+            ),
+            button(
+              Icons.military_tech_outlined,
+              l10n.achievements,
+              () => unawaited(games.showAchievements()),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildClearButton(String label, VoidCallback onPressed) {
     return TextButton.icon(
       onPressed: onPressed,
@@ -349,6 +393,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
           _buildClearButton(l10n.clearScores, _clear),
         if (_showStatistics && !_statistics.isEmpty)
           _buildClearButton(l10n.clearStats, _clearStatistics),
+        _buildGamesButtons(l10n),
         TextButton(
           onPressed: () {
             _click();

@@ -161,6 +161,8 @@
   "clearScores": "Effacer les records",
   "clearScoresTitle": "Effacer les records ?",
   "clearScoresMessage": "Tous les records de tous les niveaux seront supprimés. Cette action est irréversible.",
+  "leaderboards": "Classements",
+  "achievements": "Succès",
   "bestTimes": "Meilleurs temps",
   "statistics": "Statistiques",
   "statPlayed": "Jouées",

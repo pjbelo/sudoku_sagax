@@ -57,6 +57,14 @@ SudokuPuzzle dailyPuzzle(DateTime day) {
   );
 }
 
+/// Today's date for the daily puzzle: the calendar day in UTC, so the
+/// puzzle changes at 00:00 UTC for everyone, when Game Center's daily
+/// leaderboard starts again. Returned as a local midnight of that date.
+DateTime dailyToday([DateTime? now]) {
+  final utc = (now ?? DateTime.now()).toUtc();
+  return DateTime(utc.year, utc.month, utc.day);
+}
+
 /// Days from 1 January 2026 to the date of [day].
 int dayNumber(DateTime day) => DateTime.utc(
   day.year,

@@ -68,7 +68,10 @@ Widget storeGlow(Color color, double size, double alpha) {
     decoration: BoxDecoration(
       shape: BoxShape.circle,
       gradient: RadialGradient(
-        colors: [color.withValues(alpha: alpha), color.withValues(alpha: 0)],
+        colors: [
+          color.withValues(alpha: alpha),
+          color.withValues(alpha: 0),
+        ],
       ),
     ),
   );

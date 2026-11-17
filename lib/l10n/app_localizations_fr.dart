@@ -605,6 +605,12 @@ class AppLocalizationsFr extends AppLocalizations {
       'Tous les records de tous les niveaux seront supprimés. Cette action est irréversible.';
 
   @override
+  String get leaderboards => 'Classements';
+
+  @override
+  String get achievements => 'Succès';
+
+  @override
   String get bestTimes => 'Meilleurs temps';
 
   @override

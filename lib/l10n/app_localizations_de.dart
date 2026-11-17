@@ -602,6 +602,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Alle Ergebnisse aller Level werden gelöscht. Dies kann nicht rückgängig gemacht werden.';
 
   @override
+  String get leaderboards => 'Bestenlisten';
+
+  @override
+  String get achievements => 'Erfolge';
+
+  @override
   String get bestTimes => 'Bestzeiten';
 
   @override

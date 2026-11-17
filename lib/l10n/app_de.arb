@@ -161,6 +161,8 @@
   "clearScores": "Bestenliste löschen",
   "clearScoresTitle": "Bestenliste löschen?",
   "clearScoresMessage": "Alle Ergebnisse aller Level werden gelöscht. Dies kann nicht rückgängig gemacht werden.",
+  "leaderboards": "Bestenlisten",
+  "achievements": "Erfolge",
   "bestTimes": "Bestzeiten",
   "statistics": "Statistik",
   "statPlayed": "Gespielt",

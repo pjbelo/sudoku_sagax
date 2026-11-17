@@ -1070,6 +1070,18 @@ abstract class AppLocalizations {
   /// **'All scores for every level will be deleted. This cannot be undone.'**
   String get clearScoresMessage;
 
+  /// No description provided for @leaderboards.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaderboards'**
+  String get leaderboards;
+
+  /// No description provided for @achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievements;
+
   /// No description provided for @bestTimes.
   ///
   /// In en, this message translates to:

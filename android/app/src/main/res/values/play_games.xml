@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Google Play Games project ID, from Play Console (Play Games Services →
+         Setup and management → Configuration). Empty: Play Games stays off.
+         Fill in together with lib/game/play_games_ids.dart; see
+         docs/game-center.md. -->
+    <string name="game_services_project_id" translatable="false"></string>
+</resources>

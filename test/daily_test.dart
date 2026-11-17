@@ -54,6 +54,16 @@ void main() {
       expect(week, [3, 4, 5, 6, 6, 7, 8]);
     });
 
+    test("today is the UTC date, as Game Center's daily leaderboard", () {
+      // 23:30 on 17 November in New York is already the 18th in UTC.
+      final newYork = DateTime.utc(2026, 11, 18, 4, 30).toLocal();
+      expect(dailyToday(newYork), DateTime(2026, 11, 18));
+      expect(
+        dailyToday(DateTime.utc(2026, 11, 17, 23, 59)),
+        DateTime(2026, 11, 17),
+      );
+    });
+
     test('the same all day, another the next day', () {
       final morning = dailyPuzzle(DateTime(2026, 11, 18, 0, 5));
       final night = dailyPuzzle(DateTime(2026, 11, 18, 23, 55));

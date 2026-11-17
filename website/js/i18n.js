@@ -132,7 +132,7 @@ window.SUDOKU_SAGAX_I18N = {
     "statusFull": "The grid is full, but something is not right",
     "privacy": {
       "title": "Privacy Policy",
-      "updated": "Last updated: 8 October 2026",
+      "updated": "Last updated: 17 November 2026",
       "intro": "This Privacy Policy describes how <strong>Tekinsight — Information Technologies</strong> (\"we\", \"our\" or \"Tekinsight\") collects, uses and protects information from users of the <strong>Sudoku Sagax</strong> application (\"App\" or \"Sudoku Sagax\"), published under the Sagax Games brand.",
       "summary": "<strong>Summary:</strong> Sudoku Sagax does not collect personally identifiable data. We only use Google Firebase services to collect anonymous usage and stability data in order to improve the App. Your options and scores stay on your device.",
       "sections": [
@@ -177,7 +177,8 @@ window.SUDOKU_SAGAX_I18N = {
           ],
           [
             "<strong>Firebase Analytics (Google)</strong> — anonymous usage analytics;",
-            "<strong>Firebase Crashlytics (Google)</strong> — crash reporting. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Learn more</a>."
+            "<strong>Firebase Crashlytics (Google)</strong> — crash reporting. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Learn more</a>.",
+            "<strong>Game Center (Apple) and Google Play Games (Google)</strong> — optional: if you sign in, your best times and achievements are shared with the service to show leaderboards and achievements. They never reach us."
           ],
           [
             "These services may collect information used to identify the user's device (such as installation or device identifiers), as described in their respective policies."
@@ -360,7 +361,7 @@ window.SUDOKU_SAGAX_I18N = {
     "statusFull": "A grelha está cheia, mas há algo que não está certo",
     "privacy": {
       "title": "Política de Privacidade",
-      "updated": "Última atualização: 8 de outubro de 2026",
+      "updated": "Última atualização: 17 de novembro de 2026",
       "intro": "A presente Política de Privacidade descreve como a <strong>Tekinsight — Information Technologies</strong> (\"nós\", \"nosso\" ou \"Tekinsight\") recolhe, utiliza e protege as informações dos utilizadores da aplicação <strong>Sudoku Sagax</strong> (\"Aplicação\" ou \"Sudoku Sagax\"), publicada sob a marca Sagax Games.",
       "summary": "<strong>Resumo:</strong> O Sudoku Sagax não recolhe dados pessoais identificáveis. Utilizamos apenas serviços Google Firebase para recolher dados anónimos de utilização e estabilidade, com o objetivo de melhorar a Aplicação. As tuas opções e recordes ficam no teu dispositivo.",
       "sections": [
@@ -405,7 +406,8 @@ window.SUDOKU_SAGAX_I18N = {
           ],
           [
             "<strong>Firebase Analytics (Google)</strong> — análise anónima de utilização;",
-            "<strong>Firebase Crashlytics (Google)</strong> — relatórios de falhas. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Saber mais</a>."
+            "<strong>Firebase Crashlytics (Google)</strong> — relatórios de falhas. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Saber mais</a>.",
+            "<strong>Game Center (Apple) e Google Play Games (Google)</strong> — opcionais: se iniciares sessão, os teus melhores tempos e conquistas são partilhados com o serviço, para mostrar classificações e conquistas. Nunca chegam até nós."
           ],
           [
             "Estes serviços podem recolher informações utilizadas para identificar o dispositivo do utilizador (como identificadores de instalação ou de dispositivo), conforme descrito nas respetivas políticas."
@@ -588,7 +590,7 @@ window.SUDOKU_SAGAX_I18N = {
     "statusFull": "La cuadrícula está llena, pero algo no está bien",
     "privacy": {
       "title": "Política de Privacidad",
-      "updated": "Última actualización: 8 de octubre de 2026",
+      "updated": "Última actualización: 17 de noviembre de 2026",
       "intro": "La presente Política de Privacidad describe cómo <strong>Tekinsight — Information Technologies</strong> (\"nosotros\", \"nuestro\" o \"Tekinsight\") recopila, utiliza y protege la información de los usuarios de la aplicación <strong>Sudoku Sagax</strong> (\"Aplicación\" o \"Sudoku Sagax\"), publicada bajo la marca Sagax Games.",
       "summary": "<strong>Resumen:</strong> Sudoku Sagax no recopila datos personales identificables. Solo utilizamos servicios de Google Firebase para recopilar datos anónimos de uso y estabilidad, con el fin de mejorar la Aplicación. Tus opciones y récords se quedan en tu dispositivo.",
       "sections": [
@@ -633,7 +635,8 @@ window.SUDOKU_SAGAX_I18N = {
           ],
           [
             "<strong>Firebase Analytics (Google)</strong> — análisis anónimo de uso;",
-            "<strong>Firebase Crashlytics (Google)</strong> — informes de fallos. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Más información</a>."
+            "<strong>Firebase Crashlytics (Google)</strong> — informes de fallos. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Más información</a>.",
+            "<strong>Game Center (Apple) y Google Play Games (Google)</strong> — opcionales: si inicias sesión, tus mejores tiempos y logros se comparten con el servicio para mostrar clasificaciones y logros. Nunca nos llegan a nosotros."
           ],
           [
             "Estos servicios pueden recopilar información utilizada para identificar el dispositivo del usuario (como identificadores de instalación o de dispositivo), según se describe en sus respectivas políticas."
@@ -816,7 +819,7 @@ window.SUDOKU_SAGAX_I18N = {
     "statusFull": "La grille est pleine, mais quelque chose ne va pas",
     "privacy": {
       "title": "Politique de Confidentialité",
-      "updated": "Dernière mise à jour : 8 octobre 2026",
+      "updated": "Dernière mise à jour : 17 novembre 2026",
       "intro": "La présente Politique de Confidentialité décrit comment <strong>Tekinsight — Information Technologies</strong> (« nous », « notre » ou « Tekinsight ») collecte, utilise et protège les informations des utilisateurs de l'application <strong>Sudoku Sagax</strong> (« Application » ou « Sudoku Sagax »), publiée sous la marque Sagax Games.",
       "summary": "<strong>Résumé :</strong> Sudoku Sagax ne collecte aucune donnée personnelle identifiable. Nous utilisons uniquement les services Google Firebase pour collecter des données anonymes d'utilisation et de stabilité, afin d'améliorer l'Application. Vos options et vos records restent sur votre appareil.",
       "sections": [
@@ -861,7 +864,8 @@ window.SUDOKU_SAGAX_I18N = {
           ],
           [
             "<strong>Firebase Analytics (Google)</strong> — analyse anonyme de l'utilisation ;",
-            "<strong>Firebase Crashlytics (Google)</strong> — rapports de plantage. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">En savoir plus</a>."
+            "<strong>Firebase Crashlytics (Google)</strong> — rapports de plantage. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">En savoir plus</a>.",
+            "<strong>Game Center (Apple) et Google Play Games (Google)</strong> — facultatifs : si vous vous connectez, vos meilleurs temps et vos succès sont partagés avec le service pour afficher les classements et les succès. Ils ne nous parviennent jamais."
           ],
           [
             "Ces services peuvent collecter des informations permettant d'identifier l'appareil de l'utilisateur (comme des identifiants d'installation ou d'appareil), comme décrit dans leurs politiques respectives."
@@ -1044,7 +1048,7 @@ window.SUDOKU_SAGAX_I18N = {
     "statusFull": "Das Gitter ist voll, aber etwas stimmt nicht",
     "privacy": {
       "title": "Datenschutzerklärung",
-      "updated": "Zuletzt aktualisiert: 8. Oktober 2026",
+      "updated": "Zuletzt aktualisiert: 17. November 2026",
       "intro": "Diese Datenschutzerklärung beschreibt, wie <strong>Tekinsight — Information Technologies</strong> („wir\", „unser\" oder „Tekinsight\") Informationen der Nutzer der App <strong>Sudoku Sagax</strong> („App\" oder „Sudoku Sagax\"), veröffentlicht unter der Marke Sagax Games, erhebt, verwendet und schützt.",
       "summary": "<strong>Zusammenfassung:</strong> Sudoku Sagax erhebt keine personenbezogenen Daten. Wir nutzen ausschließlich Google-Firebase-Dienste, um anonyme Nutzungs- und Stabilitätsdaten zu erheben und so die App zu verbessern. Deine Optionen und Bestzeiten bleiben auf deinem Gerät.",
       "sections": [
@@ -1089,7 +1093,8 @@ window.SUDOKU_SAGAX_I18N = {
           ],
           [
             "<strong>Firebase Analytics (Google)</strong> — anonyme Nutzungsanalyse;",
-            "<strong>Firebase Crashlytics (Google)</strong> — Absturzberichte. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Mehr erfahren</a>."
+            "<strong>Firebase Crashlytics (Google)</strong> — Absturzberichte. <a href=\"https://firebase.google.com/support/privacy\" target=\"_blank\" rel=\"noopener\">Mehr erfahren</a>.",
+            "<strong>Game Center (Apple) und Google Play Games (Google)</strong> — optional: Wenn du dich anmeldest, werden deine Bestzeiten und Erfolge mit dem Dienst geteilt, um Bestenlisten und Erfolge anzuzeigen. Sie erreichen uns nie."
           ],
           [
             "Diese Dienste können Informationen erheben, die zur Identifizierung des Geräts dienen (etwa Installations- oder Gerätekennungen), wie in ihren jeweiligen Richtlinien beschrieben."

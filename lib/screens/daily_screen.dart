@@ -24,7 +24,8 @@ import 'game_screen.dart';
 class DailyScreen extends StatefulWidget {
   const DailyScreen({super.key, this.today});
 
-  /// The date to treat as today; null for the real one (tests set it).
+  /// The date to treat as today; null for the real one, [dailyToday]
+  /// (tests set it).
   final DateTime? today;
 
   @override
@@ -33,7 +34,9 @@ class DailyScreen extends StatefulWidget {
 
 class _DailyScreenState extends State<DailyScreen> {
   final _daily = DailyService.instance;
-  late final DateTime _today = _dateOf(widget.today ?? DateTime.now());
+  late final DateTime _today = widget.today == null
+      ? dailyToday()
+      : _dateOf(widget.today!);
 
   /// The first day of the month the calendar shows.
   late DateTime _month = DateTime(_today.year, _today.month);

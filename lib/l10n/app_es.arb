@@ -161,6 +161,8 @@
   "clearScores": "Borrar récords",
   "clearScoresTitle": "¿Borrar los récords?",
   "clearScoresMessage": "Se eliminarán todos los récords de todos los niveles. Esta acción no se puede deshacer.",
+  "leaderboards": "Clasificaciones",
+  "achievements": "Logros",
   "bestTimes": "Mejores tiempos",
   "statistics": "Estadísticas",
   "statPlayed": "Jugadas",

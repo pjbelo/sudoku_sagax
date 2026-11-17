@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../game/daily_puzzle.dart';
 import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
 import '../l10n/app_localizations.dart';
@@ -423,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               child: _SecondaryButton(
                 // A tick once today's puzzle is solved.
-                icon: DailyService.instance.isSolved(DateTime.now())
+                icon: DailyService.instance.isSolved(dailyToday())
                     ? Icons.event_available
                     : Icons.calendar_today_outlined,
                 label: l10n.daily,

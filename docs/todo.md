@@ -85,11 +85,17 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   option (off by default, and on by itself when the system asks for more
   contrast) strengthens the grid lines, notes, highlights and keys. Still
   worth a pass on a real device with VoiceOver and TalkBack on.
-- **B7. Game Center and Google Play Games (M).** Leaderboards for the best
-  time at each level and for the daily puzzle (needs B5), plus achievements
-  (first win at each level, win without hints, seven-day streak, a technique
-  learned, which needs B4). Needs setup in App Store Connect and Play
-  Console, as was done for MasterCode.
+- ~~**B7. Game Center and Google Play Games (M).**~~ Done in the app on
+  2026-11-17: a best-time leaderboard per level and one for the daily
+  puzzle (which now changes at 00:00 UTC, like Game Center's daily
+  leaderboard), and 14 achievements (each level, Pure Logic, Seven Days in
+  a Row, First Lesson, Lessons Learned, Puzzle of the Day), with images.
+  **Still to do in the stores:** create them in App Store Connect
+  ([game-center.md](app-store/game-center.md)) and in Play Console, then
+  paste the Play IDs into the app
+  ([play-games.md](google-play/play-games.md)); test with a Sandbox
+  account and a Play tester; mention them in the store texts and the App
+  Review notes.
 - **B8. Share a puzzle (S).** A short code or link for the puzzle just
   played, so a friend can solve the same grid and compare times.
 - **B9. Light theme (S–M).** A light version of the Sagax theme that
@@ -107,7 +113,8 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   the tagline.
 
 - **Upload the website.** The privacy page now lists the statistics and the
-  game in progress among the data kept on the device (built on 2026-11-17).
+  game in progress among the data kept on the device, and Game Center and
+  Google Play Games among the third-party services (built on 2026-11-17).
   Upload `website/` to the Plesk document root with the 1.1 release.
 
 - **Benefit 6 wording ("reduced stress").** `benefit6Desc` says flow "is

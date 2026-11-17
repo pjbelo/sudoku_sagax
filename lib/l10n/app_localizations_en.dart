@@ -599,6 +599,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'All scores for every level will be deleted. This cannot be undone.';
 
   @override
+  String get leaderboards => 'Leaderboards';
+
+  @override
+  String get achievements => 'Achievements';
+
+  @override
   String get bestTimes => 'Best times';
 
   @override

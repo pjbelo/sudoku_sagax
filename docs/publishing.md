@@ -118,7 +118,10 @@ unplug.
    - ads: none;
    - content rating questionnaire;
    - target audience;
-   - **Data safety**: declare what Firebase Analytics and Crashlytics collect:
+   - **Data safety**: once Google Play Games is set up, also declare that
+     scores and achievements are shared with it when the player signs in
+     ([play-games.md](google-play/play-games.md));
+   - declare what Firebase Analytics and Crashlytics collect:
      app interactions, crash logs and diagnostics, and app/device identifiers.
      This data is collected for analytics and crash reporting, not shared
      (Firebase acts as a service provider), and encrypted in transit. Options,

@@ -17,6 +17,7 @@ import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
 import '../services/daily_service.dart';
+import '../services/games_service.dart';
 import '../services/lesson_service.dart';
 import '../services/saved_game_service.dart';
 import '../services/scoreboard_service.dart';
@@ -634,15 +635,31 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         now: DateTime.now(),
       ),
     );
-    final rank = await ScoreboardService.instance.add(
-      _level,
-      ScoreEntry(
-        seconds: _seconds,
-        hints: _game.hintsUsed,
-        mistakes: _game.mistakes,
-        date: DateTime.now(),
-      ),
-    );
+    // Game Center and Play Games (no-ops when not signed in). A daily
+    // puzzle goes to its own leaderboard, not to its level's, and stays
+    // off the level's scoreboard: its easy days have a few more clues.
+    if (day == null) {
+      unawaited(
+        GamesService.instance.recordWin(
+          level: _level,
+          seconds: _seconds,
+          hints: _game.hintsUsed,
+        ),
+      );
+    } else {
+      unawaited(GamesService.instance.recordDaily(_seconds));
+    }
+    final rank = day != null
+        ? null
+        : await ScoreboardService.instance.add(
+            _level,
+            ScoreEntry(
+              seconds: _seconds,
+              hints: _game.hintsUsed,
+              mistakes: _game.mistakes,
+              date: DateTime.now(),
+            ),
+          );
     _analytics.log('level_completed', {
       'level': _level,
       'seconds': _seconds,

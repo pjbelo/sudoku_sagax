@@ -403,6 +403,8 @@
   "clearScores": "Clear scoreboard",
   "clearScoresTitle": "Clear the scoreboard?",
   "clearScoresMessage": "All scores for every level will be deleted. This cannot be undone.",
+  "leaderboards": "Leaderboards",
+  "achievements": "Achievements",
   "bestTimes": "Best times",
   "statistics": "Statistics",
   "statPlayed": "Played",

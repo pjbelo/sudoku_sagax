@@ -10,6 +10,7 @@ import '../l10n/app_localizations.dart';
 import '../sagax_theme.dart';
 import '../services/analytics_service.dart';
 import '../services/audio_service.dart';
+import '../services/games_service.dart';
 import '../services/lesson_service.dart';
 import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
@@ -78,7 +79,11 @@ class _LessonScreenState extends State<LessonScreen> {
       _step.removals.forEach((cell, mask) => _game.notes[cell] &= ~mask);
       _game.enterDigit(i, digit);
       unawaited(_audio.playSfx(AudioService.winSfx, volume: 0.7));
-      unawaited(LessonService.instance.markDone(widget.technique));
+      unawaited(
+        LessonService.instance
+            .markDone(widget.technique)
+            .then((_) => GamesService.instance.recordLesson()),
+      );
       AnalyticsService.instance.log('lesson_done', {
         'technique': widget.technique.name,
         'missed': _missed ? 1 : 0,
