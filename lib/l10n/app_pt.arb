@@ -216,5 +216,10 @@
   "puzzleCodeFound": "Nível {level} · {summary}",
   "puzzleCodeInvalid": "Ainda não há um código válido. Verifica a mensagem ou o código.",
   "puzzleCodePlay": "Jogar este puzzle",
-  "puzzleCodeNote": "Um puzzle partilhado conta nas tuas estatísticas, mas não nos recordes nem nas classificações."
+  "puzzleCodeNote": "Um puzzle partilhado conta nas tuas estatísticas, mas não nos recordes nem nas classificações.",
+  "optTheme": "Aspeto",
+  "optThemeDesc": "Seguir a definição do sistema, ou usar sempre claro ou escuro.",
+  "themeSystem": "Sistema",
+  "themeLight": "Claro",
+  "themeDark": "Escuro"
 }

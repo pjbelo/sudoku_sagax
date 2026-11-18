@@ -74,8 +74,10 @@ reads as a badge on the light theme too.
 1. Copy `SagaxPalette`, `AppColors` and `_buildTheme` from `sagax_theme.dart`.
    Each app adds its own extra tokens next to these (Sudoku's `error` and
    `hint` started that way).
-2. In `MaterialApp`, set `theme: sagaxLightTheme`, `darkTheme: sagaxTheme`
-   and `themeMode: ThemeMode.system`. Add the `AnnotatedRegion` for the
+2. In `MaterialApp`, set `theme: sagaxLightTheme` and
+   `darkTheme: sagaxTheme`, and take `themeMode` from the settings. It is
+   `ThemeMode.system` by default, with an Appearance option (System / Light
+   / Dark) as in Sudoku Sagax's Options. Add the `AnnotatedRegion` for the
    status bar from `main.dart`, for screens without an app bar.
 3. Replace each `AppColors.<colour>` constant with the token for what it is
    for. Text on a cyan fill is `onPrimary`, not `background`.

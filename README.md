@@ -93,7 +93,7 @@ lib/
   screens/
     home_screen.dart           Logo, 3×3 level selector, Play, Continue, Scoreboard, Daily; Info, Lessons, Code, Options, language
     game_screen.dart           Board, stats, controls, number pad, pause, win bar + summary
-    options_screen.dart        The option switches + Restore defaults
+    options_screen.dart        The option switches, Appearance (system / light / dark) + Restore defaults
     scoreboard_screen.dart     Per-level best times and statistics
     info_screen.dart           How to play, Brain Benefits, scientific references, credits
     review_screen.dart         After a win: techniques needed, hints and mistakes with the logic available
@@ -122,7 +122,8 @@ integration_test/              store_screenshots_test.dart / store_video_test.da
 
 ### Theming
 
-The app follows the system's light or dark setting. Colours come from
+The app follows the system's light or dark setting, unless the player picks
+one in Options (Appearance: System / Light / Dark). Colours come from
 [lib/sagax_theme.dart](lib/sagax_theme.dart): read them with
 `AppColors.of(context)`, by role (`text`, `card`, `primary`…), never as fixed
 values. [docs/brand-palette.md](docs/brand-palette.md) has both palettes,

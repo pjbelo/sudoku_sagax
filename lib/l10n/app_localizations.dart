@@ -1405,6 +1405,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A shared puzzle counts in your statistics, but not on the scoreboard or the leaderboards.'**
   String get puzzleCodeNote;
+
+  /// Options card: light or dark theme. Its choices are themeSystem, themeLight, themeDark (short).
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get optTheme;
+
+  /// No description provided for @optThemeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the system\'s setting, or always use light or dark.'**
+  String get optThemeDesc;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
 }
 
 class _AppLocalizationsDelegate

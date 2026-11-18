@@ -129,6 +129,44 @@ void main() {
     );
   });
 
+  testWidgets('the Appearance option overrides the system', (tester) async {
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
+    Color background() =>
+        Theme.of(tester.element(find.byType(Scaffold).last))
+            .scaffoldBackgroundColor;
+
+    await pumpApp(tester);
+    await tester.tap(find.text('Options'));
+    await tester.pumpAndSettle();
+    // The card's buttons are the first Exo 2 SemiBold text: let it load
+    // before the taps, or the text changes size between layout and paint.
+    await waitForFonts(tester);
+    expect(background(), AppColors.light.background);
+
+    // Dark while the system is light.
+    await tester.ensureVisible(find.text('Dark'));
+    await tester.tap(find.text('Dark'));
+    await tester.pumpAndSettle();
+    expect(SettingsService.instance.themeMode, ThemeMode.dark);
+    expect(background(), AppColors.dark.background);
+
+    // Light while the system is dark.
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    await tester.tap(find.text('Light'));
+    await tester.pumpAndSettle();
+    expect(background(), AppColors.light.background);
+
+    // Back to the system's setting (dark now), also by Restore defaults.
+    await tester.tap(find.text('Dark'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Restore defaults'));
+    await tester.tap(find.text('Restore defaults'));
+    await tester.pumpAndSettle();
+    expect(SettingsService.instance.themeMode, ThemeMode.system);
+    expect(background(), AppColors.dark.background);
+  });
+
   testWidgets('solving a game with hints records a score', (tester) async {
     await pumpApp(tester);
     await tester.tap(find.text('PLAY'));

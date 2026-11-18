@@ -795,4 +795,20 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get puzzleCodeNote =>
       'Ein geteiltes Rätsel zählt in deiner Statistik, aber nicht in den Bestzeiten oder Ranglisten.';
+
+  @override
+  String get optTheme => 'Darstellung';
+
+  @override
+  String get optThemeDesc =>
+      'Der Systemeinstellung folgen oder immer hell oder dunkel.';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Hell';
+
+  @override
+  String get themeDark => 'Dunkel';
 }

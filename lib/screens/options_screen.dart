@@ -12,8 +12,8 @@ import '../services/settings_service.dart';
 import '../widgets/adaptive_layout.dart';
 
 /// Sound, Timer, Show errors, Mark conflicts, Hint button, Fill notes on easy levels,
-/// Vibration, High contrast and Left-handed switches.
-/// Changes are saved immediately.
+/// Vibration and High contrast switches, the Appearance choice (system,
+/// light or dark), and the Left-handed switch. Changes are saved immediately.
 class OptionsScreen extends StatelessWidget {
   const OptionsScreen({super.key});
 
@@ -125,6 +125,17 @@ class OptionsScreen extends StatelessWidget {
                   _click();
                   settings.highContrast = v;
                   _logChange('high_contrast', v);
+                },
+              ),
+              _ThemeCard(
+                value: settings.themeMode,
+                onChanged: (mode) {
+                  _click();
+                  settings.themeMode = mode;
+                  AnalyticsService.instance.log('option_changed', {
+                    'option': 'theme',
+                    'value': mode.name,
+                  });
                 },
               ),
               _OptionCard(
@@ -295,6 +306,106 @@ class _OptionCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The Appearance option: the system's setting, light or dark, as three
+/// buttons in a row under the title.
+class _ThemeCard extends StatelessWidget {
+  const _ThemeCard({required this.value, required this.onChanged});
+
+  final ThemeMode value;
+  final ValueChanged<ThemeMode> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colors = AppColors.of(context);
+    final primary = Theme.of(context).primaryColor;
+
+    // Shrunk to one line in a narrow card, rather than wrapped.
+    Widget label(String text) =>
+        FittedBox(fit: BoxFit.scaleDown, child: Text(text, maxLines: 1));
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: primary.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Icon(Icons.brightness_6_outlined, color: primary),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.optTheme,
+                      style: GoogleFonts.exo2(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: colors.text,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.optThemeDesc,
+                      style: GoogleFonts.inter(
+                        color: colors.muted,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Words only, no icons: on a narrow phone the three words need
+          // the whole width.
+          SegmentedButton<ThemeMode>(
+            segments: [
+              ButtonSegment(
+                value: ThemeMode.system,
+                label: label(l10n.themeSystem),
+              ),
+              ButtonSegment(
+                value: ThemeMode.light,
+                label: label(l10n.themeLight),
+              ),
+              ButtonSegment(
+                value: ThemeMode.dark,
+                label: label(l10n.themeDark),
+              ),
+            ],
+            selected: {value},
+            onSelectionChanged: (selection) => onChanged(selection.first),
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+              foregroundColor: colors.muted,
+              selectedForegroundColor: colors.onPrimary,
+              selectedBackgroundColor: primary,
+              side: BorderSide(color: primary.withValues(alpha: 0.6)),
+              textStyle: GoogleFonts.exo2(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

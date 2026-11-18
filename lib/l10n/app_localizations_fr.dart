@@ -799,4 +799,20 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get puzzleCodeNote =>
       'Une grille partagée compte dans vos statistiques, mais pas dans les records ni les classements.';
+
+  @override
+  String get optTheme => 'Apparence';
+
+  @override
+  String get optThemeDesc =>
+      'Suivre le réglage du système, ou toujours clair ou sombre.';
+
+  @override
+  String get themeSystem => 'Système';
+
+  @override
+  String get themeLight => 'Clair';
+
+  @override
+  String get themeDark => 'Sombre';
 }

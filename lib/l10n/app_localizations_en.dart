@@ -791,4 +791,20 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get puzzleCodeNote =>
       'A shared puzzle counts in your statistics, but not on the scoreboard or the leaderboards.';
+
+  @override
+  String get optTheme => 'Appearance';
+
+  @override
+  String get optThemeDesc =>
+      'Follow the system\'s setting, or always use light or dark.';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
 }

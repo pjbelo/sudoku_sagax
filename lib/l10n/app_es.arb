@@ -216,5 +216,10 @@
   "puzzleCodeFound": "Nivel {level} · {summary}",
   "puzzleCodeInvalid": "Todavía no hay un código válido. Revisa el mensaje o el código.",
   "puzzleCodePlay": "Jugar este puzle",
-  "puzzleCodeNote": "Un puzle compartido cuenta en tus estadísticas, pero no en los récords ni en las clasificaciones."
+  "puzzleCodeNote": "Un puzle compartido cuenta en tus estadísticas, pero no en los récords ni en las clasificaciones.",
+  "optTheme": "Apariencia",
+  "optThemeDesc": "Seguir el ajuste del sistema, o usar siempre claro u oscuro.",
+  "themeSystem": "Sistema",
+  "themeLight": "Claro",
+  "themeDark": "Oscuro"
 }

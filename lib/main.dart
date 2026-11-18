@@ -83,16 +83,18 @@ class SudokuSagaxApp extends StatelessWidget {
       bridgeMode: defaultTargetPlatform == TargetPlatform.iOS
           ? DisplayFeatureBridgeMode.full
           : DisplayFeatureBridgeMode.none,
-      // Rebuilds when the language changes (stored with the other options).
+      // Rebuilds when the language or the appearance changes (stored with
+      // the other options).
       child: ListenableBuilder(
         listenable: SettingsService.instance,
         builder: (context, _) => MaterialApp(
           title: 'Sudoku Sagax',
           debugShowCheckedModeBanner: false,
-          // Light or dark, as the system is set.
+          // Light or dark: as the system is set, unless the Appearance
+          // option picks one.
           theme: sagaxLightTheme,
           darkTheme: sagaxTheme,
-          themeMode: ThemeMode.system,
+          themeMode: SettingsService.instance.themeMode,
           locale: SettingsService.instance.locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

@@ -216,5 +216,10 @@
   "puzzleCodeFound": "Niveau {level} · {summary}",
   "puzzleCodeInvalid": "Pas encore de code valide. Vérifiez le message ou le code.",
   "puzzleCodePlay": "Jouer cette grille",
-  "puzzleCodeNote": "Une grille partagée compte dans vos statistiques, mais pas dans les records ni les classements."
+  "puzzleCodeNote": "Une grille partagée compte dans vos statistiques, mais pas dans les records ni les classements.",
+  "optTheme": "Apparence",
+  "optThemeDesc": "Suivre le réglage du système, ou toujours clair ou sombre.",
+  "themeSystem": "Système",
+  "themeLight": "Clair",
+  "themeDark": "Sombre"
 }

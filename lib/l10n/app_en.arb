@@ -499,5 +499,13 @@
   },
   "puzzleCodeInvalid": "No valid code yet. Check the message or the code.",
   "puzzleCodePlay": "Play this puzzle",
-  "puzzleCodeNote": "A shared puzzle counts in your statistics, but not on the scoreboard or the leaderboards."
+  "puzzleCodeNote": "A shared puzzle counts in your statistics, but not on the scoreboard or the leaderboards.",
+  "optTheme": "Appearance",
+  "@optTheme": {
+    "description": "Options card: light or dark theme. Its choices are themeSystem, themeLight, themeDark (short)."
+  },
+  "optThemeDesc": "Follow the system's setting, or always use light or dark.",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark"
 }

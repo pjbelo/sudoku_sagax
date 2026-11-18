@@ -797,4 +797,20 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get puzzleCodeNote =>
       'Un puzle compartido cuenta en tus estadísticas, pero no en los récords ni en las clasificaciones.';
+
+  @override
+  String get optTheme => 'Apariencia';
+
+  @override
+  String get optThemeDesc =>
+      'Seguir el ajuste del sistema, o usar siempre claro u oscuro.';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeDark => 'Oscuro';
 }

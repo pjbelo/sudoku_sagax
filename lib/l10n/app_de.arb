@@ -216,5 +216,10 @@
   "puzzleCodeFound": "Level {level} · {summary}",
   "puzzleCodeInvalid": "Noch kein gültiger Code. Prüfe die Nachricht oder den Code.",
   "puzzleCodePlay": "Dieses Rätsel spielen",
-  "puzzleCodeNote": "Ein geteiltes Rätsel zählt in deiner Statistik, aber nicht in den Bestzeiten oder Ranglisten."
+  "puzzleCodeNote": "Ein geteiltes Rätsel zählt in deiner Statistik, aber nicht in den Bestzeiten oder Ranglisten.",
+  "optTheme": "Darstellung",
+  "optThemeDesc": "Der Systemeinstellung folgen oder immer hell oder dunkel.",
+  "themeSystem": "System",
+  "themeLight": "Hell",
+  "themeDark": "Dunkel"
 }

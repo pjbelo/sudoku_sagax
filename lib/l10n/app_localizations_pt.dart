@@ -795,4 +795,20 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get puzzleCodeNote =>
       'Um puzzle partilhado conta nas tuas estatísticas, mas não nos recordes nem nas classificações.';
+
+  @override
+  String get optTheme => 'Aspeto';
+
+  @override
+  String get optThemeDesc =>
+      'Seguir a definição do sistema, ou usar sempre claro ou escuro.';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get themeLight => 'Claro';
+
+  @override
+  String get themeDark => 'Escuro';
 }

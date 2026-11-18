@@ -113,8 +113,8 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   launch screen and store art stay navy; the screenshot and video scripts
   set the simulator to dark (`APPEARANCE=light` for light shots). Still to
   do: decide whether one store screenshot shows the light theme; bring the
-  palette to Slidox, Memorex and MasterCode; maybe an in-app choice
-  (System / Light / Dark) if players ask for it.
+  palette to Slidox, Memorex and MasterCode. Options has an Appearance
+  choice (System / Light / Dark, System by default), added the same day.
 
 ## Other open items
 

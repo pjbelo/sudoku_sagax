@@ -1,11 +1,11 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Player options, persisted with shared_preferences.
 ///
 /// Defaults: sound ON, timer ON, show errors OFF, hint button ON,
 /// left-handed OFF, fill notes on easy levels OFF, vibration ON,
-/// mark conflicts ON, high contrast OFF.
+/// mark conflicts ON, high contrast OFF, appearance as the system.
 /// The chosen language is stored here too (null = follow the device).
 class SettingsService extends ChangeNotifier {
   SettingsService._();
@@ -20,6 +20,7 @@ class SettingsService extends ChangeNotifier {
   static const defaultHaptics = true;
   static const defaultMarkConflicts = true;
   static const defaultHighContrast = false;
+  static const defaultThemeMode = ThemeMode.system;
 
   /// Levels from here on always offer Fill notes; below it, only with the
   /// "Fill notes on easy levels" option.
@@ -34,6 +35,7 @@ class SettingsService extends ChangeNotifier {
   static const _hapticsKey = 'haptics';
   static const _markConflictsKey = 'mark_conflicts';
   static const _highContrastKey = 'high_contrast';
+  static const _themeModeKey = 'theme_mode';
   static const _localeKey = 'locale';
 
   SharedPreferences? _prefs;
@@ -47,6 +49,7 @@ class SettingsService extends ChangeNotifier {
   bool _haptics = defaultHaptics;
   bool _markConflicts = defaultMarkConflicts;
   bool _highContrast = defaultHighContrast;
+  ThemeMode _themeMode = defaultThemeMode;
   Locale? _locale;
 
   bool get sound => _sound;
@@ -69,6 +72,10 @@ class SettingsService extends ChangeNotifier {
   /// Stronger lines, notes and highlights on the board and the keys.
   bool get highContrast => _highContrast;
 
+  /// Light or dark: as the system is set ([ThemeMode.system]), or always
+  /// one of them.
+  ThemeMode get themeMode => _themeMode;
+
   /// Whether the game offers Fill notes at [level].
   bool fillNotesAt(int level) => level >= fillNotesFromLevel || _fillNotesEasy;
   Locale? get locale => _locale;
@@ -82,7 +89,8 @@ class SettingsService extends ChangeNotifier {
       _fillNotesEasy == defaultFillNotesEasy &&
       _haptics == defaultHaptics &&
       _markConflicts == defaultMarkConflicts &&
-      _highContrast == defaultHighContrast;
+      _highContrast == defaultHighContrast &&
+      _themeMode == defaultThemeMode;
 
   /// Reads the stored options. Call once in `main()` before `runApp`.
   Future<void> load() async {
@@ -97,6 +105,12 @@ class SettingsService extends ChangeNotifier {
     _haptics = prefs.getBool(_hapticsKey) ?? defaultHaptics;
     _markConflicts = prefs.getBool(_markConflictsKey) ?? defaultMarkConflicts;
     _highContrast = prefs.getBool(_highContrastKey) ?? defaultHighContrast;
+    // Stored by name: 'system', 'light' or 'dark'.
+    final mode = prefs.getString(_themeModeKey);
+    _themeMode = ThemeMode.values.firstWhere(
+      (m) => m.name == mode,
+      orElse: () => defaultThemeMode,
+    );
     final code = prefs.getString(_localeKey);
     _locale = code == null ? null : Locale(code);
   }
@@ -116,6 +130,12 @@ class SettingsService extends ChangeNotifier {
       _update(_markConflictsKey, value, () => _markConflicts = value);
   set highContrast(bool value) =>
       _update(_highContrastKey, value, () => _highContrast = value);
+
+  set themeMode(ThemeMode value) {
+    _themeMode = value;
+    _prefs?.setString(_themeModeKey, value.name);
+    notifyListeners();
+  }
 
   set locale(Locale? value) {
     _locale = value;
@@ -140,6 +160,7 @@ class SettingsService extends ChangeNotifier {
     haptics = defaultHaptics;
     markConflicts = defaultMarkConflicts;
     highContrast = defaultHighContrast;
+    themeMode = defaultThemeMode;
   }
 
   void _update(String key, bool value, VoidCallback apply) {
