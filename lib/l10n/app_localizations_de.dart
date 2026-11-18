@@ -725,7 +725,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get benefit6Desc =>
-      'Ein Rätsel, das zu deinem Können passt, lädt zum „Flow“ ein — dem völligen Aufgehen in der Aufgabe —, der mit Freude und weniger Stress verbunden ist. Neun Schwierigkeitsstufen halten die Herausforderung genau richtig.';
+      'Ein Rätsel, das zu deinem Können passt, lädt zum „Flow“ ein — dem völligen Aufgehen in der Aufgabe —, der mit Freude verbunden ist. Neun Schwierigkeitsstufen halten die Herausforderung genau richtig.';
 
   @override
   String get evidenceNote =>

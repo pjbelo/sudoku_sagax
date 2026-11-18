@@ -9,8 +9,8 @@ import 'awards.dart';
 // "Get resources" lists them all). Paste them here, keyed by the Game
 // Center IDs in awards.dart, and put the project ID in
 // android/app/src/main/res/values/play_games.xml. While these maps are
-// empty, Android never touches Play Games. docs/game-center.md has the
-// setup steps.
+// empty, Android never touches Play Games. docs/google-play/play-games.md
+// has the setup steps.
 
 /// Play Games achievement ID per [Award].
 const playGamesAchievementIds = <Award, String>{};

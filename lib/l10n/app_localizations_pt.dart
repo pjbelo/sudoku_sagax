@@ -725,7 +725,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get benefit6Desc =>
-      'Um puzzle ajustado à tua capacidade convida ao \"flow\" — a absorção total na tarefa — associado ao prazer e à redução do stress. Nove níveis de dificuldade permitem manter o desafio na medida certa.';
+      'Um puzzle ajustado à tua capacidade convida ao \"flow\" — a absorção total na tarefa — associado ao prazer. Nove níveis de dificuldade permitem manter o desafio na medida certa.';
 
   @override
   String get evidenceNote =>

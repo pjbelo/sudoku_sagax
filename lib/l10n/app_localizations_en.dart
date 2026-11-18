@@ -721,7 +721,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get benefit6Desc =>
-      'A puzzle matched to your skill invites \"flow\" — full absorption in the task — which is linked to enjoyment and reduced stress. Nine difficulty levels let you keep the challenge just right.';
+      'A puzzle matched to your skill invites \"flow\" — full absorption in the task — which is linked to enjoyment. Nine difficulty levels let you keep the challenge just right.';
 
   @override
   String get evidenceNote =>

@@ -729,7 +729,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get benefit6Desc =>
-      'Une grille adaptée à votre niveau favorise le « flow » — l\'absorption totale dans la tâche — associé au plaisir et à la réduction du stress. Neuf niveaux de difficulté vous permettent de garder le défi juste à la bonne mesure.';
+      'Une grille adaptée à votre niveau favorise le « flow » — l\'absorption totale dans la tâche — associé au plaisir. Neuf niveaux de difficulté vous permettent de garder le défi juste à la bonne mesure.';
 
   @override
   String get evidenceNote =>

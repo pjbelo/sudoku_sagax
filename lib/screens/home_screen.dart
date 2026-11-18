@@ -247,6 +247,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       l10n,
                       logoHeight: compact ? 84 : logoHeight,
                       gap: gap,
+                      // Continue takes the tagline's place, so that the
+                      // links row still fits on a phone held upright. A
+                      // returning player has seen the tagline already.
+                      showTagline: continueButton == null,
                     ),
                     SizedBox(height: gap),
                     _buildMenu(
@@ -302,11 +306,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Logo, developer and tagline.
+  /// Logo, developer and (unless [showTagline] is false) tagline.
   Widget _buildBrand(
     AppLocalizations l10n, {
     required double logoHeight,
     required double gap,
+    bool showTagline = true,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -333,12 +338,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: gap),
-        Text(
-          l10n.tagline,
-          style: Theme.of(context).textTheme.bodyLarge,
-          textAlign: TextAlign.center,
-        ),
+        if (showTagline) ...[
+          SizedBox(height: gap),
+          Text(
+            l10n.tagline,
+            style: Theme.of(context).textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ],
     );
   }

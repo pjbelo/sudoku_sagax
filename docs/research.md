@@ -149,6 +149,10 @@ the third author as "Two, Wung Wai", a metadata typo; PMC has Tso.)
 and the Foundations of Positive Psychology* (pp. 239–263). Springer.
 - Flow arises when challenge matches skill. This is the design rationale for
   nine finely graded levels. → *Benefit 6.* (Same reference as Slidox.)
+- Flow is full absorption in the task and is experienced as intrinsically
+  rewarding, so Benefit 6 links it to enjoyment. The chapter says nothing
+  about stress, so the app makes no stress claim (until 2026-11-18 it said
+  "reduced stress"; see Heydari et al. 2026 under *Not used*).
 
 ## Research behind the level design
 

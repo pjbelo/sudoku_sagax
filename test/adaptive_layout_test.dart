@@ -278,6 +278,34 @@ void main() {
       }
     });
 
+    testWidgets('with Continue, the links row still fits on a phone', (
+      tester,
+    ) async {
+      await _saveUnfinishedGame();
+      for (final code in const ['en', 'pt', 'es', 'fr', 'de']) {
+        final locale = Locale(code);
+        await pumpScreen(
+          tester,
+          const HomeScreen(),
+          phonePortrait,
+          locale: locale,
+        );
+        await waitForFonts(tester);
+        final l10n = lookupAppLocalizations(locale);
+        expect(
+          tester.getRect(find.text(l10n.lessons)).bottom,
+          lessThanOrEqualTo(844 - 34),
+          reason: code,
+        );
+        // Continue takes the tagline's place in one column.
+        expect(find.text(l10n.tagline), findsNothing, reason: code);
+      }
+
+      // In two panes there is room for both.
+      await pumpScreen(tester, const HomeScreen(), ipad13Landscape);
+      expect(find.text('Fill the grid, sharpen your mind'), findsOneWidget);
+    });
+
     testWidgets('Continue under Play in one column, under the brand in two', (
       tester,
     ) async {

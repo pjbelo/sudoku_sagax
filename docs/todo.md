@@ -4,11 +4,15 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B9 (B7 still needs the store setup).
+B1–B9) were agreed on 2026-11-17 and are **done in the app**
+(2026-11-17/18, each in its own commit on `develop`). B7 still needs the
+store setup; see [Next release](#next-release) below.
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
-### Suggested order
+### Release plan
+
+The plan was to split them into releases:
 
 1. **Version 1.1:** A1–A4, B1, B2. A1–A4 catch up with the genre; the coach
    and graded levels give the app its identity (the answer to Guideline 4.3).
@@ -16,8 +20,10 @@ Size is a rough guide: S is about a day, M a few days, L a week or more.
    daily puzzle brings players back.
 3. **Later:** B6, B7, B8, B9.
 
-After each version, redo the screenshots, videos, descriptions and App
-Review notes so the new features come first (see [publishing.md](publishing.md)).
+All of them are now on `develop`, so the next release carries them all
+unless some are held back. Decide which before the store work below: the
+screenshots, texts and App Review notes should show what ships, with the
+new features first (see [publishing.md](publishing.md)).
 
 ### A. Catch up with the genre
 
@@ -105,40 +111,58 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   that opens the app directly (Universal Links / App Links need files on
   the website and an entitlement), and a shorter code (it would need every
   game made from a frozen seed, like the daily puzzle).
-- ~~**B9. Light theme (S–M).**~~ Done on 2026-11-18: the app follows the
-  system's light or dark setting. Widgets read colour tokens by role
-  (`AppColors.of(context)`); the light palette keeps the brand's hues,
-  darkened to at least 4.5:1 on white, and is written up for the sister
-  apps in [brand-palette.md](brand-palette.md). Home has a light logo. The
-  launch screen and store art stay navy; the screenshot and video scripts
-  set the simulator to dark (`APPEARANCE=light` for light shots). Still to
-  do: decide whether one store screenshot shows the light theme; bring the
-  palette to Slidox, Memorex and MasterCode. Options has an Appearance
-  choice (System / Light / Dark, System by default), added the same day.
+- ~~**B9. Light theme (S–M).**~~ Done on 2026-11-18: a light theme and an
+  Appearance option (System / Light / Dark, System by default). Widgets read
+  colour tokens by role (`AppColors.of(context)`); the light palette keeps
+  the brand's hues, darkened to at least 4.5:1 on white, and is written up
+  for the sister apps in [brand-palette.md](brand-palette.md). Home has a
+  light logo. The launch screen and store art stay navy; the screenshot and
+  video scripts set the simulator to dark (`APPEARANCE=light` for light
+  shots). Still to do: bring the palette to Slidox, Memorex and MasterCode.
+
+## Next release
+
+What is left before the agreed improvements reach the stores.
+
+- **Version number.** `pubspec.yaml` still says `1.0.0+3`. Raise it (for
+  example `1.1.0+4`) before building for the stores.
+- **Game Center and Play Games setup (B7).** Create the leaderboards and
+  achievements in App Store Connect
+  ([game-center.md](app-store/game-center.md)) and Play Console, paste the
+  Play IDs into the app ([play-games.md](google-play/play-games.md)), and
+  test with a Sandbox account and a Play tester.
+- **Test on real devices.** Things the tests can't show:
+  - VoiceOver and TalkBack on the board, keys and coach card (B6);
+  - the light theme and the Appearance option, including the status bar;
+  - the share sheet, on iPhone and on iPad, where it must point at the
+    button (B8);
+  - Game Center and Play Games sign-in, scores and achievements (B7).
+- **Store texts.** [store-listing-texts.md](store-listing-texts.md) still
+  describes version 1.0 (notes, undo, hints, timer, scoreboard). Rewrite the
+  descriptions, keywords and App Review notes around what sets the app apart
+  (Guideline 4.3): the logic coach, levels graded by technique, the game
+  review, guided lessons, the daily puzzle, accessibility, Game Center and
+  Play Games, sharing a puzzle, and the light theme. Then copy the new
+  features into `website/js/i18n.js` and rerun `node website/tools/build.js`.
+- **Release notes.** Rewrite the *What's new* text in each language section
+  of [store-listing-texts.md](store-listing-texts.md) and the Play Console
+  block under *Release notes*: they still describe the 1.0 release.
+- **Screenshots and video.** Redo them so they show the coach, the lessons
+  and the daily puzzle first. Decide whether one screenshot shows the light
+  theme (`APPEARANCE=light tool/store/screenshots.sh …`). Do the two items
+  under [Store assets](#store-assets) (iPad landscape in every language, the
+  old iPhone 17 Pro Max set) in the same pass.
+- **Data safety and App Privacy.** Declare Game Center and Play Games
+  progress where the stores ask (see the two setup guides).
 
 ## Other open items
 
-- **Home with Continue on a phone.** With a saved game, the Continue button
-  pushes the links row (Info, Lessons, Code, Options, language) below the bottom
-  of a 390×844 phone held upright, so it needs a scroll (by about 50 px, 75
-  in Spanish and French). Without a saved game everything fits. Options: a
-  tighter gap, a smaller logo when Continue shows, or Continue in place of
-  the tagline.
-
 - **Upload the website.** The privacy page now lists the statistics and the
   game in progress among the data kept on the device, and Game Center and
-  Google Play Games among the third-party services (built on 2026-11-17).
-  Upload `website/` to the Plesk document root with the 1.1 release.
-
-- **Benefit 6 wording ("reduced stress").** `benefit6Desc` says flow "is
-  linked to enjoyment and reduced stress", but [research.md](research.md)
-  only supports the enjoyment part: Nakamura & Csikszentmihalyi (2014) cover
-  absorption and enjoyment, not stress, and Heydari et al. (2026, anxiety) is
-  background only and not cited in the app. Either soften the text (e.g.
-  "linked to enjoyment") or add a verified flow–stress source to research.md
-  and the reference lists. If the text changes, update all 5 `.arb` files, run
-  `flutter gen-l10n`, then update `website/js/i18n.js` and rerun
-  `node website/tools/build.js`.
+  Google Play Games among the third-party services (built on 2026-11-17),
+  and Benefit 6 no longer claims "reduced stress" (2026-11-18). Upload
+  `website/` to the Plesk document root with the next release, after the
+  features from the new store texts are in (see Next release).
 
 ## Store assets
 

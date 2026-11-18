@@ -1283,7 +1283,7 @@ abstract class AppLocalizations {
   /// No description provided for @benefit6Desc.
   ///
   /// In en, this message translates to:
-  /// **'A puzzle matched to your skill invites \"flow\" — full absorption in the task — which is linked to enjoyment and reduced stress. Nine difficulty levels let you keep the challenge just right.'**
+  /// **'A puzzle matched to your skill invites \"flow\" — full absorption in the task — which is linked to enjoyment. Nine difficulty levels let you keep the challenge just right.'**
   String get benefit6Desc;
 
   /// No description provided for @evidenceNote.
