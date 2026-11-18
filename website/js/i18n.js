@@ -112,7 +112,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "😌",
         "Focus, Flow and Well-being",
-        "A puzzle matched to your skill invites \"flow\" — full absorption in the task — which is linked to enjoyment and reduced stress. Nine difficulty levels let you keep the challenge just right."
+        "A puzzle matched to your skill invites \"flow\" — full absorption in the task — which is linked to enjoyment. Nine difficulty levels let you keep the challenge just right."
       ]
     ],
     "evidenceNote": "A note on the evidence: most of these studies are observational, so they show associations rather than proof of cause. Sudoku works best as one part of an active lifestyle that also includes exercise, sleep and social life.",
@@ -341,7 +341,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "😌",
         "Foco, Flow e Bem-estar",
-        "Um puzzle ajustado à tua capacidade convida ao \"flow\" — a absorção total na tarefa — associado ao prazer e à redução do stress. Nove níveis de dificuldade permitem manter o desafio na medida certa."
+        "Um puzzle ajustado à tua capacidade convida ao \"flow\" — a absorção total na tarefa — associado ao prazer. Nove níveis de dificuldade permitem manter o desafio na medida certa."
       ]
     ],
     "evidenceNote": "Uma nota sobre as evidências: a maioria destes estudos é observacional, pelo que mostra associações e não provas de causa. O Sudoku funciona melhor como parte de um estilo de vida ativo, que inclua também exercício, sono e vida social.",
@@ -570,7 +570,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "😌",
         "Concentración, Flow y Bienestar",
-        "Un puzle ajustado a tu nivel invita al \"flow\" —la absorción total en la tarea—, asociado al disfrute y a la reducción del estrés. Nueve niveles de dificultad te permiten mantener el reto en su punto justo."
+        "Un puzle ajustado a tu nivel invita al \"flow\" —la absorción total en la tarea—, asociado al disfrute. Nueve niveles de dificultad te permiten mantener el reto en su punto justo."
       ]
     ],
     "evidenceNote": "Una nota sobre la evidencia: la mayoría de estos estudios son observacionales, por lo que muestran asociaciones y no pruebas de causa. El Sudoku funciona mejor como parte de un estilo de vida activo que incluya también ejercicio, descanso y vida social.",
@@ -799,7 +799,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "😌",
         "Concentration, Flow et Bien-être",
-        "Une grille adaptée à votre niveau favorise le « flow » — l'absorption totale dans la tâche — associé au plaisir et à la réduction du stress. Neuf niveaux de difficulté vous permettent de garder le défi juste à la bonne mesure."
+        "Une grille adaptée à votre niveau favorise le « flow » — l'absorption totale dans la tâche — associé au plaisir. Neuf niveaux de difficulté vous permettent de garder le défi juste à la bonne mesure."
       ]
     ],
     "evidenceNote": "Une remarque sur les données : la plupart de ces études sont observationnelles ; elles montrent des associations, pas une preuve de cause à effet. Le Sudoku est plus efficace dans le cadre d'un mode de vie actif, qui inclut aussi l'exercice, le sommeil et la vie sociale.",
@@ -1028,7 +1028,7 @@ window.SUDOKU_SAGAX_I18N = {
       [
         "😌",
         "Fokus, Flow und Wohlbefinden",
-        "Ein Rätsel, das zu deinem Können passt, lädt zum „Flow“ ein — dem völligen Aufgehen in der Aufgabe —, der mit Freude und weniger Stress verbunden ist. Neun Schwierigkeitsstufen halten die Herausforderung genau richtig."
+        "Ein Rätsel, das zu deinem Können passt, lädt zum „Flow“ ein — dem völligen Aufgehen in der Aufgabe —, der mit Freude verbunden ist. Neun Schwierigkeitsstufen halten die Herausforderung genau richtig."
       ]
     ],
     "evidenceNote": "Ein Hinweis zur Studienlage: Die meisten dieser Studien sind Beobachtungsstudien; sie zeigen Zusammenhänge, aber keinen Beweis für Ursache und Wirkung. Sudoku wirkt am besten als Teil eines aktiven Lebensstils, zu dem auch Bewegung, Schlaf und soziale Kontakte gehören.",
