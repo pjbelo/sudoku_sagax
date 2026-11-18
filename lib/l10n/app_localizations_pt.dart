@@ -755,4 +755,44 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get back => 'Voltar';
+
+  @override
+  String get share => 'Partilhar';
+
+  @override
+  String shareMessage(int level, String time, String code, String website) {
+    return 'Resolvi este puzzle do Sudoku Sagax (nível $level) em $time. Consegues fazer melhor?\n\nCódigo: $code\n\nNo Sudoku Sagax, toca em Código no ecrã inicial e cola esta mensagem.\n$website';
+  }
+
+  @override
+  String get sharedPuzzleTitle => 'Puzzle partilhado';
+
+  @override
+  String get puzzleCode => 'Código';
+
+  @override
+  String get puzzleCodeTitle => 'Código de puzzle';
+
+  @override
+  String get puzzleCodeIntro =>
+      'Recebeste um código de um amigo? Cola a mensagem, ou escreve o código, para resolver o mesmo puzzle e comparar tempos.';
+
+  @override
+  String get puzzleCodeHint => 'Cola a mensagem ou escreve o código';
+
+  @override
+  String puzzleCodeFound(int level, String summary) {
+    return 'Nível $level · $summary';
+  }
+
+  @override
+  String get puzzleCodeInvalid =>
+      'Ainda não há um código válido. Verifica a mensagem ou o código.';
+
+  @override
+  String get puzzleCodePlay => 'Jogar este puzzle';
+
+  @override
+  String get puzzleCodeNote =>
+      'Um puzzle partilhado conta nas tuas estatísticas, mas não nos recordes nem nas classificações.';
 }

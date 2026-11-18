@@ -205,5 +205,16 @@
   "sounds": "Sonidos",
   "license": "Licencia",
   "close": "Cerrar",
-  "back": "Volver"
+  "back": "Volver",
+  "share": "Compartir",
+  "shareMessage": "He resuelto este puzle de Sudoku Sagax (nivel {level}) en {time}. ¿Puedes mejorarlo?\n\nCódigo: {code}\n\nEn Sudoku Sagax, toca Código en la pantalla de inicio y pega este mensaje.\n{website}",
+  "sharedPuzzleTitle": "Puzle compartido",
+  "puzzleCode": "Código",
+  "puzzleCodeTitle": "Código de puzle",
+  "puzzleCodeIntro": "¿Te ha llegado un código de un amigo? Pega su mensaje, o escribe el código, para resolver el mismo puzle y comparar tiempos.",
+  "puzzleCodeHint": "Pega el mensaje o escribe el código",
+  "puzzleCodeFound": "Nivel {level} · {summary}",
+  "puzzleCodeInvalid": "Todavía no hay un código válido. Revisa el mensaje o el código.",
+  "puzzleCodePlay": "Jugar este puzle",
+  "puzzleCodeNote": "Un puzle compartido cuenta en tus estadísticas, pero no en los récords ni en las clasificaciones."
 }

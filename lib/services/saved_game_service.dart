@@ -11,6 +11,7 @@ class SavedGame {
     required this.game,
     required this.seconds,
     this.events = const [],
+    this.shared = false,
   });
 
   final SudokuGame game;
@@ -20,6 +21,10 @@ class SavedGame {
 
   /// The hints and mistakes so far, for the review after the win.
   final List<ReviewEvent> events;
+
+  /// A puzzle opened from a friend's code: it stays off the scoreboard and
+  /// Game Center.
+  final bool shared;
 
   int get level => game.puzzle.level;
 }
@@ -75,24 +80,28 @@ class SavedGameService {
           for (final e in data['events'] as List? ?? const [])
             ReviewEvent.fromJson(e as Map<String, dynamic>),
         ],
+        // Saves from before shared puzzles have no flag.
+        shared: data['shared'] as bool? ?? false,
       );
     } catch (_) {
       return null;
     }
   }
 
-  /// Replaces the saved game with [game], its clock and its review
-  /// [events].
+  /// Replaces the saved game with [game], its clock, its review [events]
+  /// and whether it is a [shared] puzzle.
   Future<void> save(
     SudokuGame game,
     int seconds, {
     List<ReviewEvent> events = const [],
+    bool shared = false,
   }) async {
     final json = jsonEncode({
       'version': _version,
       'game': game.toJson(),
       'seconds': seconds,
       'events': [for (final e in events) e.toJson()],
+      'shared': shared,
     });
     _json = json;
     await _prefs?.setString(_key, json);

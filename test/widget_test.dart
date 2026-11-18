@@ -5,11 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudoku_sagax/game/game_review.dart';
 import 'package:sudoku_sagax/game/logic_coach.dart';
+import 'package:sudoku_sagax/game/puzzle_code.dart';
 import 'package:sudoku_sagax/game/sudoku_game.dart';
 import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/main.dart';
 import 'package:sudoku_sagax/sagax_theme.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
+import 'package:sudoku_sagax/screens/puzzle_code_screen.dart';
 import 'package:sudoku_sagax/services/daily_service.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
 import 'package:sudoku_sagax/services/scoreboard_service.dart';
@@ -628,6 +630,98 @@ void main() {
         ),
       );
       expect(note.style?.color, AppColors.snowWhite);
+    });
+  });
+
+  group('shared puzzle', () {
+    testWidgets(
+      'a pasted message opens the same grid, kept off the scoreboard',
+      (tester) async {
+        // Catch what the share sheet gets.
+        final shared = <String>[];
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          const MethodChannel('dev.fluttercommunity.plus/share'),
+          (call) async {
+            shared.add((call.arguments as Map)['text'] as String);
+            return 'dev.fluttercommunity.plus/share/unavailable';
+          },
+        );
+
+        final puzzle = generatePuzzle(1, seed: 7);
+        await pumpApp(tester);
+        await tester.tap(find.text('Code'));
+        await tester.pumpAndSettle();
+        expect(find.byType(PuzzleCodeScreen), findsOneWidget);
+
+        // Nothing to play until the text holds a valid code.
+        await tester.enterText(find.byType(TextField), 'hello');
+        await tester.pumpAndSettle();
+        expect(
+          find.text('No valid code yet. Check the message or the code.'),
+          findsOneWidget,
+        );
+        final play = find.widgetWithText(ElevatedButton, 'Play this puzzle');
+        expect(tester.widget<ElevatedButton>(play).onPressed, isNull);
+
+        await tester.enterText(
+          find.byType(TextField),
+          'Can you do better?\n\nCode: ${puzzleCode(puzzle)}\n\nhttps://x',
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Level 1 · Beginner · singles'), findsOneWidget);
+        await tester.tap(play);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Shared puzzle'), findsOneWidget);
+        await useHint(tester);
+        final saved = SavedGameService.instance.savedGame!;
+        expect(saved.shared, isTrue);
+        expect(saved.game.puzzle.givens, puzzle.givens);
+
+        for (int i = 1; i < 81 - puzzle.clueCount; i++) {
+          await useHint(tester);
+        }
+        await tester.tap(find.text('OK'));
+        await tester.pumpAndSettle();
+        // Statistics only: no scoreboard.
+        expect(find.text('🏆 New best time for this level!'), findsNothing);
+        expect(ScoreboardService.instance.scoresFor(1), isEmpty);
+        expect(StatisticsService.instance.levelStats(1).solved, 1);
+
+        // Share: the message holds the code of this puzzle.
+        await tester.tap(find.text('Share'));
+        await tester.pumpAndSettle();
+        expect(shared, hasLength(1));
+        expect(shared.single, contains('(level 1)'));
+        expect(puzzleFromText(shared.single)?.givens, puzzle.givens);
+
+        // Back to the menu goes home, past the code screen.
+        await tester.tap(find.text('Back to Menu'));
+        await tester.pumpAndSettle();
+        expect(find.byType(PuzzleCodeScreen), findsNothing);
+        expect(find.text('PLAY'), findsOneWidget);
+      },
+    );
+
+    testWidgets('a level game after a shared one counts again', (tester) async {
+      final puzzle = generatePuzzle(1, seed: 8);
+      await SavedGameService.instance.save(SudokuGame(puzzle), 0, shared: true);
+      await pumpApp(tester);
+      await tester.tap(find.textContaining('Continue'));
+      await tester.pumpAndSettle();
+      expect(find.text('Shared puzzle'), findsOneWidget);
+      for (int i = 0; i < 81 - puzzle.clueCount; i++) {
+        await useHint(tester);
+      }
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      expect(ScoreboardService.instance.scoresFor(1), isEmpty);
+
+      await tester.tap(find.text('Same Level'));
+      await tester.pumpAndSettle();
+      expect(find.text('Sudoku Sagax'), findsOneWidget); // the usual title
+      await useHint(tester);
+      expect(SavedGameService.instance.savedGame!.shared, isFalse);
     });
   });
 }

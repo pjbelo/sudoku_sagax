@@ -16,6 +16,7 @@ import 'package:sudoku_sagax/screens/info_screen.dart';
 import 'package:sudoku_sagax/screens/lesson_screen.dart';
 import 'package:sudoku_sagax/screens/lessons_screen.dart';
 import 'package:sudoku_sagax/screens/options_screen.dart';
+import 'package:sudoku_sagax/screens/puzzle_code_screen.dart';
 import 'package:sudoku_sagax/screens/review_screen.dart';
 import 'package:sudoku_sagax/screens/scoreboard_screen.dart';
 import 'package:sudoku_sagax/services/daily_service.dart';
@@ -129,6 +130,7 @@ void main() {
       'daily': DailyScreen(today: DateTime(2026, 9, 30)),
       // The X-Wing lesson has the longest texts.
       'lesson': const LessonScreen(technique: CoachTechnique.xWing),
+      'puzzle code': const PuzzleCodeScreen(),
     };
 
     for (final MapEntry(key: windowName, value: window) in windows.entries) {

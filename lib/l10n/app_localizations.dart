@@ -1339,6 +1339,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
+
+  /// Win summary button: shares the puzzle's code.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// Text shared after a win. Keep the code on its own after 'Code:'; the friend pastes the whole message. 'Code' must match the home screen link (puzzleCode).
+  ///
+  /// In en, this message translates to:
+  /// **'I solved this Sudoku Sagax puzzle (level {level}) in {time}. Can you do better?\n\nCode: {code}\n\nIn Sudoku Sagax, tap Code on the home screen and paste this message.\n{website}'**
+  String shareMessage(int level, String time, String code, String website);
+
+  /// Game screen title for a puzzle opened from a code.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared puzzle'**
+  String get sharedPuzzleTitle;
+
+  /// Home screen link that opens the puzzle code screen. Short.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get puzzleCode;
+
+  /// No description provided for @puzzleCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Puzzle code'**
+  String get puzzleCodeTitle;
+
+  /// No description provided for @puzzleCodeIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Got a code from a friend? Paste their message, or type the code, to solve the same puzzle and compare times.'**
+  String get puzzleCodeIntro;
+
+  /// No description provided for @puzzleCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the message or type the code'**
+  String get puzzleCodeHint;
+
+  /// No description provided for @puzzleCodeFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Level {level} · {summary}'**
+  String puzzleCodeFound(int level, String summary);
+
+  /// No description provided for @puzzleCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid code yet. Check the message or the code.'**
+  String get puzzleCodeInvalid;
+
+  /// No description provided for @puzzleCodePlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play this puzzle'**
+  String get puzzleCodePlay;
+
+  /// No description provided for @puzzleCodeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A shared puzzle counts in your statistics, but not on the scoreboard or the leaderboards.'**
+  String get puzzleCodeNote;
 }
 
 class _AppLocalizationsDelegate

@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foldable/foldable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../game/daily_puzzle.dart';
 import '../game/game_review.dart';
 import '../game/lessons.dart';
 import '../game/logic_coach.dart';
+import '../game/puzzle_code.dart';
 import '../game/sudoku_game.dart';
 import '../game/sudoku_generator.dart';
 import '../l10n/app_localizations.dart';
@@ -44,6 +46,7 @@ class GameScreen extends StatefulWidget {
     this.initialLevel = 1,
     this.savedGame,
     this.dailyDay,
+    this.sharedPuzzle,
   });
 
   /// The level of a new game.
@@ -56,6 +59,11 @@ class GameScreen extends StatefulWidget {
   /// the puzzle, it is saved apart from the levels' game, and the win
   /// counts for the daily streak.
   final DateTime? dailyDay;
+
+  /// A puzzle opened from a friend's code (null otherwise). It is played
+  /// as a level game, but stays off the scoreboard and Game Center: a code
+  /// can come from anywhere.
+  final SudokuPuzzle? sharedPuzzle;
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -80,6 +88,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   late int _level;
   late SudokuGame _game;
+
+  /// Whether this game is a puzzle from a friend's code.
+  bool _shared = false;
   int? _selected;
   bool _notesMode = false;
 
@@ -152,7 +163,10 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     if (saved != null) {
       _resume(saved);
     } else {
-      _resetFor(widget.initialLevel.clamp(1, sudokuLevels.length));
+      _resetFor(
+        widget.initialLevel.clamp(1, sudokuLevels.length),
+        shared: widget.sharedPuzzle,
+      );
     }
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
   }
@@ -184,10 +198,15 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   // --- Game flow ---
 
-  void _resetFor(int level) {
+  /// Starts a new game: today's puzzle in daily mode, else the [shared]
+  /// puzzle when given, else a new puzzle of [level].
+  void _resetFor(int level, {SudokuPuzzle? shared}) {
     final day = widget.dailyDay;
-    _game = SudokuGame(day == null ? generatePuzzle(level) : dailyPuzzle(day));
+    _game = SudokuGame(
+      day != null ? dailyPuzzle(day) : shared ?? generatePuzzle(level),
+    );
     _level = _game.puzzle.level;
+    _shared = shared != null;
     _selected = null;
     _notesMode = false;
     _activeDigit = null;
@@ -204,7 +223,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     // Once the screen is up: the level's lesson, the first time it's played.
     WidgetsBinding.instance.addPostFrameCallback((_) => _suggestLesson());
     _analytics.log('game_session_start', {
-      'level': level,
+      'level': _level,
+      'shared': _shared ? 1 : 0,
       'clues': _game.puzzle.clueCount,
       'timer_shown': _settings.timer ? 1 : 0,
       'show_errors': _settings.showErrors ? 1 : 0,
@@ -252,6 +272,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   void _resume(SavedGame saved) {
     _level = saved.level;
     _game = saved.game;
+    _shared = saved.shared;
     _seconds = saved.seconds;
     _events.addAll(saved.events);
     _countedAsStarted = true; // counted when it was first played
@@ -267,7 +288,9 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     if (_solved) return;
     if (_game.hasProgress) {
       _countStart();
-      unawaited(_savedGames.save(_game, _seconds, events: _events));
+      unawaited(
+        _savedGames.save(_game, _seconds, events: _events, shared: _shared),
+      );
     } else {
       unawaited(_savedGames.clear());
     }
@@ -637,8 +660,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
     // Game Center and Play Games (no-ops when not signed in). A daily
     // puzzle goes to its own leaderboard, not to its level's, and stays
-    // off the level's scoreboard: its easy days have a few more clues.
-    if (day == null) {
+    // off the level's scoreboard: its easy days have a few more clues. A
+    // shared puzzle goes to neither: its code could come from anywhere.
+    if (_shared) {
+      // Statistics only.
+    } else if (day == null) {
       unawaited(
         GamesService.instance.recordWin(
           level: _level,
@@ -649,7 +675,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     } else {
       unawaited(GamesService.instance.recordDaily(_seconds));
     }
-    final rank = day != null
+    final rank = day != null || _shared
         ? null
         : await ScoreboardService.instance.add(
             _level,
@@ -665,7 +691,8 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
       'seconds': _seconds,
       'hints': _game.hintsUsed,
       'mistakes': _game.mistakes,
-      'rank': rank ?? 0, // 0 = outside the top 10
+      'rank': rank ?? 0, // 0 = outside the top 10 (or not on it)
+      'shared': _shared ? 1 : 0,
     });
     if (!mounted) return;
     setState(() {
@@ -690,6 +717,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           onButtonSfx: () =>
               unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85)),
           onReview: _openReview,
+          onShare: _sharePuzzle,
           daily: widget.dailyDay != null,
         ),
         milliseconds: 250,
@@ -737,6 +765,37 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
     );
   }
 
+  /// From the win summary: shares the puzzle's code and the time, so a
+  /// friend can solve the same grid and compare. [origin] anchors the share
+  /// sheet on iPad.
+  Future<void> _sharePuzzle(Rect? origin) async {
+    unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85));
+    final l10n = AppLocalizations.of(context)!;
+    final language = Localizations.localeOf(context).languageCode;
+    // The website's page in the player's language (English at the root).
+    final website =
+        'https://sudoku.sagax-games.com/${language == 'en' ? '' : '$language/'}';
+    final text = l10n.shareMessage(
+      _level,
+      formatTime(_seconds),
+      puzzleCode(_game.puzzle),
+      website,
+    );
+    _analytics.log('puzzle_shared', {
+      'level': _level,
+      'daily': widget.dailyDay != null ? 1 : 0,
+      'shared': _shared ? 1 : 0,
+    });
+    try {
+      await SharePlus.instance.share(
+        ShareParams(text: text, sharePositionOrigin: origin),
+      );
+    } catch (e) {
+      // No share sheet (tests, unsupported platforms).
+      debugPrint('Share failed: $e');
+    }
+  }
+
   // --- UI ---
 
   @override
@@ -761,7 +820,11 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         appBar: showAppBar
             ? AppBar(
                 title: Text(
-                  widget.dailyDay == null ? l10n.appTitle : l10n.dailyTitle,
+                  widget.dailyDay != null
+                      ? l10n.dailyTitle
+                      : _shared
+                      ? l10n.sharedPuzzleTitle
+                      : l10n.appTitle,
                 ),
                 centerTitle: true,
                 actions: [if (_canPause) _buildPauseButton(l10n)],
@@ -1419,6 +1482,7 @@ class _WinSummaryScreen extends StatelessWidget {
     required this.rank,
     required this.onButtonSfx,
     required this.onReview,
+    required this.onShare,
     this.daily = false,
   });
 
@@ -1431,6 +1495,10 @@ class _WinSummaryScreen extends StatelessWidget {
 
   /// Opens the game review.
   final VoidCallback onReview;
+
+  /// Shares the puzzle's code; the rectangle is the button's, for the
+  /// share sheet on iPad.
+  final void Function(Rect? origin) onShare;
 
   /// A daily puzzle: no next or same level, just back to the menu.
   final bool daily;
@@ -1480,18 +1548,63 @@ class _WinSummaryScreen extends StatelessWidget {
           ),
         ],
         const SizedBox(height: 16),
-        OutlinedButton.icon(
-          onPressed: onReview,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.hintAmber,
-            side: BorderSide(color: AppColors.hintAmber.withValues(alpha: 0.6)),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          ),
-          icon: const Icon(Icons.insights),
-          label: Text(
-            l10n.review,
-            style: GoogleFonts.exo2(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+        // Side by side, or one under the other in a narrow window.
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            OutlinedButton.icon(
+              onPressed: onReview,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.hintAmber,
+                side: BorderSide(
+                  color: AppColors.hintAmber.withValues(alpha: 0.6),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 20,
+                ),
+              ),
+              icon: const Icon(Icons.insights),
+              label: Text(
+                l10n.review,
+                style: GoogleFonts.exo2(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            // A Builder, so the share sheet can point at this button.
+            Builder(
+              builder: (context) => OutlinedButton.icon(
+                onPressed: () {
+                  final box = context.findRenderObject() as RenderBox?;
+                  onShare(
+                    box == null
+                        ? null
+                        : box.localToGlobal(Offset.zero) & box.size,
+                  );
+                },
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: primary,
+                  side: BorderSide(color: primary.withValues(alpha: 0.6)),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 20,
+                  ),
+                ),
+                icon: const Icon(Icons.ios_share_rounded),
+                label: Text(
+                  l10n.share,
+                  style: GoogleFonts.exo2(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

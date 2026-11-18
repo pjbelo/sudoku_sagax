@@ -23,6 +23,7 @@ import 'game_screen.dart';
 import 'info_screen.dart';
 import 'lessons_screen.dart';
 import 'options_screen.dart';
+import 'puzzle_code_screen.dart';
 import 'scoreboard_screen.dart';
 
 // ============================================================
@@ -189,6 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openLessons() =>
       unawaited(_open(const LessonsScreen(), 'lessons_opened'));
 
+  void _openPuzzleCode() =>
+      unawaited(_open(const PuzzleCodeScreen(), 'puzzle_code_opened'));
+
   void _openOptions() =>
       unawaited(_open(const OptionsScreen(), 'options_opened'));
 
@@ -282,6 +286,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icons.school_outlined,
                     color: AppColors.electricCyan,
                   ),
+                ),
+                IconButton(
+                  tooltip: l10n.puzzleCodeTitle,
+                  onPressed: _openPuzzleCode,
+                  icon: const Icon(Icons.tag, color: AppColors.electricCyan),
                 ),
                 IconButton(
                   tooltip: l10n.options,
@@ -437,8 +446,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Info, Lessons, Options and language: small buttons, an icon over its
-  /// label, so the four share one row on a phone.
+  /// Info, Lessons, Code, Options and language: small buttons, an icon over
+  /// its label, so the five share one row on a phone.
   Widget _buildLinks(AppLocalizations l10n) {
     final language = _languageLabel(
       Localizations.localeOf(context).languageCode,
@@ -457,6 +466,13 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icons.school_outlined,
             label: l10n.lessons,
             onPressed: _openLessons,
+          ),
+        ),
+        Expanded(
+          child: _LinkButton(
+            icon: Icons.tag,
+            label: l10n.puzzleCode,
+            onPressed: _openPuzzleCode,
           ),
         ),
         Expanded(

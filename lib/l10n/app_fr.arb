@@ -205,5 +205,16 @@
   "sounds": "Sons",
   "license": "Licence",
   "close": "Fermer",
-  "back": "Retour"
+  "back": "Retour",
+  "share": "Partager",
+  "shareMessage": "J'ai résolu cette grille de Sudoku Sagax (niveau {level}) en {time}. Sauras-tu faire mieux ?\n\nCode : {code}\n\nDans Sudoku Sagax, touche Code sur l'écran d'accueil et colle ce message.\n{website}",
+  "sharedPuzzleTitle": "Grille partagée",
+  "puzzleCode": "Code",
+  "puzzleCodeTitle": "Code de grille",
+  "puzzleCodeIntro": "Un ami vous a envoyé un code ? Collez son message, ou tapez le code, pour résoudre la même grille et comparer vos temps.",
+  "puzzleCodeHint": "Collez le message ou tapez le code",
+  "puzzleCodeFound": "Niveau {level} · {summary}",
+  "puzzleCodeInvalid": "Pas encore de code valide. Vérifiez le message ou le code.",
+  "puzzleCodePlay": "Jouer cette grille",
+  "puzzleCodeNote": "Une grille partagée compte dans vos statistiques, mais pas dans les records ni les classements."
 }

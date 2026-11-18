@@ -452,5 +452,52 @@
   "sounds": "Sounds",
   "license": "License",
   "close": "Close",
-  "back": "Back"
+  "back": "Back",
+  "share": "Share",
+  "@share": {
+    "description": "Win summary button: shares the puzzle's code."
+  },
+  "shareMessage": "I solved this Sudoku Sagax puzzle (level {level}) in {time}. Can you do better?\n\nCode: {code}\n\nIn Sudoku Sagax, tap Code on the home screen and paste this message.\n{website}",
+  "@shareMessage": {
+    "description": "Text shared after a win. Keep the code on its own after 'Code:'; the friend pastes the whole message. 'Code' must match the home screen link (puzzleCode).",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      },
+      "website": {
+        "type": "String"
+      }
+    }
+  },
+  "sharedPuzzleTitle": "Shared puzzle",
+  "@sharedPuzzleTitle": {
+    "description": "Game screen title for a puzzle opened from a code."
+  },
+  "puzzleCode": "Code",
+  "@puzzleCode": {
+    "description": "Home screen link that opens the puzzle code screen. Short."
+  },
+  "puzzleCodeTitle": "Puzzle code",
+  "puzzleCodeIntro": "Got a code from a friend? Paste their message, or type the code, to solve the same puzzle and compare times.",
+  "puzzleCodeHint": "Paste the message or type the code",
+  "puzzleCodeFound": "Level {level} · {summary}",
+  "@puzzleCodeFound": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCodeInvalid": "No valid code yet. Check the message or the code.",
+  "puzzleCodePlay": "Play this puzzle",
+  "puzzleCodeNote": "A shared puzzle counts in your statistics, but not on the scoreboard or the leaderboards."
 }

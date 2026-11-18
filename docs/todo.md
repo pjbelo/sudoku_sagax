@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B6.
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B8 (B7 still needs the store setup).
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -96,8 +96,15 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   ([play-games.md](google-play/play-games.md)); test with a Sandbox
   account and a Play tester; mention them in the store texts and the App
   Review notes.
-- **B8. Share a puzzle (S).** A short code or link for the puzzle just
-  played, so a friend can solve the same grid and compare times.
+- ~~**B8. Share a puzzle (S).**~~ Done on 2026-11-18: the win summary's
+  Share button sends the time and a code that holds the puzzle itself
+  (level and givens, base 32 with a check character: 34–48 characters, so
+  made to be pasted rather than typed); Home's Code link opens a screen
+  where the friend pastes the whole message. A shared puzzle counts in the
+  statistics but not on the scoreboard or Game Center. Not done: a link
+  that opens the app directly (Universal Links / App Links need files on
+  the website and an entitlement), and a shorter code (it would need every
+  game made from a frozen seed, like the daily puzzle).
 - **B9. Light theme (S–M).** A light version of the Sagax theme that
   follows the system setting. The theme is shared with the sister apps, so
   plan the light palette for the brand, not only for this app, and redo the
@@ -106,7 +113,7 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
 ## Other open items
 
 - **Home with Continue on a phone.** With a saved game, the Continue button
-  pushes the links row (Info, Lessons, Options, language) below the bottom
+  pushes the links row (Info, Lessons, Code, Options, language) below the bottom
   of a 390×844 phone held upright, so it needs a scroll (by about 50 px, 75
   in Spanish and French). Without a saved game everything fits. Options: a
   tighter gap, a smaller logo when Continue shows, or Continue in place of

@@ -759,4 +759,44 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get back => 'Retour';
+
+  @override
+  String get share => 'Partager';
+
+  @override
+  String shareMessage(int level, String time, String code, String website) {
+    return 'J\'ai résolu cette grille de Sudoku Sagax (niveau $level) en $time. Sauras-tu faire mieux ?\n\nCode : $code\n\nDans Sudoku Sagax, touche Code sur l\'écran d\'accueil et colle ce message.\n$website';
+  }
+
+  @override
+  String get sharedPuzzleTitle => 'Grille partagée';
+
+  @override
+  String get puzzleCode => 'Code';
+
+  @override
+  String get puzzleCodeTitle => 'Code de grille';
+
+  @override
+  String get puzzleCodeIntro =>
+      'Un ami vous a envoyé un code ? Collez son message, ou tapez le code, pour résoudre la même grille et comparer vos temps.';
+
+  @override
+  String get puzzleCodeHint => 'Collez le message ou tapez le code';
+
+  @override
+  String puzzleCodeFound(int level, String summary) {
+    return 'Niveau $level · $summary';
+  }
+
+  @override
+  String get puzzleCodeInvalid =>
+      'Pas encore de code valide. Vérifiez le message ou le code.';
+
+  @override
+  String get puzzleCodePlay => 'Jouer cette grille';
+
+  @override
+  String get puzzleCodeNote =>
+      'Une grille partagée compte dans vos statistiques, mais pas dans les records ni les classements.';
 }
