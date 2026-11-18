@@ -4,9 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../sagax_theme.dart';
 
 /// Sudoku Sagax wordmark: a 3×3 box with a few digits beside the name.
-/// Source of `assets/images/sudoku-sagax-transp.png` (the home-screen logo),
-/// rendered by tool/store/logo_test.dart. Also drawn live in the feature
-/// graphic. Everything scales with [height].
+/// Source of the home-screen logos, `assets/images/sudoku-sagax-transp.png`
+/// (dark theme) and `sudoku-sagax-transp-light.png` (light), rendered by
+/// tool/store/logo_test.dart. Its colours come from the theme around it.
+/// Also drawn live in the feature graphic. Everything scales with [height].
 class SudokuLogo extends StatelessWidget {
   const SudokuLogo({super.key, this.height = 84});
 
@@ -17,6 +18,7 @@ class SudokuLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final scale = height / 96;
     final gap = 5.0 * scale;
     final cell = (height - gap * 2) / 3;
@@ -36,7 +38,9 @@ class SudokuLogo extends StatelessWidget {
               crossAxisSpacing: gap,
               physics: const NeverScrollableScrollPhysics(),
               padding: EdgeInsets.zero,
-              children: [for (int i = 0; i < 9; i++) _cell(i, cell, scale)],
+              children: [
+                for (int i = 0; i < 9; i++) _cell(colors, i, cell, scale),
+              ],
             ),
           ),
           SizedBox(width: 18 * scale),
@@ -50,7 +54,7 @@ class SudokuLogo extends StatelessWidget {
                   height: 1,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 5 * scale,
-                  color: AppColors.snowWhite,
+                  color: colors.text,
                 ),
               ),
               SizedBox(height: 8 * scale),
@@ -61,7 +65,7 @@ class SudokuLogo extends StatelessWidget {
                   height: 1,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 14.5 * scale,
-                  color: AppColors.electricCyan,
+                  color: colors.primary,
                 ),
               ),
             ],
@@ -71,21 +75,21 @@ class SudokuLogo extends StatelessWidget {
     );
   }
 
-  Widget _cell(int i, double size, double scale) {
+  Widget _cell(AppColors colors, int i, double size, double scale) {
     final digit = _digits[i];
     final isCenter = i == 4;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: isCenter ? AppColors.electricCyan : AppColors.cardDark,
+        color: isCenter ? colors.primary : colors.card,
         borderRadius: BorderRadius.circular(size * 0.22),
         border: Border.all(
-          color: AppColors.electricCyan.withValues(alpha: isCenter ? 1 : 0.4),
+          color: colors.primary.withValues(alpha: isCenter ? 1 : 0.4),
           width: 1.5 * scale,
         ),
         boxShadow: isCenter
             ? [
                 BoxShadow(
-                  color: AppColors.electricCyan.withValues(alpha: 0.45),
+                  color: colors.primary.withValues(alpha: 0.45),
                   blurRadius: 12 * scale,
                   spreadRadius: 1 * scale,
                 ),
@@ -101,9 +105,7 @@ class SudokuLogo extends StatelessWidget {
                   fontSize: size * 0.62,
                   height: 1,
                   fontWeight: FontWeight.bold,
-                  color: isCenter
-                      ? AppColors.midnightNavy
-                      : AppColors.snowWhite,
+                  color: isCenter ? colors.onPrimary : colors.text,
                 ),
               ),
       ),

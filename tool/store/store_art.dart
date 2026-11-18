@@ -52,7 +52,7 @@ class StoreBackdrop extends StatelessWidget {
         gradient: RadialGradient(
           center: center,
           radius: radius,
-          colors: const [Color(0xFF1C2B4F), AppColors.midnightNavy],
+          colors: const [Color(0xFF1C2B4F), SagaxPalette.midnightNavy],
         ),
       ),
       child: CustomPaint(painter: StoreGridPainter(gridSpacing)),
@@ -85,7 +85,7 @@ class StoreGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.electricCyan.withValues(alpha: 0.05)
+      ..color = SagaxPalette.electricCyan.withValues(alpha: 0.05)
       ..strokeWidth = spacing / 32;
     for (double x = 0; x < size.width; x += spacing) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);

@@ -77,9 +77,9 @@ class IconMark extends StatelessWidget {
     if (monochrome) {
       color = Colors.white;
     } else if (center) {
-      color = AppColors.midnightNavy;
+      color = SagaxPalette.midnightNavy;
     } else {
-      color = AppColors.snowWhite;
+      color = SagaxPalette.snowWhite;
     }
     return Text(
       '$digit',
@@ -92,7 +92,7 @@ class IconMark extends StatelessWidget {
             ? null
             : [
                 Shadow(
-                  color: AppColors.electricCyan.withValues(alpha: 0.6),
+                  color: SagaxPalette.electricCyan.withValues(alpha: 0.6),
                   blurRadius: cell * 0.12,
                 ),
               ],
@@ -120,7 +120,7 @@ class _MarkPainter extends CustomPainter {
         : const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [AppColors.electricCyan, _violet],
+            colors: [SagaxPalette.electricCyan, _violet],
           ).createShader(Offset.zero & size);
 
     Paint stroke(double width, {double alpha = 1, double blur = 0}) {
@@ -145,10 +145,10 @@ class _MarkPainter extends CustomPainter {
       canvas.drawRRect(
         centre,
         Paint()
-          ..color = AppColors.electricCyan.withValues(alpha: 0.75)
+          ..color = SagaxPalette.electricCyan.withValues(alpha: 0.75)
           ..maskFilter = MaskFilter.blur(BlurStyle.normal, s * 0.045),
       );
-      canvas.drawRRect(centre, Paint()..color = AppColors.electricCyan);
+      canvas.drawRRect(centre, Paint()..color = SagaxPalette.electricCyan);
     }
 
     // Inner lines between cells (kept off the frame).
@@ -175,7 +175,7 @@ class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.electricCyan.withValues(alpha: 0.05)
+      ..color = SagaxPalette.electricCyan.withValues(alpha: 0.05)
       ..strokeWidth = 2;
     for (double x = 0; x <= size.width; x += size.width / 16) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);

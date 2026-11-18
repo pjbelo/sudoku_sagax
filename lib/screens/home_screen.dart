@@ -119,7 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showLanguagePicker() {
-    const primary = AppColors.electricCyan;
+    final colors = AppColors.of(context);
+    final primary = colors.primary;
     final currentCode = Localizations.localeOf(context).languageCode;
     unawaited(_audio.playSfx(AudioService.buttonSfx, volume: 0.85));
 
@@ -128,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // As tall as the 5 languages need, up to the height there is: only half
       // the screen on an iPhone Duo folded like a laptop.
       isScrollControlled: true,
-      backgroundColor: AppColors.cardDark,
+      backgroundColor: colors.card,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -143,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.softSlate,
+                  color: colors.muted,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -151,18 +152,13 @@ class _HomeScreenState extends State<HomeScreen> {
               for (final (code, label) in _languages)
                 ListTile(
                   leading: code == currentCode
-                      ? const Icon(Icons.check_circle, color: primary)
-                      : const Icon(
-                          Icons.circle_outlined,
-                          color: AppColors.softSlate,
-                        ),
+                      ? Icon(Icons.check_circle, color: primary)
+                      : Icon(Icons.circle_outlined, color: colors.muted),
                   title: Text(
                     label,
                     style: GoogleFonts.inter(
                       fontSize: 18,
-                      color: code == currentCode
-                          ? primary
-                          : AppColors.snowWhite,
+                      color: code == currentCode ? primary : colors.text,
                       fontWeight: code == currentCode
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -198,6 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final scale = uiScaleOf(context);
     // iPhone Duo with a side strip: Info and the language go there.
@@ -274,38 +271,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(
                   tooltip: l10n.info,
                   onPressed: _openInfo,
-                  icon: const Icon(
-                    Icons.info_outline,
-                    color: AppColors.electricCyan,
-                  ),
+                  icon: Icon(Icons.info_outline, color: colors.primary),
                 ),
                 IconButton(
                   tooltip: l10n.lessons,
                   onPressed: _openLessons,
-                  icon: const Icon(
-                    Icons.school_outlined,
-                    color: AppColors.electricCyan,
-                  ),
+                  icon: Icon(Icons.school_outlined, color: colors.primary),
                 ),
                 IconButton(
                   tooltip: l10n.puzzleCodeTitle,
                   onPressed: _openPuzzleCode,
-                  icon: const Icon(Icons.tag, color: AppColors.electricCyan),
+                  icon: Icon(Icons.tag, color: colors.primary),
                 ),
                 IconButton(
                   tooltip: l10n.options,
                   onPressed: _openOptions,
-                  icon: const Icon(Icons.tune, color: AppColors.electricCyan),
+                  icon: Icon(Icons.tune, color: colors.primary),
                 ),
                 IconButton(
                   tooltip: _languageLabel(
                     Localizations.localeOf(context).languageCode,
                   ),
                   onPressed: _showLanguagePicker,
-                  icon: const Icon(
-                    Icons.language,
-                    color: AppColors.electricCyan,
-                  ),
+                  icon: Icon(Icons.language, color: colors.primary),
                 ),
               ],
             ),
@@ -323,11 +311,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Rendered from SudokuLogo by tool/store/logo_test.dart. The PNG has
+        // Rendered from SudokuLogo by tool/store/logo_test.dart. Each PNG has
         // 1/12 padding per side for the glow, so a height of 98 shows the
         // logo itself at 84.
         Image.asset(
-          'assets/images/sudoku-sagax-transp.png',
+          // The light theme has its own logo, with dark lettering.
+          Theme.of(context).brightness == Brightness.light
+              ? 'assets/images/sudoku-sagax-transp-light.png'
+              : 'assets/images/sudoku-sagax-transp.png',
           height: logoHeight,
           fit: BoxFit.contain,
         ),
@@ -372,6 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
     required double gap,
     Widget? continueButton,
   }) {
+    final colors = AppColors.of(context);
     final scale = uiScaleOf(context);
     final buttonGap = compact ? 10.0 : 14.0 * scale;
     return Column(
@@ -399,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SizedBox(height: compact ? 8 : 12 * scale),
         Text(
           levelSummary(l10n, _selectedLevel),
-          style: GoogleFonts.inter(fontSize: 15, color: AppColors.softSlate),
+          style: GoogleFonts.inter(fontSize: 15, color: colors.muted),
         ),
         SizedBox(height: gap),
 

@@ -4,7 +4,7 @@
 
 These come from the review of the game and of its competitors on 2026-11-16;
 the reasons are in [competition.md](competition.md). All of them (A1–A4 and
-B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B8 (B7 still needs the store setup).
+B1–B9) were agreed on 2026-11-17. Done: A1–A4, B1–B9 (B7 still needs the store setup).
 
 Size is a rough guide: S is about a day, M a few days, L a week or more.
 
@@ -105,10 +105,16 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
   that opens the app directly (Universal Links / App Links need files on
   the website and an entitlement), and a shorter code (it would need every
   game made from a frozen seed, like the daily puzzle).
-- **B9. Light theme (S–M).** A light version of the Sagax theme that
-  follows the system setting. The theme is shared with the sister apps, so
-  plan the light palette for the brand, not only for this app, and redo the
-  screenshots that show it.
+- ~~**B9. Light theme (S–M).**~~ Done on 2026-11-18: the app follows the
+  system's light or dark setting. Widgets read colour tokens by role
+  (`AppColors.of(context)`); the light palette keeps the brand's hues,
+  darkened to at least 4.5:1 on white, and is written up for the sister
+  apps in [brand-palette.md](brand-palette.md). Home has a light logo. The
+  launch screen and store art stay navy; the screenshot and video scripts
+  set the simulator to dark (`APPEARANCE=light` for light shots). Still to
+  do: decide whether one store screenshot shows the light theme; bring the
+  palette to Slidox, Memorex and MasterCode; maybe an in-app choice
+  (System / Light / Dark) if players ask for it.
 
 ## Other open items
 

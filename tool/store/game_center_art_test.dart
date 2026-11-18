@@ -20,9 +20,9 @@ import 'store_art.dart';
 
 /// The medal for [award]: ring colour and what sits in the middle.
 (Color, Widget) _medal(Award award) {
-  const cyan = AppColors.electricCyan;
-  const amber = AppColors.hintAmber;
-  Widget icon(IconData data, [Color color = AppColors.snowWhite]) =>
+  const cyan = SagaxPalette.electricCyan;
+  const amber = SagaxPalette.hintAmber;
+  Widget icon(IconData data, [Color color = SagaxPalette.snowWhite]) =>
       Icon(data, size: 380, color: color);
   Widget number(String text, Color color) => Text(
     text,
@@ -52,7 +52,7 @@ import 'store_art.dart';
             size: 220,
             color: amber,
           ),
-          number('7', AppColors.snowWhite),
+          number('7', SagaxPalette.snowWhite),
         ],
       ),
     ),
@@ -86,7 +86,7 @@ class AchievementArt extends StatelessWidget {
             height: 820,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.cardDark,
+              color: SagaxPalette.cardDark,
               border: Border.all(color: ring, width: 36),
               boxShadow: [
                 BoxShadow(color: ring.withValues(alpha: 0.45), blurRadius: 60),

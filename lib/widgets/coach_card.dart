@@ -124,14 +124,15 @@ class _CoachCardState extends State<CoachCard> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       padding: const EdgeInsets.fromLTRB(12, 8, 8, 6),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.hintAmber.withValues(alpha: 0.6),
+          color: colors.hint.withValues(alpha: 0.6),
           width: 1.5,
         ),
       ),
@@ -140,11 +141,7 @@ class _CoachCardState extends State<CoachCard> {
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.lightbulb_outline,
-                color: AppColors.hintAmber,
-                size: 20,
-              ),
+              Icon(Icons.lightbulb_outline, color: colors.hint, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -154,7 +151,7 @@ class _CoachCardState extends State<CoachCard> {
                   style: GoogleFonts.exo2(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.hintAmber,
+                    color: colors.hint,
                   ),
                 ),
               ),
@@ -173,7 +170,7 @@ class _CoachCardState extends State<CoachCard> {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     height: 1.35,
-                    color: AppColors.snowWhite,
+                    color: colors.text,
                   ),
                 ),
               ),
@@ -190,7 +187,7 @@ class _CoachCardState extends State<CoachCard> {
                   child: TextButton(
                     onPressed: widget.onClose,
                     style: TextButton.styleFrom(
-                      foregroundColor: AppColors.softSlate,
+                      foregroundColor: colors.muted,
                       minimumSize: const Size(0, 36),
                     ),
                     child: Text(widget.closeLabel),
@@ -204,7 +201,7 @@ class _CoachCardState extends State<CoachCard> {
                   child: ElevatedButton(
                     onPressed: widget.onButton,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.hintAmber,
+                      backgroundColor: colors.hint,
                       minimumSize: const Size(0, 36),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18,

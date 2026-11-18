@@ -26,6 +26,7 @@ class ReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final needed = techniquesNeeded(puzzle);
     final maxWidth = 560 * uiScaleOf(context);
@@ -44,10 +45,7 @@ class ReviewScreen extends StatelessWidget {
               _SectionTitle(l10n.reviewNeeded),
               Text(
                 l10n.reviewNeededNote,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: AppColors.softSlate,
-                ),
+                style: GoogleFonts.inter(fontSize: 14, color: colors.muted),
               ),
               const SizedBox(height: 12),
               for (final MapEntry(key: technique, value: count)
@@ -61,10 +59,7 @@ class ReviewScreen extends StatelessWidget {
               if (events.isEmpty)
                 Text(
                   l10n.reviewClean,
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    color: AppColors.snowWhite,
-                  ),
+                  style: GoogleFonts.inter(fontSize: 16, color: colors.text),
                 )
               else
                 for (final event in events) _EventRow(event: event),
@@ -77,7 +72,7 @@ class ReviewScreen extends StatelessWidget {
                     style: GoogleFonts.exo2(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.electricCyan,
+                      color: colors.primary,
                     ),
                   ),
                 ),
@@ -97,6 +92,7 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
@@ -104,7 +100,7 @@ class _SectionTitle extends StatelessWidget {
         style: GoogleFonts.exo2(
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          color: AppColors.electricCyan,
+          color: colors.primary,
         ),
       ),
     );
@@ -120,25 +116,21 @@ class _TechniqueRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.electricCyan.withValues(alpha: 0.25),
-        ),
+        border: Border.all(color: colors.primary.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
           Expanded(
             child: Text(
               name,
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                color: AppColors.snowWhite,
-              ),
+              style: GoogleFonts.inter(fontSize: 16, color: colors.text),
             ),
           ),
           Text(
@@ -146,7 +138,7 @@ class _TechniqueRow extends StatelessWidget {
             style: GoogleFonts.exo2(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.electricCyan,
+              color: colors.primary,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
@@ -165,6 +157,7 @@ class _EventRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final time = formatTime(event.seconds);
     final cell = ReviewScreen.cellLabel(l10n, event.cell);
@@ -193,13 +186,13 @@ class _EventRow extends StatelessWidget {
               stepCell,
             );
     }
-    final color = isHint ? AppColors.hintAmber : AppColors.errorRed;
+    final color = isHint ? colors.hint : colors.error;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.fromLTRB(12, 10, 16, 10),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color.withValues(alpha: 0.4)),
       ),
@@ -218,19 +211,13 @@ class _EventRow extends StatelessWidget {
               children: [
                 Text(
                   main,
-                  style: GoogleFonts.inter(
-                    fontSize: 15,
-                    color: AppColors.snowWhite,
-                  ),
+                  style: GoogleFonts.inter(fontSize: 15, color: colors.text),
                 ),
                 if (available != null) ...[
                   const SizedBox(height: 4),
                   Text(
                     available,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: AppColors.softSlate,
-                    ),
+                    style: GoogleFonts.inter(fontSize: 14, color: colors.muted),
                   ),
                 ],
               ],

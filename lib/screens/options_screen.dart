@@ -238,11 +238,12 @@ class _OptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: primary.withValues(alpha: 0.3)),
       ),
@@ -268,14 +269,14 @@ class _OptionCard extends StatelessWidget {
                       style: GoogleFonts.exo2(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.snowWhite,
+                        color: colors.text,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       description,
                       style: GoogleFonts.inter(
-                        color: AppColors.softSlate,
+                        color: colors.muted,
                         fontSize: 14,
                       ),
                     ),
@@ -287,9 +288,9 @@ class _OptionCard extends StatelessWidget {
                 value: value,
                 onChanged: onChanged,
                 activeTrackColor: primary,
-                activeThumbColor: AppColors.midnightNavy,
-                inactiveThumbColor: AppColors.softSlate,
-                inactiveTrackColor: AppColors.midnightNavy,
+                activeThumbColor: colors.onPrimary,
+                inactiveThumbColor: colors.muted,
+                inactiveTrackColor: colors.background,
               ),
             ],
           ),

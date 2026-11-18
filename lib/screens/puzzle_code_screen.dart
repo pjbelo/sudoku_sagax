@@ -77,6 +77,7 @@ class _PuzzleCodeScreenState extends State<PuzzleCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final primary = Theme.of(context).primaryColor;
     final puzzle = _puzzle;
@@ -94,10 +95,7 @@ class _PuzzleCodeScreenState extends State<PuzzleCodeScreen> {
             children: [
               Text(
                 l10n.puzzleCodeIntro,
-                style: GoogleFonts.inter(
-                  fontSize: 15,
-                  color: AppColors.softSlate,
-                ),
+                style: GoogleFonts.inter(fontSize: 15, color: colors.muted),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -108,17 +106,14 @@ class _PuzzleCodeScreenState extends State<PuzzleCodeScreen> {
                 autocorrect: false,
                 enableSuggestions: false,
                 textCapitalization: TextCapitalization.characters,
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  color: AppColors.snowWhite,
-                ),
+                style: GoogleFonts.inter(fontSize: 16, color: colors.text),
                 decoration: InputDecoration(
                   hintText: l10n.puzzleCodeHint,
                   hintStyle: GoogleFonts.inter(
-                    color: AppColors.softSlate.withValues(alpha: 0.7),
+                    color: colors.muted.withValues(alpha: 0.7),
                   ),
                   filled: true,
-                  fillColor: AppColors.cardDark,
+                  fillColor: colors.card,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -159,10 +154,7 @@ class _PuzzleCodeScreenState extends State<PuzzleCodeScreen> {
               else if (hasText)
                 Text(
                   l10n.puzzleCodeInvalid,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: AppColors.softSlate,
-                  ),
+                  style: GoogleFonts.inter(fontSize: 14, color: colors.muted),
                 ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -172,10 +164,7 @@ class _PuzzleCodeScreenState extends State<PuzzleCodeScreen> {
               const SizedBox(height: 16),
               Text(
                 l10n.puzzleCodeNote,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  color: AppColors.softSlate,
-                ),
+                style: GoogleFonts.inter(fontSize: 13, color: colors.muted),
               ),
             ],
           ),

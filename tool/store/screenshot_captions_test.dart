@@ -191,7 +191,7 @@ class FramedScreenshot extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    line(lines.$1, AppColors.snowWhite),
+                    line(lines.$1, SagaxPalette.snowWhite),
                     line(lines.$2, _accent),
                   ],
                 ),
@@ -207,7 +207,7 @@ class FramedScreenshot extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(radius),
                 border: Border.all(
-                  color: AppColors.electricCyan.withValues(alpha: 0.35),
+                  color: SagaxPalette.electricCyan.withValues(alpha: 0.35),
                   width: unit * 0.003,
                 ),
                 boxShadow: [

@@ -53,7 +53,7 @@ class FeatureGraphic extends StatelessWidget {
           Positioned(
             right: 40,
             top: 20,
-            child: storeGlow(AppColors.electricCyan, 460, 0.16),
+            child: storeGlow(SagaxPalette.electricCyan, 460, 0.16),
           ),
 
           // Left: logo, tagline, levels.
@@ -76,13 +76,15 @@ class FeatureGraphic extends StatelessWidget {
                       style: GoogleFonts.exo2(
                         fontSize: 34,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.snowWhite,
+                        color: SagaxPalette.snowWhite,
                       ),
                       children: [
                         TextSpan(text: first),
                         TextSpan(
                           text: second,
-                          style: const TextStyle(color: AppColors.electricCyan),
+                          style: const TextStyle(
+                            color: SagaxPalette.electricCyan,
+                          ),
                         ),
                       ],
                     ),
@@ -95,7 +97,7 @@ class FeatureGraphic extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 3,
-                    color: AppColors.softSlate,
+                    color: SagaxPalette.softSlate,
                   ),
                 ),
               ],
@@ -113,7 +115,7 @@ class FeatureGraphic extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.electricCyan.withValues(alpha: 0.45),
+                    color: SagaxPalette.electricCyan.withValues(alpha: 0.45),
                     blurRadius: 36,
                     spreadRadius: 2,
                   ),

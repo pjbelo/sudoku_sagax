@@ -219,6 +219,7 @@ class _LessonScreenState extends State<LessonScreen> {
 
   /// What the technique is, then the stage's text and its button.
   Widget _buildText(AppLocalizations l10n) {
+    final colors = AppColors.of(context);
     final String text;
     switch (_stage) {
       case _Stage.find:
@@ -235,10 +236,10 @@ class _LessonScreenState extends State<LessonScreen> {
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 8),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.hintAmber.withValues(alpha: 0.6),
+          color: colors.hint.withValues(alpha: 0.6),
           width: 1.5,
         ),
       ),
@@ -255,7 +256,7 @@ class _LessonScreenState extends State<LessonScreen> {
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       height: 1.35,
-                      color: AppColors.softSlate,
+                      color: colors.muted,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -265,9 +266,7 @@ class _LessonScreenState extends State<LessonScreen> {
                       fontSize: 15,
                       height: 1.35,
                       fontWeight: FontWeight.w500,
-                      color: _stage == _Stage.done
-                          ? AppColors.hintAmber
-                          : AppColors.snowWhite,
+                      color: _stage == _Stage.done ? colors.hint : colors.text,
                     ),
                   ),
                 ],
@@ -283,9 +282,9 @@ class _LessonScreenState extends State<LessonScreen> {
                     ? OutlinedButton(
                         onPressed: _showMe,
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.hintAmber,
+                          foregroundColor: colors.hint,
                           side: BorderSide(
-                            color: AppColors.hintAmber.withValues(alpha: 0.6),
+                            color: colors.hint.withValues(alpha: 0.6),
                           ),
                         ),
                         child: Text(l10n.coachShow),
@@ -293,7 +292,7 @@ class _LessonScreenState extends State<LessonScreen> {
                     : ElevatedButton(
                         onPressed: _finish,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.hintAmber,
+                          backgroundColor: colors.hint,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 20,
                             vertical: 8,

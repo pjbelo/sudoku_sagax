@@ -11,6 +11,7 @@ import 'package:sudoku_sagax/game/sudoku_generator.dart';
 import 'package:sudoku_sagax/main.dart';
 import 'package:sudoku_sagax/sagax_theme.dart';
 import 'package:sudoku_sagax/screens/game_screen.dart';
+import 'package:sudoku_sagax/screens/home_screen.dart';
 import 'package:sudoku_sagax/screens/puzzle_code_screen.dart';
 import 'package:sudoku_sagax/services/daily_service.dart';
 import 'package:sudoku_sagax/services/saved_game_service.dart';
@@ -89,8 +90,11 @@ void main() {
   testWidgets('home shows the level selector and menu', (tester) async {
     await pumpApp(tester);
 
+    // Tests run with a light system setting, so the light logo.
     expect(
-      find.image(const AssetImage('assets/images/sudoku-sagax-transp.png')),
+      find.image(
+        const AssetImage('assets/images/sudoku-sagax-transp-light.png'),
+      ),
       findsOneWidget,
     );
     expect(find.text('PLAY'), findsOneWidget);
@@ -103,6 +107,26 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Expert · X-Wing'), findsOneWidget);
+  });
+
+  testWidgets("follows the system's light or dark setting", (tester) async {
+    addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
+    Color background() =>
+        Theme.of(tester.element(find.byType(HomeScreen)))
+            .scaffoldBackgroundColor;
+
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
+    await pumpApp(tester);
+    expect(background(), AppColors.light.background);
+
+    // Switching the system to dark changes the open app at once.
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    await tester.pumpAndSettle();
+    expect(background(), AppColors.dark.background);
+    expect(
+      find.image(const AssetImage('assets/images/sudoku-sagax-transp.png')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('solving a game with hints records a score', (tester) async {
@@ -607,7 +631,7 @@ void main() {
       );
 
       // The option off, but the system asking for more contrast: the
-      // board's notes turn white.
+      // board's notes take the main text colour (the light theme's here).
       SettingsService.instance.highContrast = false;
       tester.platformDispatcher.accessibilityFeaturesTestValue =
           const FakeAccessibilityFeatures(highContrast: true);
@@ -629,7 +653,7 @@ void main() {
           ),
         ),
       );
-      expect(note.style?.color, AppColors.snowWhite);
+      expect(note.style?.color, AppColors.light.text);
     });
   });
 

@@ -164,7 +164,7 @@ class VideoCaption extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                line(lines.$1, AppColors.snowWhite),
+                line(lines.$1, SagaxPalette.snowWhite),
                 line(lines.$2, _accent),
               ],
             ),

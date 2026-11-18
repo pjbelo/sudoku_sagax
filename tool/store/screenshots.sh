@@ -11,6 +11,11 @@
 #   tool/store/screenshots.sh pixel          # Google Play, phone
 #   tool/store/screenshots.sh pixel-tablet   # Google Play, tablet
 #   tool/store/screenshots.sh iphone en,pt   # only some languages
+#   APPEARANCE=light tool/store/screenshots.sh iphone   # the light theme
+#
+# The app follows the system's light or dark setting. The store shots use
+# the dark Sagax look unless APPEARANCE=light: the script sets the
+# simulator or emulator to that appearance first.
 #
 # integration_test/store_screenshots_test.dart drives the app and prints
 # `SHOT:<lang>_<name>` at each scene; this script grabs the real device screen
@@ -36,6 +41,8 @@ cd "$(dirname "$0")/../.."
 
 target=${1:?usage: $0 <iphone|iphone-6.3|ipad|duo-outer|duo-inner|ipad-landscape|duo-inner-landscape|pixel|pixel-tablet> [langs]}
 langs=${2:-en,pt,es,fr,de}
+appearance=${APPEARANCE:-dark}
+case $appearance in dark|light) ;; *) echo "APPEARANCE must be dark or light" >&2; exit 1 ;; esac
 
 case $target in
   iphone)       platform=ios;     sim="iPhone 17 Pro Max";     out="docs/app-store/screenshots/iPhone 17 Pro Max" ;;
@@ -91,6 +98,8 @@ if [ $platform = ios ]; then
     fi
   }
   set_status_bar() {
+    # The app follows the system's appearance (see APPEARANCE above).
+    xcrun simctl ui "$device" appearance "$appearance"
     xcrun simctl status_bar "$device" override --time 9:41 \
       --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active \
       --cellularBars 4 --batteryState discharging --batteryLevel 100
@@ -186,6 +195,8 @@ else
   # SystemUI ignores demo-mode commands until it has fully started.
   sleep 20
   demo() { "$adb" -s "$device" shell am broadcast -a com.android.systemui.demo -e command "$@" >/dev/null; }
+  # The app follows the system's appearance (see APPEARANCE above).
+  "$adb" -s "$device" shell cmd uimode night "$([ "$appearance" = dark ] && echo yes || echo no)" >/dev/null
   "$adb" -s "$device" shell settings put global sysui_demo_allowed 1
   demo enter
   demo clock -e hhmm 0941

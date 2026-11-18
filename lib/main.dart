@@ -89,15 +89,34 @@ class SudokuSagaxApp extends StatelessWidget {
         builder: (context, _) => MaterialApp(
           title: 'Sudoku Sagax',
           debugShowCheckedModeBanner: false,
-          theme: sagaxTheme,
+          // Light or dark, as the system is set.
+          theme: sagaxLightTheme,
+          darkTheme: sagaxTheme,
+          themeMode: ThemeMode.system,
           locale: SettingsService.instance.locale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           navigatorObservers: AnalyticsService.instance.observers,
-          builder: (context, child) => LargeScreenText(child: child!),
+          builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+            // Status bar icons that show on the theme's background, for the
+            // screens without an app bar (the app bar sets its own).
+            value: _statusBarFor(Theme.of(context).brightness),
+            child: LargeScreenText(child: child!),
+          ),
           home: const HomeScreen(),
         ),
       ),
     );
   }
+}
+
+/// Dark icons on the light theme, light icons on the dark one.
+SystemUiOverlayStyle _statusBarFor(Brightness brightness) {
+  final dark = brightness == Brightness.dark;
+  return SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    // Android reads the icons' brightness, iOS the bar's.
+    statusBarIconBrightness: dark ? Brightness.light : Brightness.dark,
+    statusBarBrightness: dark ? Brightness.dark : Brightness.light,
+  );
 }

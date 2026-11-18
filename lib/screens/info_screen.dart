@@ -83,7 +83,8 @@ class _InfoScreenState extends State<InfoScreen> {
   }
 
   void _showCredits(BuildContext context) {
-    const primary = AppColors.electricCyan;
+    final colors = AppColors.of(context);
+    final primary = colors.primary;
     final l10n = AppLocalizations.of(context)!;
 
     Widget heading(String text) => Text(
@@ -94,10 +95,8 @@ class _InfoScreenState extends State<InfoScreen> {
         color: primary,
       ),
     );
-    Widget detail(String text) => Text(
-      text,
-      style: GoogleFonts.inter(fontSize: 13, color: AppColors.softSlate),
-    );
+    Widget detail(String text) =>
+        Text(text, style: GoogleFonts.inter(fontSize: 13, color: colors.muted));
 
     showCupertinoDialog(
       context: context,
@@ -109,7 +108,7 @@ class _InfoScreenState extends State<InfoScreen> {
             style: GoogleFonts.exo2(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppColors.snowWhite,
+              color: colors.text,
             ),
           ),
         ),
@@ -145,7 +144,8 @@ class _InfoScreenState extends State<InfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const primary = AppColors.electricCyan;
+    final colors = AppColors.of(context);
+    final primary = colors.primary;
     final l10n = AppLocalizations.of(context)!;
 
     final benefits = [
@@ -160,14 +160,14 @@ class _InfoScreenState extends State<InfoScreen> {
     final title = Text(
       l10n.infoScreenTitle,
       style: GoogleFonts.exo2(
-        color: AppColors.snowWhite,
+        color: colors.text,
         fontWeight: FontWeight.bold,
         fontSize: 20,
       ),
     );
 
     TextStyle sectionStyle() => GoogleFonts.exo2(
-      color: AppColors.snowWhite,
+      color: colors.text,
       fontWeight: FontWeight.bold,
       fontSize: 28,
     );
@@ -191,10 +191,7 @@ class _InfoScreenState extends State<InfoScreen> {
             const SizedBox(height: 20),
             Text(
               l10n.sudokuBenefitsIntro,
-              style: GoogleFonts.inter(
-                color: AppColors.snowWhite,
-                fontSize: 18,
-              ),
+              style: GoogleFonts.inter(color: colors.text, fontSize: 18),
             ),
             const SizedBox(height: 20),
             TwoColumnCards(
@@ -210,7 +207,7 @@ class _InfoScreenState extends State<InfoScreen> {
             _InfoCard(
               title: 'ℹ️',
               description: l10n.evidenceNote,
-              titleColor: AppColors.hintAmber,
+              titleColor: colors.hint,
             ),
             const SizedBox(height: 30),
             Text(l10n.scientificReferences, style: sectionStyle()),
@@ -238,7 +235,7 @@ class _InfoScreenState extends State<InfoScreen> {
                 l10n.developedBy,
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: AppColors.softSlate,
+                  color: colors.muted,
                   fontWeight: FontWeight.w300,
                 ),
                 textAlign: TextAlign.center,
@@ -290,7 +287,7 @@ class _InfoScreenState extends State<InfoScreen> {
         child: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
             middle: title,
-            backgroundColor: AppColors.midnightNavy,
+            backgroundColor: colors.background,
             border: null,
           ),
           child: body,
@@ -318,12 +315,13 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: titleColor.withValues(alpha: 0.3)),
       ),
@@ -341,7 +339,7 @@ class _InfoCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             description,
-            style: GoogleFonts.inter(color: AppColors.softSlate, fontSize: 16),
+            style: GoogleFonts.inter(color: colors.muted, fontSize: 16),
           ),
         ],
       ),
@@ -362,16 +360,15 @@ class _ReferenceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppColors.electricCyan.withValues(alpha: 0.25),
-        ),
+        border: Border.all(color: colors.primary.withValues(alpha: 0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,7 +376,7 @@ class _ReferenceCard extends StatelessWidget {
           Text(
             authors,
             style: GoogleFonts.inter(
-              color: AppColors.softSlate,
+              color: colors.muted,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -388,7 +385,7 @@ class _ReferenceCard extends StatelessWidget {
           Text(
             title,
             style: GoogleFonts.exo2(
-              color: AppColors.snowWhite,
+              color: colors.text,
               fontSize: 17,
               fontWeight: FontWeight.w700,
             ),
@@ -396,7 +393,7 @@ class _ReferenceCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             journal,
-            style: GoogleFonts.inter(color: AppColors.softSlate, fontSize: 14),
+            style: GoogleFonts.inter(color: colors.muted, fontSize: 14),
           ),
         ],
       ),

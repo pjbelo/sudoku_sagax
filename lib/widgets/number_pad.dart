@@ -39,6 +39,7 @@ class NumberPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final strong = highContrast || MediaQuery.highContrastOf(context);
     // The digits are sized from the keys, so system text scaling stays out.
@@ -49,15 +50,16 @@ class NumberPad extends StatelessWidget {
                 for (int first = 1; first <= 7; first += 3)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: _row(l10n, first, 3, 4, strong),
+                    child: _row(colors, l10n, first, 3, 4, strong),
                   ),
               ],
             )
-          : _row(l10n, 1, 9, 2.5, strong),
+          : _row(colors, l10n, 1, 9, 2.5, strong),
     );
   }
 
   Widget _row(
+    AppColors colors,
     AppLocalizations l10n,
     int first,
     int count,
@@ -72,7 +74,7 @@ class NumberPad extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: gap),
-                child: _key(l10n, d, strong),
+                child: _key(colors, l10n, d, strong),
               ),
             ),
         ],
@@ -80,16 +82,16 @@ class NumberPad extends StatelessWidget {
     );
   }
 
-  Widget _key(AppLocalizations l10n, int digit, bool strong) {
+  Widget _key(AppColors colors, AppLocalizations l10n, int digit, bool strong) {
     final remaining = (9 - game.placedCount(digit)).clamp(0, 9);
     final active = digit == activeDigit;
     final Color color;
     if (active) {
-      color = AppColors.midnightNavy;
+      color = colors.onPrimary;
     } else if (notesMode && !strong) {
-      color = AppColors.softSlate;
+      color = colors.muted;
     } else {
-      color = AppColors.snowWhite;
+      color = colors.text;
     }
     // Screen readers hear "5, 3 left" rather than the two numbers.
     return Semantics(
@@ -98,11 +100,12 @@ class NumberPad extends StatelessWidget {
       selected: active,
       onTap: () => onDigit(digit),
       excludeSemantics: true,
-      child: _keyFace(digit, remaining, active, color, strong),
+      child: _keyFace(colors, digit, remaining, active, color, strong),
     );
   }
 
   Widget _keyFace(
+    AppColors colors,
     int digit,
     int remaining,
     bool active,
@@ -112,11 +115,11 @@ class NumberPad extends StatelessWidget {
     return Opacity(
       opacity: remaining == 0 && !active ? 0.35 : 1,
       child: Material(
-        color: active ? AppColors.electricCyan : AppColors.cardDark,
+        color: active ? colors.primary : colors.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(
-            color: AppColors.electricCyan.withValues(
+            color: colors.primary.withValues(
               alpha: strong ? 0.9 : (notesMode || active ? 0.6 : 0.3),
             ),
             width: strong ? 1.5 : 1,
@@ -144,8 +147,8 @@ class NumberPad extends StatelessWidget {
                   fontSize: max(10, height * 0.15),
                   height: 1,
                   color: active
-                      ? AppColors.midnightNavy
-                      : AppColors.electricCyan.withValues(alpha: 0.8),
+                      ? colors.onPrimary
+                      : colors.primary.withValues(alpha: 0.8),
                 ),
               ),
             ],

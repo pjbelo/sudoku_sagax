@@ -80,6 +80,7 @@ class SudokuBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final strong = highContrast || MediaQuery.highContrastOf(context);
     return AspectRatio(
@@ -92,10 +93,10 @@ class SudokuBoard extends StatelessWidget {
             final cell = size / 9;
             return Container(
               decoration: BoxDecoration(
-                color: AppColors.cardDark,
+                color: colors.card,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: AppColors.electricCyan.withValues(alpha: 0.6),
+                  color: colors.primary.withValues(alpha: 0.6),
                   width: 2,
                 ),
               ),
@@ -113,7 +114,10 @@ class SudokuBoard extends StatelessWidget {
                           onCellTap(r * 9 + c);
                         },
                   child: CustomPaint(
-                    foregroundPainter: _GridPainter(strong: strong),
+                    foregroundPainter: _GridPainter(
+                      colors: colors,
+                      strong: strong,
+                    ),
                     child: Column(
                       children: [
                         for (int r = 0; r < 9; r++)
@@ -123,6 +127,7 @@ class SudokuBoard extends StatelessWidget {
                                 for (int c = 0; c < 9; c++)
                                   Expanded(
                                     child: _buildCell(
+                                      colors,
                                       l10n,
                                       r * 9 + c,
                                       cell,
@@ -144,7 +149,13 @@ class SudokuBoard extends StatelessWidget {
     );
   }
 
-  Widget _buildCell(AppLocalizations l10n, int i, double cell, bool strong) {
+  Widget _buildCell(
+    AppColors colors,
+    AppLocalizations l10n,
+    int i,
+    double cell,
+    bool strong,
+  ) {
     if (hidden) return const SizedBox.expand();
 
     final sel = selected;
@@ -164,28 +175,22 @@ class SudokuBoard extends StatelessWidget {
     final Color background;
     if (coach != null) {
       if (coach.focus.contains(i)) {
-        background = AppColors.hintAmber.withValues(alpha: 0.32);
+        background = colors.hint.withValues(alpha: 0.32);
       } else if (coach.removed.contains(i)) {
-        background = AppColors.errorRed.withValues(alpha: 0.16);
+        background = colors.error.withValues(alpha: 0.16);
       } else if (coach.area.contains(i)) {
-        background = AppColors.hintAmber.withValues(alpha: 0.10);
+        background = colors.hint.withValues(alpha: 0.10);
       } else {
         background = Colors.transparent;
       }
     } else if (isSelected) {
-      background = AppColors.electricCyan.withValues(
-        alpha: strong ? 0.55 : 0.38,
-      );
+      background = colors.primary.withValues(alpha: strong ? 0.55 : 0.38);
     } else if (showWrong) {
-      background = AppColors.errorRed.withValues(alpha: strong ? 0.3 : 0.18);
+      background = colors.error.withValues(alpha: strong ? 0.3 : 0.18);
     } else if (sameDigit) {
-      background = AppColors.electricCyan.withValues(
-        alpha: strong ? 0.35 : 0.22,
-      );
+      background = colors.primary.withValues(alpha: strong ? 0.35 : 0.22);
     } else if (isPeer) {
-      background = AppColors.electricCyan.withValues(
-        alpha: strong ? 0.15 : 0.07,
-      );
+      background = colors.primary.withValues(alpha: strong ? 0.15 : 0.07);
     } else {
       background = Colors.transparent;
     }
@@ -194,13 +199,13 @@ class SudokuBoard extends StatelessWidget {
     if (value != 0) {
       final Color color;
       if (showWrong) {
-        color = AppColors.errorRed;
+        color = colors.error;
       } else if (game.isGiven(i)) {
-        color = AppColors.snowWhite;
+        color = colors.text;
       } else if (game.hinted[i]) {
-        color = AppColors.hintAmber;
+        color = colors.hint;
       } else {
-        color = AppColors.electricCyan;
+        color = colors.primary;
       }
       content = Text(
         '$value',
@@ -225,7 +230,7 @@ class SudokuBoard extends StatelessWidget {
                 right: cell * 0.25,
                 bottom: cell * 0.1,
                 height: cell * 0.07,
-                child: const ColoredBox(color: AppColors.errorRed),
+                child: ColoredBox(color: colors.error),
               ),
             if (game.hinted[i])
               Positioned(
@@ -234,9 +239,9 @@ class SudokuBoard extends StatelessWidget {
                 right: cell * 0.08,
                 width: cell * 0.14,
                 height: cell * 0.14,
-                child: const DecoratedBox(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: AppColors.hintAmber,
+                    color: colors.hint,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -246,17 +251,19 @@ class SudokuBoard extends StatelessWidget {
       }
     } else if (coach != null && coach.candidates.containsKey(i)) {
       content = _buildNotes(
+        colors,
         coach.candidates[i]!,
         cell,
         0,
-        color: AppColors.hintAmber,
+        color: colors.hint,
       );
     } else if (game.notes[i] != 0) {
       content = _buildNotes(
+        colors,
         game.notes[i],
         cell,
         selValue,
-        color: strong ? AppColors.snowWhite : null,
+        color: strong ? colors.text : null,
       );
     }
 
@@ -272,7 +279,7 @@ class SudokuBoard extends StatelessWidget {
         color: background,
         foregroundDecoration: showConflict
             ? BoxDecoration(
-                border: Border.all(color: AppColors.errorRed, width: 2),
+                border: Border.all(color: colors.error, width: 2),
                 borderRadius: BorderRadius.circular(cell * 0.12),
               )
             : null,
@@ -310,7 +317,13 @@ class SudokuBoard extends StatelessWidget {
   }
 
   /// The digits of [mask] as a 3×3 mini-grid, in [color] when given.
-  Widget _buildNotes(int mask, double cell, int selValue, {Color? color}) {
+  Widget _buildNotes(
+    AppColors colors,
+    int mask,
+    double cell,
+    int selValue, {
+    Color? color,
+  }) {
     return Padding(
       padding: EdgeInsets.all(cell * 0.06),
       child: Column(
@@ -323,6 +336,7 @@ class SudokuBoard extends StatelessWidget {
                     Expanded(
                       child: Center(
                         child: _note(
+                          colors,
                           mask,
                           r * 3 + c + 1,
                           cell,
@@ -339,7 +353,14 @@ class SudokuBoard extends StatelessWidget {
     );
   }
 
-  Widget? _note(int mask, int digit, double cell, int selValue, Color? color) {
+  Widget? _note(
+    AppColors colors,
+    int mask,
+    int digit,
+    double cell,
+    int selValue,
+    Color? color,
+  ) {
     if (mask & (1 << (digit - 1)) == 0) return null;
     final match = digit == selValue;
     return Text(
@@ -348,7 +369,7 @@ class SudokuBoard extends StatelessWidget {
         fontSize: cell * 0.23,
         height: 1,
         fontWeight: match ? FontWeight.bold : FontWeight.w500,
-        color: color ?? (match ? AppColors.electricCyan : AppColors.softSlate),
+        color: color ?? (match ? colors.primary : colors.muted),
       ),
     );
   }
@@ -357,20 +378,22 @@ class SudokuBoard extends StatelessWidget {
 /// Thin lines between cells, thick cyan lines between 3×3 boxes; both
 /// stronger with [strong] (high contrast).
 class _GridPainter extends CustomPainter {
-  _GridPainter({required this.strong});
+  _GridPainter({required this.colors, required this.strong});
 
+  /// The theme's colours (light or dark).
+  final AppColors colors;
   final bool strong;
 
   @override
   void paint(Canvas canvas, Size size) {
     final thin = Paint()
       ..color = strong
-          ? AppColors.snowWhite.withValues(alpha: 0.55)
-          : AppColors.softSlate.withValues(alpha: 0.2)
+          ? colors.text.withValues(alpha: 0.55)
+          : colors.muted.withValues(alpha: 0.2)
       ..strokeWidth = 1;
     // A touch heavier on large boards, so the 3×3 boxes still stand out.
     final thick = Paint()
-      ..color = AppColors.electricCyan.withValues(alpha: strong ? 1 : 0.55)
+      ..color = colors.primary.withValues(alpha: strong ? 1 : 0.55)
       ..strokeWidth = (size.width >= 600 ? 3 : 2) + (strong ? 1 : 0);
     final step = size.width / 9;
     for (int k = 1; k < 9; k++) {
@@ -383,5 +406,5 @@ class _GridPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _GridPainter oldDelegate) =>
-      oldDelegate.strong != strong;
+      oldDelegate.strong != strong || oldDelegate.colors != colors;
 }

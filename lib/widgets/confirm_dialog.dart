@@ -17,6 +17,8 @@ Future<bool> showConfirmDialog(
   final cupertino =
       platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
 
+  final colors = AppColors.of(context);
+
   Widget action(BuildContext ctx, String label, bool result) {
     final isConfirm = result;
     if (cupertino) {
@@ -31,8 +33,8 @@ Future<bool> showConfirmDialog(
       onPressed: () => Navigator.pop(ctx, result),
       style: TextButton.styleFrom(
         foregroundColor: isConfirm && destructive
-            ? AppColors.errorRed
-            : AppColors.electricCyan,
+            ? colors.error
+            : colors.primary,
       ),
       child: Text(label),
     );
@@ -41,7 +43,7 @@ Future<bool> showConfirmDialog(
   final result = await showAdaptiveDialog<bool>(
     context: context,
     builder: (ctx) => AlertDialog.adaptive(
-      backgroundColor: cupertino ? null : AppColors.cardDark,
+      backgroundColor: cupertino ? null : colors.card,
       title: Text(title),
       content: Text(message),
       actions: [

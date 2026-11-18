@@ -170,6 +170,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
 
   /// Best times | Statistics.
   Widget _buildViewSwitch(AppLocalizations l10n) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     return SizedBox(
       width: double.infinity,
@@ -184,8 +185,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
             _showView(statistics: selection.first),
         showSelectedIcon: false,
         style: SegmentedButton.styleFrom(
-          foregroundColor: AppColors.softSlate,
-          selectedForegroundColor: AppColors.midnightNavy,
+          foregroundColor: colors.muted,
+          selectedForegroundColor: colors.onPrimary,
           selectedBackgroundColor: primary,
           side: BorderSide(color: primary.withValues(alpha: 0.6)),
           textStyle: GoogleFonts.exo2(
@@ -210,6 +211,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   /// The day streaks, then the counters of the level, at most [maxWidth]
   /// wide. Like the list, it fills its pane so the margins scroll too.
   Widget _buildStatistics(AppLocalizations l10n, {required double maxWidth}) {
+    final colors = AppColors.of(context);
     final stats = _statistics.levelStats(_level);
     final locale = Localizations.localeOf(context).languageCode;
     String time(int? seconds) => seconds == null ? '–' : formatTime(seconds);
@@ -240,7 +242,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
           Text(
             l10n.streakNote,
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(fontSize: 13, color: AppColors.softSlate),
+            style: GoogleFonts.inter(fontSize: 13, color: colors.muted),
           ),
           const SizedBox(height: 20),
           Text(
@@ -249,7 +251,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
             style: GoogleFonts.exo2(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.snowWhite,
+              color: colors.text,
             ),
           ),
           const SizedBox(height: 10),
@@ -269,10 +271,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   }
 
   Widget _buildSummary(AppLocalizations l10n) {
+    final colors = AppColors.of(context);
     return Text(
       '${l10n.levelLabel} $_level · ${levelSummary(l10n, _level)}',
       textAlign: TextAlign.center,
-      style: GoogleFonts.inter(fontSize: 15, color: AppColors.softSlate),
+      style: GoogleFonts.inter(fontSize: 15, color: colors.muted),
     );
   }
 
@@ -373,12 +376,13 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   }
 
   Widget _buildClearButton(String label, VoidCallback onPressed) {
+    final colors = AppColors.of(context);
     return TextButton.icon(
       onPressed: onPressed,
-      icon: const Icon(Icons.delete_outline, color: AppColors.errorRed),
+      icon: Icon(Icons.delete_outline, color: colors.error),
       label: Text(
         label,
-        style: GoogleFonts.exo2(fontSize: 15, color: AppColors.errorRed),
+        style: GoogleFonts.exo2(fontSize: 15, color: colors.error),
       ),
     );
   }
@@ -430,13 +434,14 @@ class _ScoreRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     final medal = this.medal;
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: primary.withValues(alpha: rank == 1 ? 0.7 : 0.25),
@@ -453,7 +458,7 @@ class _ScoreRow extends StatelessWidget {
                     style: GoogleFonts.exo2(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.softSlate,
+                      color: colors.muted,
                     ),
                   ),
           ),
@@ -464,18 +469,12 @@ class _ScoreRow extends StatelessWidget {
               children: [
                 Text(
                   date,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: AppColors.snowWhite,
-                  ),
+                  style: GoogleFonts.inter(fontSize: 14, color: colors.text),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   hintsLabel,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: AppColors.softSlate,
-                  ),
+                  style: GoogleFonts.inter(fontSize: 12, color: colors.muted),
                 ),
               ],
             ),
@@ -485,7 +484,7 @@ class _ScoreRow extends StatelessWidget {
             style: GoogleFonts.exo2(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: rank == 1 ? AppColors.hintAmber : primary,
+              color: rank == 1 ? colors.hint : primary,
               fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
@@ -523,13 +522,14 @@ class _StatTiles extends StatelessWidget {
   }
 
   Widget _tile(BuildContext context, (String, String) tile) {
+    final colors = AppColors.of(context);
     final (label, value) = tile;
     final primary = Theme.of(context).primaryColor;
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: primary.withValues(alpha: 0.25)),
       ),
@@ -541,10 +541,7 @@ class _StatTiles extends StatelessWidget {
             child: Text(
               label,
               maxLines: 1,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: AppColors.softSlate,
-              ),
+              style: GoogleFonts.inter(fontSize: 13, color: colors.muted),
             ),
           ),
           const SizedBox(height: 4),

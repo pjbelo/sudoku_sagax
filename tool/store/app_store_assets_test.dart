@@ -78,7 +78,7 @@ Widget _glowingBoard({double opacity = 1, double glow = 0.45}) {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: AppColors.electricCyan.withValues(alpha: glow),
+            color: SagaxPalette.electricCyan.withValues(alpha: glow),
             blurRadius: 90,
             spreadRadius: 6,
           ),
@@ -117,7 +117,7 @@ class AppStoreHeader extends StatelessWidget {
           Positioned(
             left: 1920 - 1100,
             top: 823 - 1100,
-            child: storeGlow(AppColors.electricCyan, 2200, 0.14),
+            child: storeGlow(SagaxPalette.electricCyan, 2200, 0.14),
           ),
           Positioned(
             left: -500,
@@ -168,7 +168,7 @@ class AppStoreHeader extends StatelessWidget {
                       const SizedBox(height: 80),
                       Text.rich(
                         TextSpan(
-                          style: _headline(88, AppColors.snowWhite),
+                          style: _headline(88, SagaxPalette.snowWhite),
                           children: [
                             TextSpan(
                               text: l10n.tagline.substring(0, comma + 1),
@@ -176,7 +176,7 @@ class AppStoreHeader extends StatelessWidget {
                             TextSpan(
                               text: l10n.tagline.substring(comma + 1),
                               style: const TextStyle(
-                                color: AppColors.electricCyan,
+                                color: SagaxPalette.electricCyan,
                               ),
                             ),
                           ],
@@ -219,7 +219,7 @@ class AppStoreSearchResult extends StatelessWidget {
           Positioned(
             left: _searchSafe.left + boardSize / 2 - 1150,
             top: 1280 - 1150,
-            child: storeGlow(AppColors.electricCyan, 2300, 0.16),
+            child: storeGlow(SagaxPalette.electricCyan, 2300, 0.16),
           ),
           Positioned(
             right: -700,
@@ -276,11 +276,11 @@ class AppStoreSearchResult extends StatelessWidget {
                           const SizedBox(height: 90),
                           Text(
                             copy.$1,
-                            style: _headline(124, AppColors.snowWhite),
+                            style: _headline(124, SagaxPalette.snowWhite),
                           ),
                           Text(
                             copy.$2,
-                            style: _headline(124, AppColors.electricCyan),
+                            style: _headline(124, SagaxPalette.electricCyan),
                           ),
                           const SizedBox(height: 48),
                           Text(
@@ -288,7 +288,7 @@ class AppStoreSearchResult extends StatelessWidget {
                             style: GoogleFonts.inter(
                               fontSize: 64,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.softSlate,
+                              color: SagaxPalette.softSlate,
                             ),
                           ),
                         ],

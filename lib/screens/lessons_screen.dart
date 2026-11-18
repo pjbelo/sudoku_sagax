@@ -41,6 +41,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final lessons = LessonService.instance;
     final maxWidth = 560 * uiScaleOf(context);
@@ -57,10 +58,7 @@ class _LessonsScreenState extends State<LessonsScreen> {
             children: [
               Text(
                 l10n.lessonsIntro,
-                style: GoogleFonts.inter(
-                  fontSize: 15,
-                  color: AppColors.softSlate,
-                ),
+                style: GoogleFonts.inter(fontSize: 15, color: colors.muted),
               ),
               const SizedBox(height: 16),
               for (final (index, technique) in lessonTechniques.indexed)
@@ -96,11 +94,12 @@ class _LessonRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: primary.withValues(alpha: done ? 0.6 : 0.25)),
       ),
@@ -113,7 +112,7 @@ class _LessonRow extends StatelessWidget {
             children: [
               Icon(
                 done ? Icons.check_circle : Icons.school_outlined,
-                color: done ? primary : AppColors.softSlate,
+                color: done ? primary : colors.muted,
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -125,7 +124,7 @@ class _LessonRow extends StatelessWidget {
                       style: GoogleFonts.exo2(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.snowWhite,
+                        color: colors.text,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -133,13 +132,13 @@ class _LessonRow extends StatelessWidget {
                       done ? '$level · $doneLabel' : level,
                       style: GoogleFonts.inter(
                         fontSize: 13,
-                        color: AppColors.softSlate,
+                        color: colors.muted,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.softSlate),
+              Icon(Icons.chevron_right, color: colors.muted),
             ],
           ),
         ),

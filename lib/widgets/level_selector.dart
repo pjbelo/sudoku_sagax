@@ -54,6 +54,7 @@ class LevelSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     const spacing = 10.0;
 
@@ -74,7 +75,7 @@ class LevelSelector extends StatelessWidget {
                   for (final spec in sudokuLevels)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: gap / 2),
-                      child: _chip(spec, primary, size),
+                      child: _chip(colors, spec, primary, size),
                     ),
                 ],
               ),
@@ -91,14 +92,20 @@ class LevelSelector extends StatelessWidget {
           spacing: spacing,
           runSpacing: spacing,
           children: [
-            for (final spec in sudokuLevels) _chip(spec, primary, chipSize),
+            for (final spec in sudokuLevels)
+              _chip(colors, spec, primary, chipSize),
           ],
         ),
       ),
     );
   }
 
-  Widget _chip(SudokuLevel spec, Color primary, double chipSize) {
+  Widget _chip(
+    AppColors colors,
+    SudokuLevel spec,
+    Color primary,
+    double chipSize,
+  ) {
     final isSelected = spec.level == selected;
     final showClues = chipSize >= 50;
     return GestureDetector(
@@ -108,7 +115,7 @@ class LevelSelector extends StatelessWidget {
         width: chipSize,
         height: chipSize,
         decoration: BoxDecoration(
-          color: isSelected ? primary : AppColors.cardDark,
+          color: isSelected ? primary : colors.card,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected ? primary : primary.withValues(alpha: 0.3),
@@ -135,9 +142,7 @@ class LevelSelector extends StatelessWidget {
                       ? chipSize * 0.3125
                       : min(16, chipSize * 0.5),
                   fontWeight: FontWeight.bold,
-                  color: isSelected
-                      ? AppColors.midnightNavy
-                      : AppColors.snowWhite,
+                  color: isSelected ? colors.onPrimary : colors.text,
                 ),
               ),
               if (showClues)
@@ -146,8 +151,8 @@ class LevelSelector extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: max(9, chipSize * 0.156),
                     color: isSelected
-                        ? AppColors.midnightNavy.withValues(alpha: 0.7)
-                        : AppColors.softSlate,
+                        ? colors.onPrimary.withValues(alpha: 0.7)
+                        : colors.muted,
                   ),
                 ),
             ],

@@ -800,6 +800,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     // iPhone Duo with a side strip: Back, the stats and Pause go there. Folded
     // like a laptop they go below the fold, which leaves the whole upper half
@@ -857,7 +858,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
               RailBar(
                 rail: rail,
                 children: [
-                  const BackButton(color: AppColors.electricCyan),
+                  BackButton(color: colors.primary),
                   ..._statBadges(l10n, compact: true),
                   if (_canPause) _buildPauseButton(l10n),
                 ],
@@ -997,6 +998,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// form a 3×3 block that grows into the free height, up to square keys
   /// (a little taller in a narrow pane).
   Widget _buildPanel(AppLocalizations l10n, Size size) {
+    final colors = AppColors.of(context);
     final scale = uiScaleOf(context);
     final narrow = size.width < 320;
     // Back and Pause, unless the app bar or the side rail holds them.
@@ -1031,7 +1033,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
             if (showNavigation)
               Row(
                 children: [
-                  const BackButton(color: AppColors.electricCyan),
+                  BackButton(color: colors.primary),
                   const Spacer(),
                   if (_canPause) _buildPauseButton(l10n),
                 ],
@@ -1062,6 +1064,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Below the fold of an iPhone Duo folded like a laptop: everything but the
   /// board, Back and Pause included, in a pane of [height].
   Widget _buildLowerHalf(AppLocalizations l10n, double height) {
+    final colors = AppColors.of(context);
     final padHeight = (height - 190).clamp(58.0, 90.0);
     return Center(
       child: SingleChildScrollView(
@@ -1070,7 +1073,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           children: [
             Row(
               children: [
-                const BackButton(color: AppColors.electricCyan),
+                BackButton(color: colors.primary),
                 Expanded(child: _buildStats(l10n)),
                 // Keeps the stats centred when there is no Pause button.
                 SizedBox(
@@ -1120,6 +1123,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
 
   /// Level, time and mistakes; [compact] for the iPhone Duo side rail.
   List<Widget> _statBadges(AppLocalizations l10n, {bool compact = false}) {
+    final colors = AppColors.of(context);
     return [
       _StatBadge(label: l10n.levelLabel, value: '$_level', compact: compact),
       if (_settings.timer)
@@ -1132,7 +1136,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
         _StatBadge(
           label: l10n.mistakesLabel,
           value: '${_game.mistakes}',
-          valueColor: _game.mistakes > 0 ? AppColors.errorRed : null,
+          valueColor: _game.mistakes > 0 ? colors.error : null,
           compact: compact,
         ),
     ];
@@ -1141,12 +1145,13 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   bool get _canPause => _settings.timer && !_solved;
 
   Widget _buildPauseButton(AppLocalizations l10n) {
+    final colors = AppColors.of(context);
     return IconButton(
       tooltip: _userPaused ? l10n.resume : l10n.pause,
       onPressed: _onTogglePause,
       icon: Icon(
         _userPaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
-        color: AppColors.electricCyan,
+        color: colors.primary,
         size: 24 * uiScaleOf(context),
       ),
     );
@@ -1156,18 +1161,19 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// as tall as the longest message, so the rows below it (the keys beside
   /// the board) don't move when the message changes.
   Widget _buildStatus(AppLocalizations l10n, {bool keepHeight = false}) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     // While no digit is picked, 9 stands in for it (for the height only).
     final digit = _activeDigit ?? 9;
     final messages = [
       (l10n.solved, primary),
-      (l10n.paused, AppColors.softSlate),
-      (l10n.statusFullWrong, AppColors.hintAmber),
+      (l10n.paused, colors.muted),
+      (l10n.statusFullWrong, colors.hint),
       (l10n.statusDigitNotes(digit), primary),
       (l10n.statusDigit(digit), primary),
       (l10n.statusNotesFill, primary),
       (l10n.statusNotes, primary),
-      (l10n.statusPlay, AppColors.softSlate),
+      (l10n.statusPlay, colors.muted),
     ];
     const fillNotesIndex = 5;
     final fillNotes = _settings.fillNotesAt(_level);
@@ -1267,6 +1273,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
   /// Undo, Redo, Erase, Notes and Hint, in [twoRows] when the pane is
   /// narrow.
   Widget _buildControls(AppLocalizations l10n, {bool twoRows = false}) {
+    final colors = AppColors.of(context);
     final buttons = <Widget>[
       _ControlButton(
         icon: Icons.undo_rounded,
@@ -1294,7 +1301,7 @@ class _GameScreenState extends State<GameScreen> with WidgetsBindingObserver {
           icon: Icons.lightbulb_outline,
           label: l10n.hint(hintPenaltySeconds),
           onPressed: _onHint,
-          color: AppColors.hintAmber,
+          color: colors.hint,
         ),
     ];
 
@@ -1359,6 +1366,7 @@ class _StatBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     return Container(
       width: compact ? double.infinity : null,
       constraints: BoxConstraints(
@@ -1368,7 +1376,7 @@ class _StatBadge extends StatelessWidget {
           ? const EdgeInsets.symmetric(horizontal: 4, vertical: 6)
           : const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
@@ -1382,7 +1390,7 @@ class _StatBadge extends StatelessWidget {
               label,
               style: GoogleFonts.inter(
                 fontSize: compact ? 11 : 13,
-                color: AppColors.softSlate,
+                color: colors.muted,
               ),
             ),
           ),
@@ -1394,7 +1402,7 @@ class _StatBadge extends StatelessWidget {
               style: GoogleFonts.exo2(
                 fontSize: compact ? 18 : 22,
                 fontWeight: FontWeight.bold,
-                color: valueColor ?? AppColors.snowWhite,
+                color: valueColor ?? colors.text,
                 fontFeatures: const [FontFeature.tabularFigures()],
               ),
             ),
@@ -1423,7 +1431,8 @@ class _ControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final base = color ?? AppColors.electricCyan;
+    final colors = AppColors.of(context);
+    final base = color ?? colors.primary;
     final enabled = onPressed != null;
     final fg = enabled ? base : base.withValues(alpha: 0.35);
     final scale = uiScaleOf(context);
@@ -1510,6 +1519,7 @@ class _WinSummaryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final primary = Theme.of(context).primaryColor;
     final hasNext = level < sudokuLevels.length;
@@ -1542,7 +1552,7 @@ class _WinSummaryScreen extends StatelessWidget {
             style: GoogleFonts.exo2(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: rank == 1 ? AppColors.hintAmber : primary,
+              color: rank == 1 ? colors.hint : primary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -1557,10 +1567,8 @@ class _WinSummaryScreen extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: onReview,
               style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.hintAmber,
-                side: BorderSide(
-                  color: AppColors.hintAmber.withValues(alpha: 0.6),
-                ),
+                foregroundColor: colors.hint,
+                side: BorderSide(color: colors.hint.withValues(alpha: 0.6)),
                 padding: const EdgeInsets.symmetric(
                   vertical: 12,
                   horizontal: 20,
@@ -1665,7 +1673,7 @@ class _WinSummaryScreen extends StatelessWidget {
             style: GoogleFonts.exo2(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.electricCyan,
+              color: colors.primary,
             ),
           ),
         ),
@@ -1681,7 +1689,7 @@ class _WinSummaryScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.midnightNavy,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: TwoPaneLayout(
           // A large screen shows it all in one calm column; short windows

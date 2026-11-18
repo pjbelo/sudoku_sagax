@@ -78,6 +78,7 @@ class _DailyScreenState extends State<DailyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).languageCode;
     final level = dailyLevel(_today);
@@ -89,7 +90,7 @@ class _DailyScreenState extends State<DailyScreen> {
       children: [
         Text(
           l10n.dailyIntro,
-          style: GoogleFonts.inter(fontSize: 15, color: AppColors.softSlate),
+          style: GoogleFonts.inter(fontSize: 15, color: colors.muted),
         ),
         const SizedBox(height: 16),
         Text(
@@ -97,13 +98,13 @@ class _DailyScreenState extends State<DailyScreen> {
           style: GoogleFonts.exo2(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: AppColors.snowWhite,
+            color: colors.text,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           '${l10n.levelLabel} $level · ${levelSummary(l10n, level)}',
-          style: GoogleFonts.inter(fontSize: 15, color: AppColors.softSlate),
+          style: GoogleFonts.inter(fontSize: 15, color: colors.muted),
         ),
         const SizedBox(height: 16),
         if (solvedSeconds != null)
@@ -216,11 +217,12 @@ class _StreakTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: primary.withValues(alpha: 0.25)),
       ),
@@ -231,10 +233,7 @@ class _StreakTile extends StatelessWidget {
             child: Text(
               label,
               maxLines: 1,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: AppColors.softSlate,
-              ),
+              style: GoogleFonts.inter(fontSize: 13, color: colors.muted),
             ),
           ),
           const SizedBox(height: 4),
@@ -276,6 +275,7 @@ class _MonthCalendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final primary = Theme.of(context).primaryColor;
     final days = DateTime(month.year, month.month + 1, 0).day;
     // Empty cells before the 1st: Monday is 1, so a Monday 1st needs none.
@@ -290,13 +290,13 @@ class _MonthCalendar extends StatelessWidget {
       onPressed: onPressed,
       icon: Icon(icon),
       color: primary,
-      disabledColor: AppColors.softSlate.withValues(alpha: 0.3),
+      disabledColor: colors.muted.withValues(alpha: 0.3),
     );
 
     return Container(
       padding: const EdgeInsets.fromLTRB(8, 4, 8, 12),
       decoration: BoxDecoration(
-        color: AppColors.cardDark,
+        color: colors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: primary.withValues(alpha: 0.25)),
       ),
@@ -313,7 +313,7 @@ class _MonthCalendar extends StatelessWidget {
                   style: GoogleFonts.exo2(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.snowWhite,
+                    color: colors.text,
                   ),
                 ),
               ),
@@ -334,13 +334,17 @@ class _MonthCalendar extends StatelessWidget {
                       name,
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: AppColors.softSlate,
+                        color: colors.muted,
                       ),
                     ),
                   ),
                 for (int i = 0; i < blanks; i++) const SizedBox(),
                 for (int d = 1; d <= days; d++)
-                  _dayCell(DateTime(month.year, month.month, d), primary),
+                  _dayCell(
+                    colors,
+                    DateTime(month.year, month.month, d),
+                    primary,
+                  ),
               ],
             ),
           ),
@@ -349,7 +353,7 @@ class _MonthCalendar extends StatelessWidget {
     );
   }
 
-  Widget _dayCell(DateTime day, Color primary) {
+  Widget _dayCell(AppColors colors, DateTime day, Color primary) {
     final solved = isSolved(day);
     final isToday = day == today;
     return Padding(
@@ -367,10 +371,10 @@ class _MonthCalendar extends StatelessWidget {
             fontSize: 14,
             fontWeight: solved || isToday ? FontWeight.bold : FontWeight.w400,
             color: solved
-                ? AppColors.midnightNavy
+                ? colors.onPrimary
                 : day.isAfter(today)
-                ? AppColors.softSlate.withValues(alpha: 0.4)
-                : AppColors.snowWhite,
+                ? colors.muted.withValues(alpha: 0.4)
+                : colors.text,
           ),
         ),
       ),

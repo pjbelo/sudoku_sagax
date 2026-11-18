@@ -49,6 +49,8 @@ if [ $platform = ios ]; then
   device=$(xcrun simctl list devices available | grep -F "$sim (" | head -1 | grep -oE '[0-9A-F-]{36}')
   xcrun simctl boot "$device" 2>/dev/null || true
   xcrun simctl bootstatus "$device" -b >/dev/null
+  # The app follows the system's appearance: record the dark Sagax look.
+  xcrun simctl ui "$device" appearance dark
   open "$(xcode-select -p)/Applications/Simulator.app" 2>/dev/null || true  # optional: just to watch
 
   start_recording() {
@@ -94,6 +96,8 @@ else
   until [ "$("$adb" -s "$device" shell getprop sys.boot_completed </dev/null | tr -d '\r')" = 1 ]; do sleep 2; done
   # Keep notifications from popping up over the footage.
   "$adb" -s "$device" shell settings put global heads_up_notifications_enabled 0 </dev/null
+  # The app follows the system's appearance: record the dark Sagax look.
+  "$adb" -s "$device" shell cmd uimode night yes </dev/null >/dev/null
 
   # `</dev/null`: these run inside the loop that reads flutter's output, and
   # adb would otherwise swallow it.
