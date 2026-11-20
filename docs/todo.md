@@ -124,8 +124,8 @@ Store Guideline 4.3 ("what does this app offer beyond a standard sudoku?").
 
 What is left before the agreed improvements reach the stores.
 
-- **Version number.** `pubspec.yaml` still says `1.0.0+3`. Raise it (for
-  example `1.1.0+4`) before building for the stores.
+- ~~**Version number.**~~ Done on 2026-11-19: `pubspec.yaml` says
+  `1.1.0+4`.
 - **Game Center and Play Games setup (B7).** Create the leaderboards and
   achievements in App Store Connect
   ([game-center.md](app-store/game-center.md)) and Play Console, paste the
@@ -137,16 +137,23 @@ What is left before the agreed improvements reach the stores.
   - the share sheet, on iPhone and on iPad, where it must point at the
     button (B8);
   - Game Center and Play Games sign-in, scores and achievements (B7).
-- **Store texts.** [store-listing-texts.md](store-listing-texts.md) still
-  describes version 1.0 (notes, undo, hints, timer, scoreboard). Rewrite the
-  descriptions, keywords and App Review notes around what sets the app apart
-  (Guideline 4.3): the logic coach, levels graded by technique, the game
-  review, guided lessons, the daily puzzle, accessibility, Game Center and
-  Play Games, sharing a puzzle, and the light theme. Then copy the new
-  features into `website/js/i18n.js` and rerun `node website/tools/build.js`.
-- **Release notes.** Rewrite the *What's new* text in each language section
-  of [store-listing-texts.md](store-listing-texts.md) and the Play Console
-  block under *Release notes*: they still describe the 1.0 release.
+- ~~**Store texts and release notes.**~~ Done on 2026-11-19 in
+  [store-listing-texts.md](store-listing-texts.md): subtitles, short
+  descriptions, promotional texts, keywords and full descriptions in all 8
+  listings lead with the logic coach, levels graded by technique, the
+  lessons and the game review (Guideline 4.3); the What's new texts, the
+  Play release notes block (1.1.0) and the App Review notes and recording
+  steps are rewritten. Still to do: have a native speaker read the
+  pt-BR, es-419, fr and de texts if possible; add the Play Games lines once
+  Play Games is live; and when pasting in App Store Connect, change the
+  subtitle and keywords too (they ship with the version).
+- **Website features.** The site's features list (`features` in
+  `website/js/i18n.js` and `website/index.html`) still describes 1.0 and
+  says "free, no ads", and the page's `metaDescription` still reads
+  "classic sudoku … notes, hints, a timer and a scoreboard". Bring both in
+  line with the new store texts (the coach,
+  graded levels, lessons, review, daily puzzle, sharing, accessibility,
+  light theme), then rerun `node website/tools/build.js`.
 - **Screenshots and video.** Redo them so they show the coach, the lessons
   and the daily puzzle first. Decide whether one screenshot shows the light
   theme (`APPEARANCE=light tool/store/screenshots.sh …`). Do the two items
